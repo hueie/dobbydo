@@ -1,0 +1,88 @@
+CREATE DATABASE `dobbydo` /*!40100 DEFAULT CHARACTER SET utf8 */;
+
+CREATE TABLE `articles` (
+  `article_id` int(5) NOT NULL AUTO_INCREMENT,
+  `title` varchar(200) NOT NULL,
+  `category` varchar(100) NOT NULL,
+  PRIMARY KEY (`article_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `book_sf` (
+  `STACK_ID` text,
+  `BOOKSF_ID` text,
+  `BOOKSF_NM` text,
+  `BOOKSF_F_CNT` int(11) DEFAULT NULL,
+  `BOOKSF_R_CNT` int(11) DEFAULT '0',
+  `MAX_BOX_CNT` int(11) DEFAULT '0',
+  `KEEP_BOX_CNT` int(11) DEFAULT NULL,
+  `REMK` text,
+  `REG_ID` text,
+  `REG_NAME` text,
+  `REG_DT` text,
+  `SYS_ID` text,
+  `SYS_NAME` text,
+  `SYS_DT` text,
+  `PVINVENCHK_YN` text,
+  `PEXAM_STATUS` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `bookarng` (
+  `ARNG_ID` int(11) DEFAULT NULL,
+  `BOX_ID` int(11) DEFAULT NULL,
+  `STACK_ID` tinytext,
+  `BOOKSF_ID` tinytext,
+  `BOOKSF_F_NO` int(11) DEFAULT NULL,
+  `BOOKSF_R_NO` int(11) DEFAULT NULL,
+  `BOOKSF_R_SNO` int(11) DEFAULT NULL,
+  `ARNG_CD` tinytext,
+  `BOX_ARNG_DT` tinytext
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `booksf_flw` (
+  `STACK_ID` tinytext,
+  `BOOKSF_ID` tinytext,
+  `FLW_NO` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `box` (
+  `BOX_ID` int(11) DEFAULT NULL,
+  `FOLDER_CNT` int(11) DEFAULT NULL,
+  `REG_ID` tinytext,
+  `REG_NAME` tinytext,
+  `REG_DT` tinytext,
+  `SYS_ID` tinytext,
+  `SYS_NAME` tinytext,
+  `SYS_DT` tinytext,
+  `ORG_CD` tinytext,
+  `BOX_NO` text
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `cube_map` (
+  `cube_idx` decimal(10,0) DEFAULT NULL,
+  `stack_id` decimal(10,0) DEFAULT NULL,
+  `pos_x` decimal(10,0) DEFAULT NULL,
+  `pos_y` decimal(10,0) DEFAULT NULL,
+  `pos_z` decimal(10,0) DEFAULT NULL,
+  `object_id` decimal(10,0) DEFAULT NULL,
+  `cube_type` decimal(10,0) DEFAULT NULL,
+  `linked_id` decimal(10,0) DEFAULT NULL,
+  `size` decimal(10,0) DEFAULT NULL,
+  `axis` decimal(10,0) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `stack` (
+  `STACK_ID` tinytext,
+  `STACK_NM` tinytext,
+  `KEEP_BOOKSF_CNT` int(11) DEFAULT NULL,
+  `REMK` text,
+  `REG_ID` tinytext,
+  `REG_NAME` tinytext,
+  `REG_DT` tinytext,
+  `SYS_ID` tinytext,
+  `SYS_NAME` tinytext,
+  `SYS_DT` tinytext
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `ysindex` (
+  `id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
