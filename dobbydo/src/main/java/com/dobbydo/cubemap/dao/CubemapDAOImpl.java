@@ -1,10 +1,15 @@
-package com.dobbydo.interestword.dao;
+package com.dobbydo.cubemap.dao;
+
+import java.util.List;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.dobbydo.atestpage.dao.IArticleDAO;
 
-@Repository("InterestwordDAO")
-public class InterestwordDAO {
+@Transactional
+@Repository
+public class CubemapDAOImpl  implements CubemapDAO {
 	
 	/*
 	public List TrandelyList(TrandelyVO vo) throws Exception {

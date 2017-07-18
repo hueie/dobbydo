@@ -1,4 +1,5 @@
-package kams.ys.cybr.service;
+package com.dobbydo.cybr.service;
+
 
 public interface CybrService {
 

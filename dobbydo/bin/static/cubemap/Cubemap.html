@@ -1,24 +1,13 @@
-
-<%@ page contentType="text/html; charset=utf-8" %>
-
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui"%>
-<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
-<%@ taglib prefix="html" uri="/WEB-INF/tlds/html.tld" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%--
+<!--
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	 --%>	
+	 -->	
 <script type="text/javascript">
 var object_id = 0; //In Graph
 var static_linked_id = 0;
-
 function view(){
 	var stack_id = $("#stack_id").val();
 	window.location = 'mms_view.jsp?stack_id='+stack_id;
 }
-
 function savemap(){
     var str = "";
 	var cube_list = [];
@@ -48,7 +37,6 @@ function savemap(){
 	        			str += ' linked_id : ' + jsonobj.linked_id +' ';
 	        			str += ' size : ' + jsonobj.size +' ';
 	        			str += ' axis : ' + jsonobj.axis +' ';
-
 	        			object_id = jsonobj.object_id;
 	        			cube_type = jsonobj.cube_type;
 	        			linked_id = jsonobj.linked_id;
@@ -92,7 +80,6 @@ function savestack(stackId){
         } 
     });
 }
-
 function addStack(){
 	var stackNm = $("#stack_nm").val();
 	var stackRemk = $("#stack_remk").val();
@@ -111,7 +98,6 @@ function addStack(){
         } 
     });
 }
-
 function addBooksf(){
 	var stackId = $("#stack_id").val();
 	var booksfNm = $("#booksf_nm").val();
@@ -132,11 +118,9 @@ function addBooksf(){
         } 
     });
 }
-
 function setStackId(stackId){
 	window.location = '/ys/cubemap/Cubemap.do?stack_id='+stackId;
 }
-
 function getStackList(){
 	$("#stack_add_form").css("display","block");
 	$("#booksf_add_form").css("display","none");
@@ -164,7 +148,6 @@ function getStackList(){
         } 
     });
 }
-
 function getBooksfList(){
 	$("#stack_add_form").css("display","none");
 	$("#booksf_add_form").css("display","block");
@@ -192,7 +175,6 @@ function getBooksfList(){
         } 
     });
 }
-
 function getBoxList(){
 	$("#stack_add_form").css("display","none");
 	$("#booksf_add_form").css("display","none");
@@ -219,7 +201,6 @@ function getBoxList(){
         } 
     });
 }
-
 function getBooksfView(booksf_id){
 	//서가
 	$.ajax({
@@ -236,7 +217,6 @@ function getBooksfView(booksf_id){
         } 
     });
 }
-
 function getBoxView(box_id){
 	//상자
 	$.ajax({
@@ -253,12 +233,9 @@ function getBoxView(box_id){
         } 
     });
 }
-
-
 var booksf_y = 1; 
 var booksf_z = 1; 
 var booksf_x = 1; 
-
 function upNdown(tag_id,i){
 	var value =  $("#"+tag_id).val();
 	if(tag_id == "linked_id"){
@@ -460,10 +437,10 @@ function upNdown(tag_id,i){
 								<input class="form-control input-sm" type="text" id="linked_id" value="0" >
 							</div>
 						
-							<%--
+							<!--
 							<button onclick="setPen_type(1)">white box</button><button onclick="setPen_type(2)">red box</button>
 							<button onclick="setPen_type(7)">green rack</button><button onclick="setPen_type(0)">eraser</button><br><hr><br>
-							 --%>
+							 -->
 							<button class="btn btn-xs btn-warning" onclick="getStackList()">서고 목록 가져오기</button>
 							<button class="btn btn-xs btn-warning" onclick="getBooksfList()">서가 목록 가져오기</button>
 							<button class="btn btn-xs btn-warning" onclick="getBoxList()">상자 목록 가져오기</button>
@@ -472,9 +449,9 @@ function upNdown(tag_id,i){
 							<button class="btn btn-xs btn-warning" onclick="savemap()">배치도 저장</button> 
 							<button class="btn btn-xs btn-warning" onclick="savestack(${CubemapVO.stack_id})">서고,사가,상자 배치 저장</button> 
 							<button class="btn btn-xs btn-warning" onclick="location.reload()">되돌리기</button> 
-							<%--
+							<!--
 							<button onclick="view()">확인</button> 
-							 --%>
+							 -->
 							<br><hr><br>
 							<div id="view"></div>
 							<br><hr><br>
@@ -500,14 +477,14 @@ function upNdown(tag_id,i){
 							</div>
 							
 							<div id="box_add_form" style="display:none">
-								<%--
+								<!--
 								<span>
 								<button onclick="">새 상자등록</button> 
 								부서명 : <input type="text" id="org_nm"><input type="hidden" name="org_cd" id="org_cd">
 								상자번호 : <input type="text" id="box_no" >
 								</span>
 								<br>
-								 --%>
+								 -->
 							</div>
 							<br><hr><br>
 							<div id="list"></div>
@@ -756,7 +733,6 @@ function upNdown(tag_id,i){
 							renderer.setSize( (window.innerWidth*6/10), window.innerHeight );
 						}
 						function onDocumentMouseMove( event ) {
-
 							event.preventDefault();
 							var d = document.getElementById('cubemapview').getBoundingClientRect();
 							var left_margin = parseInt(d.left);
@@ -862,7 +838,6 @@ function upNdown(tag_id,i){
 							var d = document.getElementById('cubemapview').getBoundingClientRect();
 							var left_margin = parseInt(d.left);
 							var top_margin = parseInt(d.top);
-
 							mouse.set( ( (event.clientX-left_margin) / (window.innerWidth*6/10) ) * 2 - 1, - ( (event.clientY-top_margin) / window.innerHeight ) * 2 + 1 );
 							raycaster.setFromCamera( mouse, camera );
 							var intersects = raycaster.intersectObjects( objects );

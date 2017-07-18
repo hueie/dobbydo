@@ -11,22 +11,25 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import kams.clas.busclas.service.ClasBusclasVO;
-import kams.ys.cubemap.service.CubemapVO;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.dobbydo.cubemap.entity.CubemapVO;
+
 @Controller
+@RequestMapping("cubemap")
 public class CubemapController {
 
-	@RequestMapping("/ys/cubemap/Cubemap.do")
+	@GetMapping("Cubemap")
 	public String Cubemap(@ModelAttribute("CubemapVO")CubemapVO CubemapVO, ModelMap model, HttpSession session) throws Exception {
 		String stack_id = CubemapVO.getStack_id();
 		if (stack_id == null || stack_id.equals("")) {
@@ -98,7 +101,7 @@ public class CubemapController {
 		return "/ys/cubemap/Cubemap";
 	}
 	
-	@RequestMapping("/ys/cubemap/CubemapStackList.do")
+	@GetMapping("CubemapStackList")
 	public void CubemapStackList(ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		//@RequestParam("clss_cd")String clss_cd, 
 		
@@ -173,7 +176,7 @@ public class CubemapController {
 		out.flush();
 	}
 	
-	@RequestMapping(value = "/ys/cubemap/CubemapBooksfList.do", method = RequestMethod.POST)
+	@PostMapping("CubemapBooksfList")
 	public void CubemapBooksfList(@RequestParam(value="stackId", required = false)String stackId, 
 			@RequestParam(value="booksf_id", required = false)String booksfId, 
 			HttpServletResponse response) throws Exception {
@@ -258,7 +261,7 @@ public class CubemapController {
 		out.flush();
 	}
 	
-	@RequestMapping(value = "/ys/cubemap/CubemapAddStack.do", method = RequestMethod.POST)
+	@PostMapping("CubemapAddStack")
 	public void CubemapAddStack(@RequestParam(value="stackNm", required = false)String stackNm, 
 			@RequestParam(value="stackRemk", required = false)String stackRemk, 
 			HttpServletResponse response) throws Exception {
@@ -322,7 +325,7 @@ public class CubemapController {
 	}
 	
 	
-	@RequestMapping(value = "/ys/cubemap/CubemapAddBooksf.do", method = RequestMethod.POST)
+	@PostMapping("CubemapAddBooksf")
 	public void CubemapAddBooksf(@RequestParam(value="stackId", required = false)String stackId, 
 			@RequestParam(value="booksfNm", required = false)String booksfNm, 
 			@RequestParam(value="booksfRemk", required = false)String booksfRemk, 
@@ -413,7 +416,7 @@ public class CubemapController {
 	out.flush();
 }
 	
-	@RequestMapping(value = "/ys/cubemap/CubemapBoxList.do", method = RequestMethod.POST)
+	@PostMapping("CubemapBoxList")
 	public void CubemapBoxList(@RequestParam(value="box_id", required = false)String boxId, 
 			@RequestParam(value="booksf_id", required = false)String booksfId, 
 			HttpServletResponse response) throws Exception {
@@ -487,7 +490,7 @@ public class CubemapController {
 	}
 	
 	
-	@RequestMapping(value = "/ys/cubemap/CubemapBoxView.do", method = RequestMethod.POST)
+	@PostMapping("CubemapBoxView")
 	public void CubemapBoxView(@RequestParam(value="box_id", required = false)String boxId, 
 			HttpServletResponse response) throws Exception {
 		
@@ -550,7 +553,7 @@ public class CubemapController {
 	
 	
 	
-	@RequestMapping(value = "/ys/cubemap/CubemapBooksfView.do", method = RequestMethod.POST)
+	@PostMapping("CubemapBooksfView")
 	public void CubemapBooksfView(@RequestParam(value="booksf_id", required = false)String booksfId, 
 			HttpServletResponse response) throws Exception {
 	
@@ -614,7 +617,7 @@ public class CubemapController {
 		out.flush();
 	}	
 	
-	@RequestMapping(value = "/ys/cubemap/CubemapSavemap.do", method = RequestMethod.POST)
+	@PostMapping("CubemapSavemap")
 	public void CubemapSavemap(@RequestParam(value="cube_list", required = false)String cube_list, 
 			@RequestParam(value="stack_id", required = false)String stack_id, 
 			HttpServletResponse response) throws Exception {
@@ -721,7 +724,7 @@ public class CubemapController {
 		out.flush();
 	}	
 	
-	@RequestMapping(value = "/ys/cubemap/CubemapSavestack.do", method = RequestMethod.POST)
+	@PostMapping("CubemapSavestack")
 	public void CubemapSavestack(@RequestParam(value="stackId", required = false)String stackId, 
 			HttpServletResponse response) throws Exception {
 		

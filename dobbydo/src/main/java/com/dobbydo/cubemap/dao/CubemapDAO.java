@@ -1,9 +1,6 @@
 package com.dobbydo.cubemap.dao;
 
-import java.util.List;
-
-@Repository("CubemapDAO")
-public class CubemapDAO extends EgovAbstractDAO {
+public interface CubemapDAO {
 	
 	/*
 	public List TrandelyList(TrandelyVO vo) throws Exception {

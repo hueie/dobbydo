@@ -1,14 +1,16 @@
 package com.dobbydo.cubemap.service;
 
+import javax.annotation.Resource;
 
-@Service("CubemapServiceImpl")
-public class CubemapServiceImpl extends AbstractServiceImpl implements CubemapService {
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-	@Resource(name="CubemapDAO")
+import com.dobbydo.cubemap.dao.CubemapDAO;
+@Service
+public class CubemapServiceImpl implements CubemapService {
+
+	@Autowired
 	private CubemapDAO CubemapDAO;
-	
-	@Resource(name="egovMessageSource")
-    EgovMessageSource egovMessageSource;
 	
 	/*
 	public List TrandelyList(TrandelyVO vo) throws Exception{

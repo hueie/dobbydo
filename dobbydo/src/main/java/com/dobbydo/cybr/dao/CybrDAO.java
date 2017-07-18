@@ -1,16 +1,9 @@
 package com.dobbydo.cybr.dao;
 
-import java.util.List;
-
-import kams.trans.pretran.service.TransPretranVO;
-import kams.trans.trandely.service.TrandelyVO;
-
 import org.springframework.stereotype.Repository;
 
-import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
-
-@Repository("CubemapDAO")
-public class CybrDAO extends EgovAbstractDAO {
+@Repository
+public class CybrDAO {
 	
 	/*
 	public List TrandelyList(TrandelyVO vo) throws Exception {

@@ -1,4 +1,4 @@
-package kams.ys.interestword.service;
+package com.dobbydo.interestword.service;
 
 public interface InterestwordService {
 

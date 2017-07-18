@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import kams.ys.interestword.service.InterestwordVO;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -24,6 +23,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import com.dobbydo.interestword.entity.InterestwordVO;
 
 @Controller
 public class InterestwordController {
@@ -67,17 +67,17 @@ public class InterestwordController {
 			int i_id;
 			String i_title, processedI_title;
 			int cnt;
-			//ì´ˆê¸°?™” ?œ?¤ ?ˆ˜ ë§Œí¼ ì¡°íšŒ?ˆ˜?— ?„£ê¸?
+			//ì´ˆê¸°?ï¿½ï¿½ ?ï¿½ï¿½?ï¿½ï¿½ ?ï¿½ï¿½ ë§Œí¼ ì¡°íšŒ?ï¿½ï¿½?ï¿½ï¿½ ?ï¿½ï¿½ï¿½?
 			Random rnd = new Random();
-	        rnd.setSeed(System.currentTimeMillis()); // ?‹œ?“œê°’ì„ ?„¤? •?•˜?—¬ ?ƒ?„±
+	        rnd.setSeed(System.currentTimeMillis()); // ?ï¿½ï¿½?ï¿½ï¿½ê°’ì„ ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ ?ï¿½ï¿½?ï¿½ï¿½
 			
 			while (resultSet.next()) {
 				i_id = resultSet.getInt("I_ID");
 				i_title = resultSet.getString("I_TITLE");
-				//ì´ˆê¸°?™” ?œ?¤ ?ˆ˜ ë§Œí¼ ì¡°íšŒ?ˆ˜?— ?„£ê¸?
+				//ì´ˆê¸°?ï¿½ï¿½ ?ï¿½ï¿½?ï¿½ï¿½ ?ï¿½ï¿½ ë§Œí¼ ì¡°íšŒ?ï¿½ï¿½?ï¿½ï¿½ ?ï¿½ï¿½ï¿½?
 				cnt = rnd.nextInt(100);
 				
-				//?˜•?ƒœ?†Œ ë¶„ì„ ë¡œì§
+				//?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ ë¶„ì„ ë¡œì§
 				//...
 				processedI_title = "";
 				
@@ -139,10 +139,10 @@ public class InterestwordController {
 				q.add(resultSet.getString("WORDS"));
 			}
 				
-			//ê·¸ë¦¬?“œ ?•Œê³ ë¦¬ì¦? 5ê°? ê²??ƒ‰?–´ë§? êµ¬í•  ê²?
+			//ê·¸ë¦¬?ï¿½ï¿½ ?ï¿½ï¿½ê³ ë¦¬ï¿½? 5ï¿½? ï¿½??ï¿½ï¿½?ï¿½ï¿½ï¿½? êµ¬í•  ï¿½?
 			for(int i=0; i<5; i++){
 				String firstElement = (String)q.remove();
-				// ?´?Ÿ¬?Š¤?„°ë§?
+				// ?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½?ï¿½ï¿½ï¿½?
 			}
 			
 			resultSet.close();
@@ -201,10 +201,10 @@ public class InterestwordController {
 			preparedStatement.setInt(3, 0);
 			preparedStatement.setString(4, stackNm);
 			preparedStatement.setString(5, "0000000001");
-			preparedStatement.setString(6, "ê´?ë¦¬ì");
+			preparedStatement.setString(6, "ï¿½?ë¦¬ì");
 			preparedStatement.setString(7, "20170616104929");
 			preparedStatement.setString(8, "0000000001");
-			preparedStatement.setString(9, "ê´?ë¦¬ì");
+			preparedStatement.setString(9, "ï¿½?ë¦¬ì");
 			preparedStatement.setString(10, "20170616104929");
 
 			preparedStatement.executeUpdate();
@@ -278,10 +278,10 @@ public class InterestwordController {
 			preparedStatement.setInt(7, 0);
 			preparedStatement.setString(8, booksfRemk);
 			preparedStatement.setString(9, "0000000001");
-			preparedStatement.setString(10, "ê´?ë¦¬ì");
+			preparedStatement.setString(10, "ï¿½?ë¦¬ì");
 			preparedStatement.setString(11, "20170616104929");
 			preparedStatement.setString(12, "0000000001");
-			preparedStatement.setString(13, "ê´?ë¦¬ì");
+			preparedStatement.setString(13, "ï¿½?ë¦¬ì");
 			preparedStatement.setString(14, "20170616104929");
 			preparedStatement.setString(15, "01");
 			preparedStatement.setString(16, "01");

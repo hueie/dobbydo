@@ -2,23 +2,13 @@ package com.dobbydo.interestword.service;
 
 import javax.annotation.Resource;
 
-import kams.ys.interestword.service.InterestwordService;
-
 import org.springframework.stereotype.Service;
-
 import com.dobbydo.interestword.dao.InterestwordDAO;
-
-import egovframework.com.cmm.EgovMessageSource;
-import egovframework.rte.fdl.cmmn.AbstractServiceImpl;
-
 @Service("InterestwordServiceImpl")
-public class InterestwordServiceImpl extends AbstractServiceImpl implements InterestwordService {
+public class InterestwordServiceImpl implements InterestwordService {
 
 	@Resource(name="InterestwordDAO")
 	private InterestwordDAO InterestwordDAO;
-	
-	@Resource(name="egovMessageSource")
-    EgovMessageSource egovMessageSource;
 	
 	/*
 	public List TrandelyList(TrandelyVO vo) throws Exception{
