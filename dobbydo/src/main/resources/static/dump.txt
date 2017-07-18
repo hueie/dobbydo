@@ -1,5 +1,7 @@
 CREATE DATABASE `dobbydo` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
+USE dobbydo;
+
 CREATE TABLE `articles` (
   `article_id` int(5) NOT NULL AUTO_INCREMENT,
   `title` varchar(200) NOT NULL,

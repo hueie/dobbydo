@@ -14,6 +14,8 @@ import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.dobbydo.atestpage.entity.Article;
 import com.dobbydo.cubemap.entity.CubemapVO;
 
 @Controller
@@ -30,7 +33,7 @@ import com.dobbydo.cubemap.entity.CubemapVO;
 public class CubemapController {
 
 	@GetMapping("Cubemap")
-	public String Cubemap(@ModelAttribute("CubemapVO")CubemapVO CubemapVO, ModelMap model, HttpSession session) throws Exception {
+	public ResponseEntity<CubemapVO> Cubemap (@ModelAttribute("CubemapVO")CubemapVO CubemapVO, ModelMap model, HttpSession session) throws Exception {
 		String stack_id = CubemapVO.getStack_id();
 		if (stack_id == null || stack_id.equals("")) {
 			stack_id = "0";
@@ -97,8 +100,8 @@ public class CubemapController {
 		}
 		obj.put("data", jsonlist);
 		CubemapVO.setCubes(obj.toString());
-		model.addAttribute("CubemapVO", CubemapVO);
-		return "/ys/cubemap/Cubemap";
+		
+		return new ResponseEntity<CubemapVO>(CubemapVO, HttpStatus.OK);
 	}
 	
 	@GetMapping("CubemapStackList")
@@ -303,10 +306,10 @@ public class CubemapController {
 			preparedStatement.setInt(3, 0);
 			preparedStatement.setString(4, stackNm);
 			preparedStatement.setString(5, "0000000001");
-			preparedStatement.setString(6, "�?리자");
+			preparedStatement.setString(6, "�?리자");
 			preparedStatement.setString(7, "20170616104929");
 			preparedStatement.setString(8, "0000000001");
-			preparedStatement.setString(9, "�?리자");
+			preparedStatement.setString(9, "�?리자");
 			preparedStatement.setString(10, "20170616104929");
 			
 			preparedStatement.executeUpdate();
@@ -379,10 +382,10 @@ public class CubemapController {
 			preparedStatement.setInt(7, 0);
 			preparedStatement.setString(8, booksfRemk);
 			preparedStatement.setString(9, "0000000001");
-			preparedStatement.setString(10, "�?리자");
+			preparedStatement.setString(10, "�?리자");
 			preparedStatement.setString(11, "20170616104929");
 			preparedStatement.setString(12, "0000000001");
-			preparedStatement.setString(13, "�?리자");
+			preparedStatement.setString(13, "�?리자");
 			preparedStatement.setString(14, "20170616104929");
 			preparedStatement.setString(15, "01");
 			preparedStatement.setString(16, "01");

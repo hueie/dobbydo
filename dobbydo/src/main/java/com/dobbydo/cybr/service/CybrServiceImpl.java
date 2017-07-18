@@ -5,6 +5,6 @@ import org.springframework.stereotype.Service;
 import com.dobbydo.cubemap.service.CubemapService;
 
 @Service
-public class CubemapServiceImpl implements CubemapService {
+public class CybrServiceImpl implements CubemapService {
 
 }
