@@ -1,7 +1,11 @@
 package com.dobbydo.cubemap.dao;
 
+import com.dobbydo.cubemap.entity.Stack;
+
 public interface CubemapDAO {
-	
+
+    void createStack(Stack stack);
+    boolean stackExists(String stackNm);
 	/*
 	public List TrandelyList(TrandelyVO vo) throws Exception {
 		return list("TrandelyList", vo);

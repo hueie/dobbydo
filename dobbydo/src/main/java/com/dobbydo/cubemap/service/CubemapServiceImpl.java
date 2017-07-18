@@ -6,11 +6,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dobbydo.cubemap.dao.CubemapDAO;
+import com.dobbydo.cubemap.entity.Stack;
 @Service
 public class CubemapServiceImpl implements CubemapService {
 
 	@Autowired
 	private CubemapDAO CubemapDAO;
+	
+
+	@Override
+	public synchronized boolean createStack(Stack stack){
+       if (CubemapDAO.stackExists(stack.getStack_nm())) {
+    	   return false;
+       } else {
+    	   CubemapDAO.createStack(stack);
+    	   return true;
+       }
+	}
 	
 	/*
 	public List TrandelyList(TrandelyVO vo) throws Exception{

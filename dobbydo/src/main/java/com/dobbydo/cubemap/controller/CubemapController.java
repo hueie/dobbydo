@@ -14,6 +14,8 @@ import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,19 +23,26 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.dobbydo.atestpage.entity.Article;
-import com.dobbydo.cubemap.entity.CubemapVO;
+import com.dobbydo.atestpage.service.IArticleService;
+import com.dobbydo.cubemap.entity.Cubemap;
+import com.dobbydo.cubemap.entity.Stack;
+import com.dobbydo.cubemap.service.CubemapService;
 
 @Controller
 @RequestMapping("cubemap")
 public class CubemapController {
-
+	@Autowired
+	private CubemapService cubemapService;
+	
 	@GetMapping("Cubemap")
-	public ResponseEntity<CubemapVO> Cubemap (@ModelAttribute("CubemapVO")CubemapVO CubemapVO, ModelMap model, HttpSession session) throws Exception {
+	public ResponseEntity<Cubemap> Cubemap (@RequestBody Cubemap CubemapVO) throws Exception {
 		String stack_id = CubemapVO.getStack_id();
 		if (stack_id == null || stack_id.equals("")) {
 			stack_id = "0";
@@ -101,7 +110,7 @@ public class CubemapController {
 		obj.put("data", jsonlist);
 		CubemapVO.setCubes(obj.toString());
 		
-		return new ResponseEntity<CubemapVO>(CubemapVO, HttpStatus.OK);
+		return new ResponseEntity<Cubemap>(CubemapVO, HttpStatus.OK);
 	}
 	
 	@GetMapping("CubemapStackList")
@@ -265,66 +274,25 @@ public class CubemapController {
 	}
 	
 	@PostMapping("CubemapAddStack")
-	public void CubemapAddStack(@RequestParam(value="stackNm", required = false)String stackNm, 
-			@RequestParam(value="stackRemk", required = false)String stackRemk, 
-			HttpServletResponse response) throws Exception {
-		
+	public ResponseEntity<Void> CubemapAddStack(@RequestParam(value="stack_nm", required = false)String stack_nm, 
+			@RequestParam(value="stack_remk", required = false)String stack_remk, UriComponentsBuilder builder
+			) throws Exception {
+		System.out.println("CubemapAddStack");
 		int stackId = 0;
-
-		Connection connect = null;
-		Statement statement = null;
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
-		String sql = "";
-
-		try{
-			// DB Open: oracle Server
-		    // JDBC Driver Loading
-		    String url = "jdbc:oracle:thin:@123.212.43.252:1521:ARCHIVE1";
-		    String uid = "CBCK";
-		    String pw = "CBCK";    
-		                                       
-		    Class.forName("oracle.jdbc.driver.OracleDriver");
-		   
-		    // Oracle DB Connection!!
-		    connect = DriverManager.getConnection(url,uid,pw);
-
-		    statement = connect.createStatement();
-		    sql = "SELECT COUNT(*) FROM TB_PVSTACK";
-			resultSet = statement.executeQuery(sql);
-			resultSet.next();
-			stackId = new Integer(resultSet.getString(1));
-			resultSet.close();
-		    
-		    
-		    sql = "insert into TB_PVSTACK(STACK_ID, STACK_NM, KEEP_BOOKSF_CNT, REMK, REG_ID, REG_NAME, REG_DT, SYS_ID, SYS_NAME, SYS_DT) values"+
-		    " (LPAD(?, 3, '0'), ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-			System.out.println(sql);
-			preparedStatement = connect.prepareStatement(sql);
-			preparedStatement.setInt(1, stackId+1);
-			preparedStatement.setString(2, stackNm);
-			preparedStatement.setInt(3, 0);
-			preparedStatement.setString(4, stackNm);
-			preparedStatement.setString(5, "0000000001");
-			preparedStatement.setString(6, "�?리자");
-			preparedStatement.setString(7, "20170616104929");
-			preparedStatement.setString(8, "0000000001");
-			preparedStatement.setString(9, "�?리자");
-			preparedStatement.setString(10, "20170616104929");
-			
-			preparedStatement.executeUpdate();
-		    
-		    statement.close();
-		    connect.close();
-		}catch(Exception ex){
-		}finally{
-		}
 		
-		//response.setContentType("application/json; charset=UTF-8");
-		response.setHeader("Cache-Control", "no-cache");
-		PrintWriter out = response.getWriter();
-		out.write("Completely Delte Data Into DB.");
-		out.flush();
+		Stack stack = new Stack();
+		stack.setStack_id(stackId);
+		stack.setStack_nm(stack_nm);
+		stack.setStack_remk(stack_remk);
+		
+		boolean flag = cubemapService.createStack(stack);
+        if (flag == false) {
+        	return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+        }
+        HttpHeaders headers = new HttpHeaders();
+        headers.setLocation(builder.path("/cubemap/Cubemap?stack_id={stack_id}").buildAndExpand(stack.getStack_id()).toUri());
+		
+		return new ResponseEntity<Void>(headers, HttpStatus.CREATED);
 	}
 	
 	

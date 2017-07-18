@@ -2,14 +2,32 @@ package com.dobbydo.cubemap.dao;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.dobbydo.atestpage.dao.IArticleDAO;
+import com.dobbydo.atestpage.entity.Article;
+import com.dobbydo.cubemap.entity.Stack;
 
 @Transactional
 @Repository
 public class CubemapDAOImpl  implements CubemapDAO {
+	@PersistenceContext	
+	private EntityManager entityManager;	
+
+	@Override
+	public void createStack(Stack stack) {
+		entityManager.persist(stack);
+	}
+	@Override
+	public boolean stackExists(String stack_nm) {
+		String hql = "FROM Stack WHERE stack_nm = :stack_nm "; //this Table Name Is Class Name Not Real Table name
+		int count = entityManager.createQuery(hql).setParameter("stack_nm", stack_nm).getResultList().size();
+		return count > 0 ? true : false;
+	}
 	
 	/*
 	public List TrandelyList(TrandelyVO vo) throws Exception {

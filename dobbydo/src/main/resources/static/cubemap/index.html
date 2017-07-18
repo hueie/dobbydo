@@ -15,17 +15,31 @@
 	<script src="/js/threejs/Detector.js"></script>
 </head>					
 		
-<body>			
+<body>		
+	
 <script type="text/javascript">
 $(document).ready(function() {
-	alert("hello");
-
+//	alert("hello");
+	var stack_id = $("#stack_id").val();
+	if(stack_id == ""){
+		
+	} else{
+		$.ajax({
+	        type: "get",
+	        url: "/cubemap/Cubemap",
+	        data: {"stack_id" : stack_id},
+	        success: function(msg){
+	            alert(msg);
+	            $("#stack_id").val(msg.stack_id);
+	            initpushdata(msg.cubes);
+	        },
+	        error:function (xhr, ajaxOptions, thrownError){
+	            alert(xhr.status);
+	            alert(thrownError);
+	        } 
+	    });
+	}
 });
-
-
-function test(){
-	alert("test");
-}
 
 var object_id = 0; //In Graph
 var static_linked_id = 0;
@@ -79,7 +93,7 @@ function savemap(){
 	var myJsonString = "{cube_list:"+JSON.stringify(cube_list)+"}";
     $.ajax({
         type: "post",
-        url: "/ys/cubemap/CubemapSavemap.do",
+        url: "/cubemap/CubemapSavemap",
         data: {"cube_list" : myJsonString, "stack_id":stack_id},
         success: function(msg){
             alert(msg);
@@ -91,10 +105,11 @@ function savemap(){
     });
 	
 }
-function savestack(stackId){
+function savestack(){
+	var stackId = $("#stack_id").val();
 	$.ajax({
         type: "post",
-        url: "/ys/cubemap/CubemapSavestack.do",
+        url: "/cubemap/CubemapSavestack",
         data: {"stackId" : stackId},
         success: function(msg){
             alert(msg);
@@ -111,8 +126,8 @@ function addStack(){
 	
 	$.ajax({
         type: "post",
-        url: "/ys/cubemap/CubemapAddStack.do",
-        data: {"stackNm" : stackNm, "stackRemk" : stackRemk},
+        url: "/cubemap/CubemapAddStack",
+        data: {"stack_nm" : stackNm, "stack_remk" : stackRemk},
         success: function(msg){
             alert(msg);
             getStackList();
@@ -131,7 +146,7 @@ function addBooksf(){
 	
 	$.ajax({
         type: "post",
-        url: "/ys/cubemap/CubemapAddBooksf.do",
+        url: "/cubemap/CubemapAddBooksf",
         data: {"stackId" : stackId, "booksfNm" : booksfNm, "booksfRemk" : booksfRemk, "booksfFCnt":booksfFCnt},
         success: function(msg){
             alert(msg);
@@ -144,7 +159,7 @@ function addBooksf(){
     });
 }
 function setStackId(stackId){
-	window.location = '/ys/cubemap/Cubemap.do?stack_id='+stackId;
+	window.location = '/cubemap/Cubemap?stack_id='+stackId;
 }
 function getStackList(){
 	$("#stack_add_form").css("display","block");
@@ -155,7 +170,7 @@ function getStackList(){
     
 	$.ajax({
         type: "post",
-        url: "/ys/cubemap/CubemapStackList.do",
+        url: "/cubemap/CubemapStackList",
         data: { },
         contentType: "application/json",
         success: function(msg){
@@ -182,7 +197,7 @@ function getBooksfList(){
 	var param = {"stackId":stackId };
 	$.ajax({
         type: "post",
-        url: "/ys/cubemap/CubemapBooksfList.do",
+        url: "/cubemap/CubemapBooksfList",
         data: param,
         success: function(msg){
         	var objs = msg;//JSON.parse(msg);
@@ -209,7 +224,7 @@ function getBoxList(){
     
 	$.ajax({
         type: "post",
-        url: "/ys/cubemap/CubemapBoxList.do",
+        url: "/cubemap/CubemapBoxList",
         data: { },
         success: function(msg){
         	var objs = JSON.parse(msg);
@@ -230,7 +245,7 @@ function getBooksfView(booksf_id){
 	//서가
 	$.ajax({
         type: "post",
-        url: "/ys/cubemap/CubemapBooksfView.do",
+        url: "/cubemap/CubemapBooksfView",
         data: { "booksf_id" : booksf_id},
         success: function(msg){
         	var obj = JSON.parse(msg);
@@ -246,7 +261,7 @@ function getBoxView(box_id){
 	//상자
 	$.ajax({
         type: "post",
-        url: "/ys/cubemap/CubemapBoxView.do",
+        url: "/cubemap/CubemapBoxView",
         data: { "box_id" : box_id},
         success: function(msg){
         	var obj = JSON.parse(msg);
@@ -305,7 +320,7 @@ function upNdown(tag_id,i){
 						<div style="width:30%;display:inline;float:right;" >
 							<label class="col-lg-2 control-label" for="normalInput">서고 ID : </label>
 							<div class="col-lg-4">
-								<input class="form-control input-sm" type="text" id="stack_id" value="     " ><!-- ${CubemapVO.stack_id} -->
+								<input class="form-control input-sm" type="text" id="stack_id" value="" >
 							</div>
 							
 							<label class="col-lg-2 control-label" for="normalInput">연결 ID : </label>
@@ -317,14 +332,13 @@ function upNdown(tag_id,i){
 							<button onclick="setPen_type(1)">white box</button><button onclick="setPen_type(2)">red box</button>
 							<button onclick="setPen_type(7)">green rack</button><button onclick="setPen_type(0)">eraser</button><br><hr><br>
 							 -->
-							<button class="btn btn-xs btn-warning" onclick="test()">test</button>
 							<button class="btn btn-xs btn-warning" onclick="getStackList()">서고 목록 가져오기</button>
 							<button class="btn btn-xs btn-warning" onclick="getBooksfList()">서가 목록 가져오기</button>
 							<button class="btn btn-xs btn-warning" onclick="getBoxList()">상자 목록 가져오기</button>
 							<button class="btn btn-xs btn-warning" onclick="setPen_type(0)">지우개</button>
 							<button class="btn btn-xs btn-warning" onclick="setPen_type(999)">상세정보</button>
 							<button class="btn btn-xs btn-warning" onclick="savemap()">배치도 저장</button> 
-							<button class="btn btn-xs btn-warning" onclick="savestack(    )">서고,사가,상자 배치 저장</button> <!-- ${CubemapVO.stack_id} -->
+							<button class="btn btn-xs btn-warning" onclick="savestack()">서고,사가,상자 배치 저장</button> 
 							<button class="btn btn-xs btn-warning" onclick="location.reload()">되돌리기</button> 
 							<!--
 							<button onclick="view()">확인</button> 
@@ -389,12 +403,12 @@ function upNdown(tag_id,i){
 						var pen_type = 1; //999; //0:eraser//1:white box//2:red box//3,4,5:y,z,x-axis green pen//6:rack
 						var cubes = [];
 						
-						initpushdata();
+						//initpushdata();
 						init();
 						render();
 						
-						function initpushdata(){
-							var obj = ""; //${CubemapVO.cubes};//JSON.parse(${CubemapVO.cubes});
+						function initpushdata(cubes){
+							var obj = cubes; //${CubemapVO.cubes};//JSON.parse(${CubemapVO.cubes});
 							for(var idx in obj.data){
 								cubes.push(obj.data[idx]);
 							}

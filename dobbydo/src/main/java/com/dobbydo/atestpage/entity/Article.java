@@ -11,6 +11,7 @@ import javax.persistence.Table;
 @Table(name="articles")
 public class Article implements Serializable { 
 	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="article_id")
@@ -19,6 +20,7 @@ public class Article implements Serializable {
     private String title;
 	@Column(name="category")	
 	private String category;
+	
 	public int getArticleId() {
 		return articleId;
 	}
