@@ -1,27 +1,42 @@
 package com.dobbydo.cubemap.service;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dobbydo.cubemap.dao.CubemapDAO;
+import com.dobbydo.cubemap.entity.Cubemap;
 import com.dobbydo.cubemap.entity.Stack;
 @Service
 public class CubemapServiceImpl implements CubemapService {
 
 	@Autowired
-	private CubemapDAO CubemapDAO;
+	private CubemapDAO cubemapDAO;
 	
 
 	@Override
 	public synchronized boolean createStack(Stack stack){
-       if (CubemapDAO.stackExists(stack.getStack_nm())) {
+       if (cubemapDAO.stackExists(stack.getStack_nm())) {
     	   return false;
        } else {
-    	   CubemapDAO.createStack(stack);
+    	   cubemapDAO.createStack(stack);
     	   return true;
        }
+	}
+
+
+	@Override
+	public List<Stack> getAllStacks() {
+		return cubemapDAO.getAllStacks();
+	}
+
+
+	@Override
+	public List<Cubemap> getCubemapsByStackId(int stack_id) {
+		return cubemapDAO.getCubemapsByStackId(stack_id);
 	}
 	
 	/*

@@ -1,9 +1,14 @@
 package com.dobbydo.cubemap.dao;
 
+import java.util.List;
+
+import com.dobbydo.atestpage.entity.Article;
+import com.dobbydo.cubemap.entity.Cubemap;
 import com.dobbydo.cubemap.entity.Stack;
 
 public interface CubemapDAO {
 
+    List<Stack> getAllStacks();
     void createStack(Stack stack);
     boolean stackExists(String stackNm);
 	/*
@@ -63,4 +68,5 @@ public interface CubemapDAO {
         return (TrandelyVO) selectByPk("TrandelyRsnView", vo);
     }
 	*/
+	List<Cubemap> getCubemapsByStackId(int stack_id);
 }

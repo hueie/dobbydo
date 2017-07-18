@@ -3,13 +3,13 @@
 <head> 
     <title>DobbyDo</title> 
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script> <!-- route Module -->
-    
     
 	<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> -->
 	<!-- https://github.com/mrdoob/three.js/blob/master/build/three.js -->
 	<!-- https://github.com/mrdoob/three.js/blob/master/examples/js/Detector.js -->
+	
+	<script src="/js/angular-1.6.5.min.js"></script>
+	<script src="/js/angular-route-1.6.5.min.js"></script>
 	<script src="/js/jquery-3.2.1.min.js"></script>
 	<script src="/js/threejs/three.js"></script>
 	<script src="/js/threejs/Detector.js"></script>
@@ -20,33 +20,30 @@
 <script type="text/javascript">
 $(document).ready(function() {
 //	alert("hello");
-	var stack_id = $("#stack_id").val();
-	if(stack_id == ""){
-		
-	} else{
-		$.ajax({
-	        type: "get",
-	        url: "/cubemap/Cubemap",
-	        data: {"stack_id" : stack_id},
-	        success: function(msg){
-	            alert(msg);
-	            $("#stack_id").val(msg.stack_id);
-	            initpushdata(msg.cubes);
-	        },
-	        error:function (xhr, ajaxOptions, thrownError){
-	            alert(xhr.status);
-	            alert(thrownError);
-	        } 
-	    });
-	}
+	getStackList();
 });
+function setStackId(stack_id){
+	$("#stack_id").val(stack_id);
+	
+	$.ajax({
+        type: "get",
+        url: "/cubemap/Cubemap",
+        data: {"stack_id" : stack_id},
+        success: function(msg){
+            alert(msg);
+            initpushdata(msg.cubes);
+        },
+        error:function (xhr, ajaxOptions, thrownError){
+            alert(xhr.status);
+            //alert(thrownError);
+        } 
+    });
+//	window.location = '/cubemap/Cubemap?stack_id='+stack_id;
+}
 
 var object_id = 0; //In Graph
 var static_linked_id = 0;
-function view(){
-	var stack_id = $("#stack_id").val();
-	window.location = 'mms_view.jsp?stack_id='+stack_id;
-}
+
 function savemap(){
     var str = "";
 	var cube_list = [];
@@ -129,7 +126,7 @@ function addStack(){
         url: "/cubemap/CubemapAddStack",
         data: {"stack_nm" : stackNm, "stack_remk" : stackRemk},
         success: function(msg){
-            alert(msg);
+            //alert(msg);
             getStackList();
         },
         error:function (xhr, ajaxOptions, thrownError){
@@ -158,9 +155,7 @@ function addBooksf(){
         } 
     });
 }
-function setStackId(stackId){
-	window.location = '/cubemap/Cubemap?stack_id='+stackId;
-}
+
 function getStackList(){
 	$("#stack_add_form").css("display","block");
 	$("#booksf_add_form").css("display","none");
@@ -169,16 +164,17 @@ function getStackList(){
     var stack_id = 0;
     
 	$.ajax({
-        type: "post",
+        type: "get",
         url: "/cubemap/CubemapStackList",
         data: { },
-        contentType: "application/json",
-        success: function(msg){
-        	var objs = msg;//JSON.parse(msg);
-        	var obj = objs.data;
+        //contentType: "application/json",
+        success: function(data, textStatus, xhr){
+        	//var objs = JSON.parse(data);
+        	var obj = data;//objs.data;
         	var html = "";
         	for(var idx in obj){
-        		html += "<span><button class=\"btn btn-xs btn-warning\" onclick=\"setStackId("+obj[idx].stackId+")\">서고배치</button> "+ obj[idx].stackId + ", " + obj[idx].stackNm + "</span><br>"; 
+        		alert(idx);
+        		html += "<span><button class=\"btn btn-xs btn-warning\" onclick=\"setStackId("+obj[idx].stack_id+")\">서고배치</button> "+ obj[idx].stack_id + ", " + obj[idx].stack_nm + "</span><br>"; 
         	}
         	document.getElementById("list").innerHTML = html;
         },
@@ -340,9 +336,6 @@ function upNdown(tag_id,i){
 							<button class="btn btn-xs btn-warning" onclick="savemap()">배치도 저장</button> 
 							<button class="btn btn-xs btn-warning" onclick="savestack()">서고,사가,상자 배치 저장</button> 
 							<button class="btn btn-xs btn-warning" onclick="location.reload()">되돌리기</button> 
-							<!--
-							<button onclick="view()">확인</button> 
-							 -->
 							<br><hr><br>
 							<div id="view"></div>
 							<br><hr><br>

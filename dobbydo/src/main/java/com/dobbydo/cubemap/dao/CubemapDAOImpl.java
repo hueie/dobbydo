@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dobbydo.atestpage.dao.IArticleDAO;
 import com.dobbydo.atestpage.entity.Article;
+import com.dobbydo.cubemap.entity.Cubemap;
 import com.dobbydo.cubemap.entity.Stack;
 
 @Transactional
@@ -18,6 +19,12 @@ public class CubemapDAOImpl  implements CubemapDAO {
 	@PersistenceContext	
 	private EntityManager entityManager;	
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Stack> getAllStacks() {
+		String hql = "FROM Stack ORDER BY stack_id DESC";
+		return (List<Stack>) entityManager.createQuery(hql).getResultList();
+	}	
 	@Override
 	public void createStack(Stack stack) {
 		entityManager.persist(stack);
@@ -27,6 +34,13 @@ public class CubemapDAOImpl  implements CubemapDAO {
 		String hql = "FROM Stack WHERE stack_nm = :stack_nm "; //this Table Name Is Class Name Not Real Table name
 		int count = entityManager.createQuery(hql).setParameter("stack_nm", stack_nm).getResultList().size();
 		return count > 0 ? true : false;
+	}
+	
+	@SuppressWarnings("unchecked") //Ignore Warnings
+	@Override
+	public List<Cubemap> getCubemapsByStackId(int stack_id) {
+		String hql = "FROM Cubemap  WHERE stack_id = :stack_id ORDER BY stack_id DESC";
+		return (List<Cubemap>) entityManager.createQuery(hql).setParameter("stack_id", stack_id).getResultList();
 	}
 	
 	/*

@@ -6,6 +6,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,150 +44,21 @@ public class CubemapController {
 	private CubemapService cubemapService;
 	
 	@GetMapping("Cubemap")
-	public ResponseEntity<Cubemap> Cubemap (@RequestBody Cubemap CubemapVO) throws Exception {
-		String stack_id = CubemapVO.getStack_id();
-		if (stack_id == null || stack_id.equals("")) {
-			stack_id = "0";
+	public ResponseEntity<List<Cubemap>> Cubemap (@RequestParam(value="stack_id", required = false)int stack_id) {
+		System.out.println("stack_id : " + stack_id);
+		List<Cubemap> list = null;
+		if (stack_id != 0 ) {
+			list = cubemapService.getCubemapsByStackId(stack_id);
+			return new ResponseEntity<List<Cubemap>>(list, HttpStatus.OK);
+		}else {
+			return new ResponseEntity<List<Cubemap>>(list, HttpStatus.CONFLICT);
 		}
-
-		Connection connect = null;
-		Statement statement = null;
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
-		String sql = "";
-
-		JSONObject obj = new JSONObject();
-		JSONArray jsonlist = new JSONArray();
-		
-		try {
-			// DB Open: mysql Server
-			// JDBC Driver Loading
-			/*
-			 * String url = "jdbc:mysql://localhost:3306/mmstestdb"; String uid
-			 * = "root"; String pw = "1234";
-			 * 
-			 * Class.forName("com.mysql.jdbc.Driver");
-			 */
-			// Mysql DB Connection!!
-
-			// DB Open: oracle Server
-			// JDBC Driver Loading
-			String url = "jdbc:oracle:thin:@123.212.43.252:1521:ARCHIVE1";
-			String uid = "CBCK";
-			String pw = "CBCK";
-
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-
-			connect = DriverManager.getConnection(url, uid, pw);
-			statement = connect.createStatement();
-
-
-			if (!stack_id.equals("0")) {
-				sql = "SELECT * FROM YS_CUBE_MAP WHERE STACK_ID = " + stack_id + " ORDER BY STACK_ID";
-				System.out.println(sql);
-				resultSet = statement.executeQuery(sql);
-				 
-				while (resultSet.next()) {
-					JSONObject jsonobj = new JSONObject();
-					jsonobj.put("x", resultSet.getString("POS_X"));
-					jsonobj.put("y", resultSet.getString("POS_Y"));
-					jsonobj.put("z", resultSet.getString("POS_Z"));
-					jsonobj.put("object_id", resultSet.getString("OBJECT_ID"));
-					jsonobj.put("cube_type", resultSet.getString("CUBE_TYPE"));
-					jsonobj.put("linked_id", resultSet.getString("LINKED_ID"));
-					jsonobj.put("size", resultSet.getString("CUBE_SIZE"));
-					jsonobj.put("axis", resultSet.getString("CUBE_AXIS"));
-				    jsonlist.put(jsonobj);
-				}
-			}
-
-			// resultSet.close();
-			preparedStatement.close();
-			statement.close();
-			connect.close();
-
-		} catch (Exception ex) {
-		} finally {
-		}
-		obj.put("data", jsonlist);
-		CubemapVO.setCubes(obj.toString());
-		
-		return new ResponseEntity<Cubemap>(CubemapVO, HttpStatus.OK);
 	}
 	
 	@GetMapping("CubemapStackList")
-	public void CubemapStackList(ModelMap model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-		//@RequestParam("clss_cd")String clss_cd, 
-		
-		//ClasBusclasVO clasBusclasVO = regProdService.RegProdClsBuscls(clss_cd);
-		//model.addAttribute("clasBusclasVO", obj);
-		//model.addAttribute("clss_cd", clss_cd);
-		
-		Connection connect = null;
-		Statement statement = null;
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
-		String sql = "";
-
-		String stackId = "";
-		String stackNm = "";
-		JSONObject obj = new JSONObject();
-		JSONArray jsonlist = new JSONArray();
-
-		/*
-		if(request.getParameter("stack_id") != null && !request.getParameter("stack_id").equals("")){
-			stackId = request.getParameter("stack_id");
-		}
-			*/
-		try{
-		            // DB Open: mysql Server
-		            // JDBC Driver Loading
-		            String url = "jdbc:oracle:thin:@123.212.43.252:1521:ARCHIVE1";
-		            String uid = "CBCK";
-		            String pw = "CBCK";    
-		                                               
-		            Class.forName("oracle.jdbc.driver.OracleDriver");
-		           
-		            // Mysql DB Connection!!
-		            connect = DriverManager.getConnection(url,uid,pw);
-		            statement = connect.createStatement();
-		            
-		/*
-		String cube_list = request.getParameter("cube_list");
-		JSONObject obj = new JSONObject(cube_list);
-		JSONArray items = obj.getJSONArray("cube_list");
-		*/
-
-		sql = "SELECT * FROM TB_PVSTACK WHERE 1=1 ";
-		if(!stackId.equals("") ){
-			sql += "AND STACK_ID = " + stackId;
-		}
-		sql += " ORDER BY STACK_ID";
-		resultSet = statement.executeQuery(sql);    
-		while (resultSet.next()) {
-			stackId = resultSet.getString("STACK_ID");
-		    stackNm = resultSet.getString("STACK_NM");
-
-		    JSONObject jsonobj = new JSONObject();
-		    jsonobj.put("stackId", stackId);
-		    jsonobj.put("stackNm", stackNm);
-		    jsonlist.put(jsonobj);
-		    System.out.println(stackNm);
-		}
-		resultSet.close();
-		statement.close();
-		connect.close();
-		}catch(Exception ex){
-		}finally{
-			
-		}
-
-		obj.put("data", jsonlist);
-		response.setContentType("application/json; charset=UTF-8");
-		response.setHeader("Cache-Control", "no-cache");
-		PrintWriter out = response.getWriter();
-		out.write(obj.toString());
-		out.flush();
+	public ResponseEntity<List<Stack>> getAllStacks() {
+		List<Stack> list = cubemapService.getAllStacks();
+		return new ResponseEntity<List<Stack>>(list, HttpStatus.OK);
 	}
 	
 	@PostMapping("CubemapBooksfList")
