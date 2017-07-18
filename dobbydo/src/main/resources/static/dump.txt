@@ -73,17 +73,13 @@ CREATE TABLE `cube_map` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `stack` (
-  `STACK_ID` tinytext,
-  `STACK_NM` tinytext,
-  `KEEP_BOOKSF_CNT` int(11) DEFAULT NULL,
-  `REMK` text,
-  `REG_ID` tinytext,
-  `REG_NAME` tinytext,
-  `REG_DT` tinytext,
-  `SYS_ID` tinytext,
-  `SYS_NAME` tinytext,
-  `SYS_DT` tinytext
+  `stack_id` int(11) NOT NULL AUTO_INCREMENT,
+  `stack_nm` text,
+  `keep_booksf_cnt` int(11) DEFAULT NULL,
+  `stack_remk` text,
+  PRIMARY KEY (`stack_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE `ysindex` (
   `id` int(11) NOT NULL
