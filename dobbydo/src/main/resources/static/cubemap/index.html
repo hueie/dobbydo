@@ -30,7 +30,7 @@ function setStackId(stack_id){
         url: "/cubemap/Cubemap",
         data: {"stack_id" : stack_id},
         success: function(msg){
-            alert(msg);
+            //alert(msg);
             initpushdata(msg.cubes);
         },
         error:function (xhr, ajaxOptions, thrownError){
