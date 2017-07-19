@@ -67,9 +67,19 @@ public class CubemapServiceImpl implements CubemapService {
 		return cubemapDAO.getBooksfsByStackId(stack_id);
 	}
 	
-
+	@Override
+	public Booksf getBooksfByBooksfId(int booksf_id) {
+		return cubemapDAO.getBooksfByBooksfId(booksf_id);
+	}
+	
+	@Override
+	public Box getBoxByBoxId(int box_id) {
+		return cubemapDAO.getBoxByBoxId(box_id);
+	}
+	
+	
 	@Override
 	public void deleteCubemap(int stack_id) {
-		articleDAO.deleteCubemap(stack_id);
+		cubemapDAO.deleteCubemap(stack_id);
 	}
 }

@@ -20,5 +20,8 @@ public interface CubemapDAO {
 	List<Cubemap> getCubemapsByStackId(int stack_id);
 	List<Booksf> getBooksfsByStackId(int stack_id);
 
+	Booksf getBooksfByBooksfId(int booksf_id);
+	Box getBoxByBoxId(int box_id);
+	
     void deleteCubemap(int stack_id);
 }

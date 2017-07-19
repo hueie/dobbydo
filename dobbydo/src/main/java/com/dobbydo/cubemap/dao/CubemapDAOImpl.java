@@ -73,7 +73,19 @@ public class CubemapDAOImpl  implements CubemapDAO {
 		return (List<Booksf>) entityManager.createQuery(hql).setParameter("stack_id", stack_id).getResultList();
 	}
 	
-
+	@SuppressWarnings("unchecked") //Ignore Warnings
+	@Override
+	public Booksf getBooksfByBooksfId(int booksf_id) {
+		return (Booksf) entityManager.find(Booksf.class, booksf_id);
+	}
+	
+	@SuppressWarnings("unchecked") //Ignore Warnings
+	@Override
+	public Box getBoxByBoxId(int box_id) {
+		return (Box) entityManager.find(Box.class, box_id);
+	}
+	
+	
 	@Override
 	public void deleteCubemap(int stack_id) {
 		String hql = "DELETE FROM Cubemap  WHERE stack_id = :stack_id ";
