@@ -2,31 +2,13 @@ CREATE DATABASE `dobbydo` /*!40100 DEFAULT CHARACTER SET utf8 */;
 
 USE dobbydo;
 
+
 CREATE TABLE `articles` (
   `article_id` int(5) NOT NULL AUTO_INCREMENT,
   `title` varchar(200) NOT NULL,
   `category` varchar(100) NOT NULL,
   PRIMARY KEY (`article_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
-
-CREATE TABLE `book_sf` (
-  `STACK_ID` text,
-  `BOOKSF_ID` text,
-  `BOOKSF_NM` text,
-  `BOOKSF_F_CNT` int(11) DEFAULT NULL,
-  `BOOKSF_R_CNT` int(11) DEFAULT '0',
-  `MAX_BOX_CNT` int(11) DEFAULT '0',
-  `KEEP_BOX_CNT` int(11) DEFAULT NULL,
-  `REMK` text,
-  `REG_ID` text,
-  `REG_NAME` text,
-  `REG_DT` text,
-  `SYS_ID` text,
-  `SYS_NAME` text,
-  `SYS_DT` text,
-  `PVINVENCHK_YN` text,
-  `PEXAM_STATUS` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 CREATE TABLE `bookarng` (
   `ARNG_ID` int(11) DEFAULT NULL,
@@ -40,6 +22,16 @@ CREATE TABLE `bookarng` (
   `BOX_ARNG_DT` tinytext
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `booksf` (
+  `BOOKSF_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `STACK_ID` int(11) DEFAULT NULL,
+  `BOOKSF_NM` text,
+  `BOOKSF_REMK` text,
+  `BOOKSF_HEIGHT` int(11) DEFAULT '0',
+  `BOOKSF_ROW_CNT` int(11) DEFAULT '0',
+  PRIMARY KEY (`BOOKSF_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
 CREATE TABLE `booksf_flw` (
   `STACK_ID` tinytext,
   `BOOKSF_ID` tinytext,
@@ -47,29 +39,34 @@ CREATE TABLE `booksf_flw` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `box` (
-  `BOX_ID` int(11) DEFAULT NULL,
-  `FOLDER_CNT` int(11) DEFAULT NULL,
-  `REG_ID` tinytext,
-  `REG_NAME` tinytext,
-  `REG_DT` tinytext,
-  `SYS_ID` tinytext,
-  `SYS_NAME` tinytext,
-  `SYS_DT` tinytext,
-  `ORG_CD` tinytext,
-  `BOX_NO` text
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `BOX_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `BOX_NM` tinytext,
+  `BOX_REMK` tinytext,
+  PRIMARY KEY (`BOX_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `cammapping` (
+  `cammapping_id` int(11) NOT NULL AUTO_INCREMENT,
+  `line_id` int(11) DEFAULT NULL,
+  `start_x` int(11) DEFAULT NULL,
+  `end_x` int(11) DEFAULT NULL,
+  `start_y` int(11) DEFAULT NULL,
+  `end_y` int(11) DEFAULT NULL,
+  PRIMARY KEY (`cammapping_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `cube_map` (
-  `cube_idx` decimal(10,0) DEFAULT NULL,
-  `stack_id` decimal(10,0) DEFAULT NULL,
-  `pos_x` decimal(10,0) DEFAULT NULL,
-  `pos_y` decimal(10,0) DEFAULT NULL,
-  `pos_z` decimal(10,0) DEFAULT NULL,
-  `object_id` decimal(10,0) DEFAULT NULL,
-  `cube_type` decimal(10,0) DEFAULT NULL,
-  `linked_id` decimal(10,0) DEFAULT NULL,
-  `cube_size` decimal(10,0) DEFAULT NULL,
-  `cube_axis` decimal(10,0) DEFAULT NULL
+  `cube_idx` int(11) NOT NULL,
+  `stack_id` int(11) DEFAULT NULL,
+  `pos_x` int(11) DEFAULT NULL,
+  `pos_y` int(11) DEFAULT NULL,
+  `pos_z` int(11) DEFAULT NULL,
+  `object_id` int(11) DEFAULT NULL,
+  `cube_type` int(11) DEFAULT NULL,
+  `linked_id` int(11) DEFAULT NULL,
+  `cube_size` int(11) DEFAULT NULL,
+  `cube_axis` int(11) DEFAULT NULL,
+  PRIMARY KEY (`cube_idx`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `stack` (
@@ -78,8 +75,7 @@ CREATE TABLE `stack` (
   `keep_booksf_cnt` int(11) DEFAULT NULL,
   `stack_remk` text,
   PRIMARY KEY (`stack_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `ysindex` (
   `id` int(11) NOT NULL
