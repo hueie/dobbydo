@@ -33,7 +33,7 @@ public class CammappingController {
 
 		for (int i = 0; i < items.length(); i++) {
             JSONObject item = items.getJSONObject(i);
-            int cammapping_id = item.getInt("cammapping_id");
+            //int cammapping_id = item.getInt("cammapping_id");
             int line_id = item.getInt("line_id");
             int start_x = item.getInt("start_x");
             int end_x = item.getInt("end_x");
@@ -41,7 +41,11 @@ public class CammappingController {
             int end_y = item.getInt("end_y");
 		    
             Cammapping cammapping = new Cammapping();
-            
+            cammapping.setLine_id(line_id);
+            cammapping.setStart_x(start_x);
+            cammapping.setEnd_x(end_x);
+            cammapping.setStart_y(start_y);
+            cammapping.setEnd_y(end_y);
             
             boolean flag = cammappingService.createCammapping(cammapping);
             if (flag == false) {
