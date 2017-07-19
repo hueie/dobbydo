@@ -12,10 +12,13 @@ public interface CubemapDAO {
 
     List<Stack> getAllStacks();
     List<Box> getAllBoxes();
+    void createCubemap(Cubemap cubemap);
     void createStack(Stack stack);
     void createBooksf(Booksf booksf);
     void createBox(Box box);
     boolean stackExists(String stackNm);
 	List<Cubemap> getCubemapsByStackId(int stack_id);
 	List<Booksf> getBooksfsByStackId(int stack_id);
+
+    void deleteCubemap(int stack_id);
 }

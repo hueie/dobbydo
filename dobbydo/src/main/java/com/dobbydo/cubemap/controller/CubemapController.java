@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -265,110 +266,49 @@ public class CubemapController {
 	}	
 	
 	@PostMapping("CubemapSavemap")
-	public void CubemapSavemap(@RequestParam(value="cube_list", required = false)String cube_list, 
-			@RequestParam(value="stack_id", required = false)String stack_id, 
-			HttpServletResponse response) throws Exception {
+	public ResponseEntity<Void> CubemapSavemap(@RequestParam(value="cube_list", required = false)String cube_list, 
+			@RequestParam(value="stack_id", required = false)int stack_id) throws JSONException {
 		
-		Connection connect = null;
-		Statement statement = null;
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
-		String sql = "";
-
-		try{
-		            // DB Open: mysql Server
-		            // JDBC Driver Loading
-		            /*
-		            String url = "jdbc:mysql://localhost:3306/mmstestdb";
-		            String uid = "root";
-		            String pw = "1234";    
-		                                               
-		            Class.forName("com.mysql.jdbc.Driver");
-		            */
-
-		            // DB Open: oracle Server
-				    // JDBC Driver Loading
-				    String url = "jdbc:oracle:thin:@123.212.43.252:1521:ARCHIVE1";
-				    String uid = "CBCK";
-				    String pw = "CBCK";    
-				                                       
-				    Class.forName("oracle.jdbc.driver.OracleDriver");
-				   
-		            connect = DriverManager.getConnection(url,uid,pw);
-		            statement = connect.createStatement();
-
-		            // Making Table!!!
-		            /*
-		            DatabaseMetaData dbm = connect.getMetaData();
-		            ResultSet tables = dbm.getTables(null, null, "YS_CUBE_MAP", null);
-		            if (tables.next()) {
-		                        //if test exists, pass this stage.
-		            } else {
-		                        sql = "CREATE TABLE YS_CUBE_MAP " +
-		                        "(cube_idx decimal(10,0), " +
-		                        " stack_id decimal(10,0), " +
-		                        " pos_x decimal(10,0), " +
-		                        " pos_y decimal(10,0), " +
-		                        " pos_z decimal(10,0), " +
-		                        " object_id decimal(10,0), " +
-		                        " cube_type decimal(10,0), " +
-		                        " linked_id decimal(10,0), " +
-		                        " size decimal(10,0), " +
-		                        " axis decimal(10,0) " +
-		                        " )";
-		                        statement.executeUpdate(sql);
-		            }
-		            */
-
-		sql = "DELETE FROM YS_CUBE_MAP WHERE STACK_ID = "+stack_id;
-		statement.executeUpdate(sql);
-
+		//Clear Stack
+		cubemapService.deleteCubemap(stack_id);
+        
+		//Create Monuments
 		if(cube_list != null && !cube_list.equals("")){
 			JSONObject obj = new JSONObject(cube_list);
 			JSONArray items = obj.getJSONArray("cube_list");
 
 			for (int i = 0; i < items.length(); i++) {
-			            JSONObject item = items.getJSONObject(i);
-			            int cube_idx = item.getInt("cube_idx");
-			            int pos_x = item.getInt("pos_x");
-			            int pos_y = item.getInt("pos_y");
-			            int pos_z = item.getInt("pos_z");
-			            int object_id = item.getInt("object_id");
-			            int cube_type = item.getInt("cube_type");
-			            int linked_id = item.getInt("linked_id");
-			            int size = item.getInt("size");
-			            int axis = item.getInt("axis");
+	            JSONObject item = items.getJSONObject(i);
+	            int cube_idx = item.getInt("cube_idx");
+	            int pos_x = item.getInt("pos_x");
+	            int pos_y = item.getInt("pos_y");
+	            int pos_z = item.getInt("pos_z");
+	            int object_id = item.getInt("object_id");
+	            int cube_type = item.getInt("cube_type");
+	            int linked_id = item.getInt("linked_id");
+	            int cube_size = item.getInt("cube_size");
+	            int cube_axis = item.getInt("cube_axis");
 			
-			            sql = "insert into YS_CUBE_MAP(cube_idx, stack_id, pos_x, pos_y, pos_z, object_id, cube_type, linked_id, cube_size, cube_axis) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-			            preparedStatement = connect.prepareStatement(sql);
-			            preparedStatement.setInt(1, cube_idx);
-			            preparedStatement.setInt(2, new Integer(stack_id));
-			            preparedStatement.setInt(3, pos_x);
-			            preparedStatement.setInt(4, pos_y);
-			            preparedStatement.setInt(5, pos_z);
-			            preparedStatement.setInt(6, object_id);
-			            preparedStatement.setInt(7, cube_type);
-			            preparedStatement.setInt(8, linked_id);
-			            preparedStatement.setInt(9, size);
-			            preparedStatement.setInt(10, axis);
-			            preparedStatement.executeUpdate();
+	            Cubemap cubemap = new Cubemap();
+	            cubemap.setCube_idx(cube_idx);
+	            cubemap.setStack_id(stack_id);
+
+	            cubemap.setPos_x(pos_x);
+	            cubemap.setPos_y(pos_y);
+	            cubemap.setPos_z(pos_z);
+	            cubemap.setObject_id(object_id);
+	            cubemap.setCube_type(cube_type);
+	            cubemap.setLinked_id(linked_id);
+	            cubemap.setCube_size(cube_size);
+	            cubemap.setCube_axis(cube_axis);
+			            
+	            boolean flag = cubemapService.createCubemap(cubemap);
+	            if (flag == false) {
+	            	return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+	            }
 			}
-
 		}
-		//resultSet.close();
-		preparedStatement.close();
-		statement.close();
-		connect.close();
-		}catch(Exception ex){
-		}finally{
-		}
-
-
-		
-		response.setHeader("Cache-Control", "no-cache");
-		PrintWriter out = response.getWriter();
-		out.write("Completely Insert Data Into DB.");
-		out.flush();
+		return new ResponseEntity<Void>(HttpStatus.CREATED);
 	}	
 	
 	@PostMapping("CubemapSavestack")
