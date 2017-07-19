@@ -18,7 +18,7 @@ import javax.websocket.server.ServerEndpoint;
 public class WSFileServer {
 
     BufferedOutputStream bos;
-    String path = "C:\\MyFiles\\javaspace\\STSProject\\wofmaker\\WebContent\\resources\\";
+    String path = "C:\\Users\\alpha\\git\\dobbydo\\dobbydo\\upload";
     
     // 메세지를 받으면 호출된다.
     @OnMessage

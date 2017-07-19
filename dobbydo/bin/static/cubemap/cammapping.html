@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="EUC-KR">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>Insert title here</title>
 
 	<script src="/js/angular-1.6.5.min.js"></script>
@@ -112,11 +112,11 @@ function sendtodb(){
 }
 </script>
 </head>
-<body>		
+<body ng-app="myApp2">		
 <div>
-<a ng-href="cubemap/bigfileupload.html">CubeMap</a>
-<a ng-href="cubemap/cubemap.html">CubeMap</a>
-<a ng-href="cubemap/cammapping.html">CamMapping</a>
+<a href="./wsfileupload.html">WSFileUpload</a>
+<a href="./cubemap.html">CubeMap</a>
+<a href="./cammapping.html">CamMapping</a>
 </div>
 <div>
 <button onclick="clearcanvas()">CLEAR</button>
