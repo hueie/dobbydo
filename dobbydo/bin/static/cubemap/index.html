@@ -30,7 +30,7 @@ function setStackId(stack_id){
         url: "/cubemap/Cubemap",
         data: {"stack_id" : stack_id},
         success: function(msg){
-            alert(msg);
+            //alert(msg);
             initpushdata(msg.cubes);
         },
         error:function (xhr, ajaxOptions, thrownError){
@@ -136,18 +136,37 @@ function addStack(){
     });
 }
 function addBooksf(){
-	var stackId = $("#stack_id").val();
-	var booksfNm = $("#booksf_nm").val();
-	var booksfRemk = $("#booksf_remk").val();
-	var booksfFCnt = $("#booksf_y").val();
+	var stack_id = $("#stack_id").val();
+	var booksf_nm = $("#booksf_nm").val();
+	var booksf_remk = $("#booksf_remk").val();
+	var booksf_y = $("#booksf_y").val();
 	
 	$.ajax({
         type: "post",
         url: "/cubemap/CubemapAddBooksf",
-        data: {"stackId" : stackId, "booksfNm" : booksfNm, "booksfRemk" : booksfRemk, "booksfFCnt":booksfFCnt},
+        data: {"stack_id" : stack_id, "booksf_nm" : booksf_nm, "booksf_remk" : booksf_remk, "booksf_y":booksf_y},
         success: function(msg){
-            alert(msg);
+            //alert(msg);
             getBooksfList();
+        },
+        error:function (xhr, ajaxOptions, thrownError){
+            alert(xhr.status);
+            alert(thrownError);
+        } 
+    });
+}
+
+function addBox(){
+	var box_nm = $("#box_nm").val();
+	var box_remk = $("#box_remk").val();
+	
+	$.ajax({
+        type: "post",
+        url: "/cubemap/CubemapAddBox",
+        data: {"box_nm" : box_nm, "box_remk" : box_remk},
+        success: function(msg){
+            //alert(msg);
+            getBoxList();
         },
         error:function (xhr, ajaxOptions, thrownError){
             alert(xhr.status);
@@ -173,7 +192,7 @@ function getStackList(){
         	var obj = data;//objs.data;
         	var html = "";
         	for(var idx in obj){
-        		alert(idx);
+        		//alert(idx);
         		html += "<span><button class=\"btn btn-xs btn-warning\" onclick=\"setStackId("+obj[idx].stack_id+")\">서고배치</button> "+ obj[idx].stack_id + ", " + obj[idx].stack_nm + "</span><br>"; 
         	}
         	document.getElementById("list").innerHTML = html;
@@ -189,21 +208,21 @@ function getBooksfList(){
 	$("#booksf_add_form").css("display","block");
 	$("#box_add_form").css("display","none");
 	//서가
-    var stackId = $("#stack_id").val();
-	var param = {"stackId":stackId };
+    var stack_id = $("#stack_id").val();
 	$.ajax({
-        type: "post",
+        type: "get",
         url: "/cubemap/CubemapBooksfList",
-        data: param,
-        success: function(msg){
-        	var objs = msg;//JSON.parse(msg);
-        	var obj = objs.data;
+        data: {"stack_id":stack_id },
+        success: function(data, textStatus, xhr){
+        	//alert(data);
+        	var objs = data;//JSON.parse(msg);
         	var html = "";
-        	for(var idx in obj){
-        		
-        		html += "<span><button class=\"btn btn-xs btn-warning\" onclick=\"upNdown('static_booksf_y',"+obj[idx].booksfFCnt+");upNdown('linked_id',"+obj[idx].booksfId+");setPen_type(7)\">서가배치</button> "+ obj[idx].stackId + ", " + obj[idx].booksfId + ", " + obj[idx].booksfNm + "</span><br>"; 
+        	for(var idx in objs){
+        		//alert(idx);
+        		html += "<span><button class=\"btn btn-xs btn-warning\" onclick=\"upNdown('static_booksf_y',"+objs[idx].booksf_height+");upNdown('linked_id',"+objs[idx].booksf_id+");setPen_type(7)\">서가배치</button> "+ objs[idx].stack_id + ", " + objs[idx].booksf_id + ", " + objs[idx].booksf_nm + ", " + objs[idx].booksf_remk  + "</span><br>"; 
         	}
         	document.getElementById("list").innerHTML = html;
+        	
         },
         error:function (xhr, ajaxOptions, thrownError){
             alert(xhr.status);
@@ -216,18 +235,16 @@ function getBoxList(){
 	$("#booksf_add_form").css("display","none");
 	$("#box_add_form").css("display","block");
 	//상자
-    var box_id = 0;
     
 	$.ajax({
         type: "post",
         url: "/cubemap/CubemapBoxList",
         data: { },
-        success: function(msg){
-        	var objs = JSON.parse(msg);
-        	var obj = objs.data;
+        success: function(data, textStatus, xhr){
+        	var objs = data;//JSON.parse(msg);
         	var html = "";
-        	for(var idx in obj){
-        		html += "<span><button class=\"btn btn-xs btn-warning\" onclick=\"upNdown('linked_id',"+obj[idx].boxId+");setPen_type(1)\">흰상자배치</button><button class=\"btn btn-xs btn-warning\" onclick=\"upNdown('linked_id',"+obj[idx].boxId+");setPen_type(2)\">빨간상자배치</button> "+ obj[idx].boxId + ", " + obj[idx].boxNo + "</span><br>"; 
+        	for(var idx in objs){
+        		html += "<span><button class=\"btn btn-xs btn-warning\" onclick=\"upNdown('linked_id',"+objs[idx].box_id+");setPen_type(1)\">흰상자배치</button><button class=\"btn btn-xs btn-warning\" onclick=\"upNdown('linked_id',"+objs[idx].box_id+");setPen_type(2)\">빨간상자배치</button> "+ objs[idx].box_id + ", " + objs[idx].box_nm + ", " + objs[idx].box_remk + "</span><br>"; 
         	}
         	document.getElementById("list").innerHTML = html;
         },
@@ -361,14 +378,12 @@ function upNdown(tag_id,i){
 							</div>
 							
 							<div id="box_add_form" style="display:none">
-								<!--
 								<span>
-								<button onclick="">새 상자등록</button> 
-								부서명 : <input type="text" id="org_nm"><input type="hidden" name="org_cd" id="org_cd">
-								상자번호 : <input type="text" id="box_no" >
+								<button onclick="addBox()">새 상자등록</button> 
+								상자이름 : <input type="text" id="box_nm" >
+								비고 : <input type="text" id="box_remk" >
 								</span>
 								<br>
-								 -->
 							</div>
 							<br><hr><br>
 							<div id="list"></div>

@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dobbydo.atestpage.dao.IArticleDAO;
 import com.dobbydo.atestpage.entity.Article;
+import com.dobbydo.cubemap.entity.Booksf;
+import com.dobbydo.cubemap.entity.Box;
 import com.dobbydo.cubemap.entity.Cubemap;
 import com.dobbydo.cubemap.entity.Stack;
 
@@ -25,10 +27,26 @@ public class CubemapDAOImpl  implements CubemapDAO {
 		String hql = "FROM Stack ORDER BY stack_id DESC";
 		return (List<Stack>) entityManager.createQuery(hql).getResultList();
 	}	
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Box> getAllBoxes() {
+		String hql = "FROM Box ORDER BY box_id DESC";
+		return (List<Box>) entityManager.createQuery(hql).getResultList();
+	}	
 	@Override
 	public void createStack(Stack stack) {
 		entityManager.persist(stack);
 	}
+	@Override
+	public void createBooksf(Booksf booksf) {
+		entityManager.persist(booksf);
+	}
+	@Override
+	public void createBox(Box box) {
+		entityManager.persist(box);
+	}
+	
 	@Override
 	public boolean stackExists(String stack_nm) {
 		String hql = "FROM Stack WHERE stack_nm = :stack_nm "; //this Table Name Is Class Name Not Real Table name
@@ -41,6 +59,14 @@ public class CubemapDAOImpl  implements CubemapDAO {
 	public List<Cubemap> getCubemapsByStackId(int stack_id) {
 		String hql = "FROM Cubemap  WHERE stack_id = :stack_id ORDER BY stack_id DESC";
 		return (List<Cubemap>) entityManager.createQuery(hql).setParameter("stack_id", stack_id).getResultList();
+	}
+	
+
+	@SuppressWarnings("unchecked") //Ignore Warnings
+	@Override
+	public List<Booksf> getBooksfsByStackId(int stack_id) {
+		String hql = "FROM Booksf  WHERE stack_id = :stack_id ORDER BY stack_id DESC";
+		return (List<Booksf>) entityManager.createQuery(hql).setParameter("stack_id", stack_id).getResultList();
 	}
 	
 	/*

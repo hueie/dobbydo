@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dobbydo.cubemap.dao.CubemapDAO;
+import com.dobbydo.cubemap.entity.Booksf;
+import com.dobbydo.cubemap.entity.Box;
 import com.dobbydo.cubemap.entity.Cubemap;
 import com.dobbydo.cubemap.entity.Stack;
 @Service
@@ -27,16 +29,36 @@ public class CubemapServiceImpl implements CubemapService {
        }
 	}
 
+	@Override
+	public synchronized boolean createBooksf(Booksf booksf){
+		cubemapDAO.createBooksf(booksf);
+		return true;
+	}
 
+	@Override
+	public synchronized boolean createBox(Box box){
+		cubemapDAO.createBox(box);
+		return true;
+	}
+	
 	@Override
 	public List<Stack> getAllStacks() {
 		return cubemapDAO.getAllStacks();
 	}
 
+	@Override
+	public List<Box> getAllBoxes() {
+		return cubemapDAO.getAllBoxes();
+	}
 
 	@Override
 	public List<Cubemap> getCubemapsByStackId(int stack_id) {
 		return cubemapDAO.getCubemapsByStackId(stack_id);
+	}
+
+	@Override
+	public List<Booksf> getBooksfsByStackId(int stack_id) {
+		return cubemapDAO.getBooksfsByStackId(stack_id);
 	}
 	
 	/*

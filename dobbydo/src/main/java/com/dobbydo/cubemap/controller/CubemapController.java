@@ -33,6 +33,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.dobbydo.atestpage.entity.Article;
 import com.dobbydo.atestpage.service.IArticleService;
+import com.dobbydo.cubemap.entity.Booksf;
+import com.dobbydo.cubemap.entity.Box;
 import com.dobbydo.cubemap.entity.Cubemap;
 import com.dobbydo.cubemap.entity.Stack;
 import com.dobbydo.cubemap.service.CubemapService;
@@ -61,89 +63,10 @@ public class CubemapController {
 		return new ResponseEntity<List<Stack>>(list, HttpStatus.OK);
 	}
 	
-	@PostMapping("CubemapBooksfList")
-	public void CubemapBooksfList(@RequestParam(value="stackId", required = false)String stackId, 
-			@RequestParam(value="booksf_id", required = false)String booksfId, 
-			HttpServletResponse response) throws Exception {
-		Connection connect = null;
-		Statement statement = null;
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
-		String sql = "";
-		
-		//String stackId = request.getParameter("stackId");
-		//String booksfId = "";
-		String booksfNm = "";
-		String booksfFCnt = "";
-		JSONObject obj = new JSONObject();
-		JSONArray jsonlist = new JSONArray();
-		
-		/*
-		if(request.getParameter("booksf_id") != null && !request.getParameter("booksf_id").equals("")){
-			booksfId = request.getParameter("booksf_id");
-		}
-		*/
-		if(booksfId == null){
-			booksfId = "";
-		}
-		
-		try{
-		            // DB Open: mysql Server
-		            // JDBC Driver Loading
-		            String url = "jdbc:oracle:thin:@123.212.43.252:1521:ARCHIVE1";
-		            String uid = "CBCK";
-		            String pw = "CBCK";    
-		                                               
-		            Class.forName("oracle.jdbc.driver.OracleDriver");
-		           
-		            // Mysql DB Connection!!
-		            connect = DriverManager.getConnection(url,uid,pw);
-		            statement = connect.createStatement();
-		            
-		/*
-		String cube_list = request.getParameter("cube_list");
-		JSONObject obj = new JSONObject(cube_list);
-		JSONArray items = obj.getJSONArray("cube_list");
-		*/
-
-		sql = "SELECT * FROM TB_PVBOOKSF WHERE 1=1 AND STACK_ID = "+stackId;
-		if(!booksfId.equals("") ){
-			sql += " AND BOOKSF_ID = " + booksfId;
-		}
-		System.out.println(sql);
-		resultSet = statement.executeQuery(sql);    
-		while (resultSet.next()) {
-		    stackId = resultSet.getString("STACK_ID");
-		    booksfId = resultSet.getString("BOOKSF_ID");
-		    booksfNm = resultSet.getString("BOOKSF_NM");
-		    booksfFCnt = resultSet.getString("BOOKSF_F_CNT");
-		    
-		    
-		    JSONObject jsonobj = new JSONObject();
-		    jsonobj.put("stackId", stackId);
-		    jsonobj.put("booksfId", booksfId);
-		    jsonobj.put("booksfNm", booksfNm);
-		    jsonobj.put("booksfFCnt", booksfFCnt);
-		    jsonlist.put(jsonobj);
-		    System.out.println(booksfNm);
-		}
-		resultSet.close();
-		statement.close();
-		connect.close();
-		}catch(Exception ex){
-		}finally{
-			
-		}
-
-		
-		
-		
-		obj.put("data", jsonlist);
-		response.setContentType("application/json; charset=UTF-8");
-		response.setHeader("Cache-Control", "no-cache");
-		PrintWriter out = response.getWriter();
-		out.write(obj.toString());
-		out.flush();
+	@GetMapping("CubemapBooksfList")
+	public ResponseEntity<List<Booksf>> CubemapBooksfList(@RequestParam(value="stack_id", required = false)int stack_id) {
+		List<Booksf> list = cubemapService.getBooksfsByStackId(stack_id);
+		return new ResponseEntity<List<Booksf>>(list, HttpStatus.OK);
 	}
 	
 	@PostMapping("CubemapAddStack")
@@ -170,167 +93,47 @@ public class CubemapController {
 	
 	
 	@PostMapping("CubemapAddBooksf")
-	public void CubemapAddBooksf(@RequestParam(value="stackId", required = false)String stackId, 
-			@RequestParam(value="booksfNm", required = false)String booksfNm, 
-			@RequestParam(value="booksfRemk", required = false)String booksfRemk, 
-			@RequestParam(value="booksfFCnt", required = false)String booksfFCnt, 
-			HttpServletResponse response) throws Exception {
+	public ResponseEntity<Void> CubemapAddBooksf(@RequestParam(value="stack_id", required = false)int stack_id, 
+			@RequestParam(value="booksf_nm", required = false)String booksf_nm, 
+			@RequestParam(value="booksf_remk", required = false)String booksf_remk, 
+			@RequestParam(value="booksf_y", required = false)int booksf_height) {
 		
-		stackId = "000"+stackId;
-		stackId = stackId.substring(stackId.length()-3);
+		Booksf booksf = new Booksf();
+		booksf.setStack_id(stack_id);
+		booksf.setBooksf_nm(booksf_nm);
+		booksf.setBooksf_remk(booksf_remk);
+		booksf.setBooksf_height(booksf_height);
 		
-		System.out.println(stackId + " " + booksfNm + " " + booksfRemk + " " + booksfFCnt);
-		
-		Connection connect = null;
-		Statement statement = null;
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
-		String sql = "";
-
-		try{
-			// DB Open: oracle Server
-		    // JDBC Driver Loading
-		    String url = "jdbc:oracle:thin:@123.212.43.252:1521:ARCHIVE1";
-		    String uid = "CBCK";
-		    String pw = "CBCK";    
-		                                       
-		    Class.forName("oracle.jdbc.driver.OracleDriver");
-		   
-		    // Oracle DB Connection!!
-		    connect = DriverManager.getConnection(url,uid,pw);
-
-		    statement = connect.createStatement();
-		    System.out.println(stackId);
-		    sql = "SELECT NVL(MAX(BOOKSF_ID),0) FROM TB_PVBOOKSF WHERE STACK_ID = '"+ stackId +"'";
-		    System.out.println(sql);
-		    
-			resultSet = statement.executeQuery(sql);
-			resultSet.next();
-			int booksfId = new Integer(resultSet.getString(1)) + 1;
-			//resultSet.close();
-		    
-		    
-		    sql = "insert into TB_PVBOOKSF(STACK_ID, BOOKSF_ID, BOOKSF_NM, BOOKSF_F_CNT, BOOKSF_R_CNT, MAX_BOX_CNT, KEEP_BOX_CNT, REMK, REG_ID, REG_NAME, REG_DT, SYS_ID, SYS_NAME, SYS_DT, PVINVENCHK_YN, PEXAM_STATUS) values"+
-		    " (LPAD(?, 3, '0'), LPAD(?, 3, '0'), ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-			System.out.println(sql);
-			preparedStatement = connect.prepareStatement(sql);
-			preparedStatement.setString(1, stackId);
-			preparedStatement.setInt(2, booksfId);
-			preparedStatement.setString(3, booksfNm);
-			preparedStatement.setString(4, booksfFCnt);
-			preparedStatement.setInt(5, 0);
-			preparedStatement.setInt(6, 0);
-			preparedStatement.setInt(7, 0);
-			preparedStatement.setString(8, booksfRemk);
-			preparedStatement.setString(9, "0000000001");
-			preparedStatement.setString(10, "�?리자");
-			preparedStatement.setString(11, "20170616104929");
-			preparedStatement.setString(12, "0000000001");
-			preparedStatement.setString(13, "�?리자");
-			preparedStatement.setString(14, "20170616104929");
-			preparedStatement.setString(15, "01");
-			preparedStatement.setString(16, "01");
-			
-			preparedStatement.executeUpdate();
-		    
-			
-			for(int idx = 1; idx < new Integer(booksfFCnt)+1 ; idx++){
-				sql = "insert into TB_PVBOOKSF_FLW(STACK_ID, BOOKSF_ID, FLW_NO) values"+
-					    " (LPAD(?, 3, '0'), LPAD(?, 3, '0'), ?)";
-				System.out.println(sql);
-				preparedStatement = connect.prepareStatement(sql);
-				preparedStatement.setString(1, stackId);
-				preparedStatement.setInt(2, booksfId);
-				preparedStatement.setInt(3, idx);
-						
-				preparedStatement.executeUpdate();
-			}
-			
-			
-		    statement.close();
-		    connect.close();
-		}catch(Exception ex){
-		}finally{
-		}
-
+		boolean flag = cubemapService.createBooksf(booksf);
+        if (flag == false) {
+        	return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<Void>(HttpStatus.CREATED);
+	}
 	
-	response.setHeader("Cache-Control", "no-cache");
-	PrintWriter out = response.getWriter();
-	out.write("Completely Delte Data Into DB.");
-	out.flush();
-}
+	
+	@PostMapping("CubemapAddBox")
+	public ResponseEntity<Void> CubemapAddBox( 
+			@RequestParam(value="box_nm", required = false)String box_nm, 
+			@RequestParam(value="box_remk", required = false)String box_remk
+			) {
+		
+		Box box = new Box();
+		box.setBox_nm(box_nm);
+		box.setBox_remk(box_remk);
+		
+		boolean flag = cubemapService.createBox(box);
+        if (flag == false) {
+        	return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<Void>(HttpStatus.CREATED);
+	}
+	
 	
 	@PostMapping("CubemapBoxList")
-	public void CubemapBoxList(@RequestParam(value="box_id", required = false)String boxId, 
-			@RequestParam(value="booksf_id", required = false)String booksfId, 
-			HttpServletResponse response) throws Exception {
-		
-		Connection connect = null;
-		Statement statement = null;
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet = null;
-		String sql = "";
-
-		String boxNo = "";
-		JSONObject obj = new JSONObject();
-		JSONArray jsonlist = new JSONArray();
-
-		if(boxId == null){
-			boxId =  "";
-		}
-
-		try{
-		            // DB Open: mysql Server
-		            // JDBC Driver Loading
-		            String url = "jdbc:oracle:thin:@123.212.43.252:1521:ARCHIVE1";
-		            String uid = "CBCK";
-		            String pw = "CBCK";    
-		                                               
-		            Class.forName("oracle.jdbc.driver.OracleDriver");
-		           
-		            // Mysql DB Connection!!
-		            connect = DriverManager.getConnection(url,uid,pw);
-		            statement = connect.createStatement();
-		            
-
-		/*
-		String cube_list = request.getParameter("cube_list");
-		JSONObject obj = new JSONObject(cube_list);
-		JSONArray items = obj.getJSONArray("cube_list");
-		*/
-
-		sql = "SELECT * FROM TB_PVBOX WHERE 1=1 ";
-		if(!boxId.equals("") ){
-			sql += "AND BOX_ID = " + boxId;
-		}
-
-		resultSet = statement.executeQuery(sql);    
-
-		while (resultSet.next()) {
-		    boxId = resultSet.getString("BOX_ID");
-		    boxNo = resultSet.getString("BOX_NO");
-		    
-		    JSONObject jsonobj = new JSONObject();
-		    jsonobj.put("boxId", boxId);
-		    jsonobj.put("boxNo", boxNo);
-		    jsonlist.put(jsonobj);
-		    System.out.println(boxNo);
-		}
-
-		resultSet.close();
-		statement.close();
-		connect.close();
-		}catch(Exception ex){
-		}finally{
-			
-		}
-
-		obj.put("data", jsonlist);
-		
-		response.setHeader("Cache-Control", "no-cache");
-		PrintWriter out = response.getWriter();
-		out.write(obj.toString());
-		out.flush();
+	public ResponseEntity<List<Box>> getAllBoxes() {
+		List<Box> list = cubemapService.getAllBoxes();
+		return new ResponseEntity<List<Box>>(list, HttpStatus.OK);
 	}
 	
 	

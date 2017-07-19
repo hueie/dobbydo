@@ -68,8 +68,8 @@ CREATE TABLE `cube_map` (
   `object_id` decimal(10,0) DEFAULT NULL,
   `cube_type` decimal(10,0) DEFAULT NULL,
   `linked_id` decimal(10,0) DEFAULT NULL,
-  `size` decimal(10,0) DEFAULT NULL,
-  `axis` decimal(10,0) DEFAULT NULL
+  `cube_size` decimal(10,0) DEFAULT NULL,
+  `cube_axis` decimal(10,0) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `stack` (
