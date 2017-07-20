@@ -12,55 +12,57 @@
         var ws = null;
    
         function connector(){
-            var url = "ws://localhost:8888/upload";
+            var url = "ws://localhost:8888/bigfileupload";
             ws = new WebSocket(url);
             ws.binaryType="arraybuffer";
 
-            ws.onopen=function(){
-                alert("연결 완료");
+            ws.onopen = function(){
+                alert("Connection Open");
             };
-            
             ws.onmessage = function(e){
                 alert(e.msg);
             };
-            
             ws.onclose = function() {
-                alert("연결 종료");
+                alert("Connection Close");
             };
             ws.onerror = function(e) {
                 alert(e.msg);
             }
         }    
         
+        
+        
         function sendFile(){
-            var file = document.getElementById('file').files[0];
+            var wsfile = document.getElementById('wsfile').files[0];
+            //send filename Text Message For Text Handler
             ws.send('filename:'+file.name);
-            alert('test');
+            alert('File Transfer Start');
             
-            var reader = new FileReader();
-            var rawData = new ArrayBuffer();            
+            var reader = new FileReader();     
+            var arrbuf = new ArrayBuffer();
 
-            reader.loadend = function() {
-
+			reader.onload = function(e) {
+            	if(reader.readyState == FileReader.DONE) {
+            		arrbuf = reader.result;   
+            		var fStart ;
+            		var fEnd ;
+            		var tti = parseInt(arrbuf.byteLength/1024);
+            		for (var i = 0; i < tti+1 ; i++) {
+            			fStart = i * 1024;
+            			fEnd = (i+1) * 1024;
+            			if(tti != i){
+            				ws.send(arrbuf.slice(fStart, fEnd)); 
+            			} else if(tti == i){
+            				ws.send(arrbuf.slice(fStart, arrbuf.byteLength) ); 
+            			}
+            		}
+	            	ws.send('end');
+	            	alert('end!');
+            	}
             }
-            
-            reader.onload = function(e) {
-                rawData = e.target.result;
-                ws.send(rawData);
-                alert("파일 전송이 완료 되었습니다.")
-                ws.send('end');
-            }
-
-            reader.readAsArrayBuffer(file);
+			
+            reader.readAsArrayBuffer(wsfile);
         }
-
-        /*
-        function addEvent(){
-            document.getElementById("connect").addEventListener("click", connector, false);
-            document.getElementById("send").addEventListener("click", sendFile, false);
-        }
-        window.addEventListener("load", addEvent, false);
-        */
     </script>
 </head>
 <body ng-app="myApp4">		
@@ -70,11 +72,14 @@
 <a href="./cammapping.html">CamMapping</a>
 </div>
 <div>
-
-    <input id="file" type="file" >
+	Websocket Upload
+    <input id="wsfile" type="file" >
     <input id="connect" type="button" value="connect" onclick="connector()">
     <input id="send" type="button" value="send" onclick="sendFile()">
-    
+</div>
+
+<div>
+
 </div>
 </body>
 </html>

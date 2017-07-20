@@ -14,8 +14,8 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.server.ServerEndpoint;
 
-@ServerEndpoint("/upload")
-public class WSFileServer {
+@ServerEndpoint("/wsupload")
+public class JavaxWSFileServer {
 
     BufferedOutputStream bos;
     String path = "C:\\Users\\alpha\\git\\dobbydo\\dobbydo\\upload";
@@ -76,7 +76,7 @@ public class WSFileServer {
 
     @OnClose
     public void closedConnection(Session session) {
-        System.out.println("연결종료........");
+        System.out.println("close........");
     }
     
 } 
