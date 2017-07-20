@@ -3,6 +3,8 @@ package com.dobbydo.wsfileserver.controller;
 import java.io.File;
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,10 +14,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.dobbydo.fileupload.entity.Fileupload;
+import com.dobbydo.fileupload.service.FileuploadService;
+
 @Controller
 @RequestMapping("cubemap")
 public class NormalFileUploadController {
-    
+	@Value("${dobbydo.file.upload.dir}")
+	private String path;
+	
+	@Autowired
+	private FileuploadService fileuploadService;
+	
     @PostMapping("normalfileupload")
     public ResponseEntity<Void> InsertNormalFileUpload(@RequestParam("file[]") MultipartFile []file,
                                    RedirectAttributes redirectAttributes) throws IllegalStateException, IOException {
@@ -28,11 +38,19 @@ public class NormalFileUploadController {
         	String destinationFileName; 
         	do { 
         		destinationFileName = sourceFileName; 
-        		destinationFile = new File("D:/upload/" + destinationFileName); 
+        		destinationFile = new File(path + destinationFileName); 
         		} 
         	while (destinationFile.exists()); 
         	destinationFile.getParentFile().mkdirs(); 
         	file[i].transferTo(destinationFile);
+        	
+
+            Fileupload fileupload = new Fileupload();
+            fileupload.setFile_nm(sourceFileName);
+            fileupload.setFile_path(path + destinationFileName);
+            fileupload.setReg_id("temp");
+        	
+        	boolean flag = fileuploadService.createFileupload(fileupload);
     	}
         return new ResponseEntity<Void>(HttpStatus.CREATED);
     }

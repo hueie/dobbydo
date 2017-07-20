@@ -51,7 +51,6 @@ public class CammappingController {
             if (flag == false) {
             	return new ResponseEntity<Void>(HttpStatus.CONFLICT);
             }
-		    String sql = "insert into cammapping(cammapping_id, line_idx, start_x, start_y, end_x, end_y) values (?, ?, ?, ?, ?, ?)";
 		}
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}

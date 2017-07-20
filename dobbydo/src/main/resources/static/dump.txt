@@ -80,3 +80,11 @@ CREATE TABLE `stack` (
 CREATE TABLE `ysindex` (
   `id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `dobbydo`.`fileupload` (
+  `fileupload_id` INT NOT NULL AUTO_INCREMENT,
+  `file_nm` TEXT NULL,
+  `file_path` TEXT NULL,
+  `fileupload_reg_id` INT NULL,
+  PRIMARY KEY (`fileupload_id`));
