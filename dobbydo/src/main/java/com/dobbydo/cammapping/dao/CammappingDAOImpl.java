@@ -26,4 +26,25 @@ public class CammappingDAOImpl  implements CammappingDAO {
 	public void createCammapping(Cammapping cammapping) {
 		entityManager.persist(cammapping);
 	}	
+	@Override
+	public void updateBooksfIdToCammapping(Cammapping cammapping) {
+		Cammapping cpg = (Cammapping)entityManager.find(Cammapping.class, cammapping.getCammapping_id());
+		cpg.setBooksf_id(cammapping.getBooksf_id()); 
+		entityManager.flush();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Cammapping> getAllCams() {
+		String hql = "FROM Cammapping ORDER BY cam_id DESC";
+		return (List<Cammapping>) entityManager.createQuery(hql).getResultList();
+	}	
+	
+	@SuppressWarnings("unchecked") //Ignore Warnings
+	@Override
+	public List<Cammapping> getLinesfsByCamId(int cam_id) {
+		String hql = "FROM Cammapping  WHERE cam_id = :cam_id ORDER BY cam_id DESC";
+		return (List<Cammapping>) entityManager.createQuery(hql).setParameter("cam_id", cam_id).getResultList();
+	}
+	
 }

@@ -99,7 +99,7 @@ function sendtodb(){
     var myJsonString = "{line_list:"+JSON.stringify(line_list)+"}";
     $.ajax({
                 type: "post",
-        url: "/cubemap/Cammapping",
+        url: "/cammapping/Cammapping",
         data: {"line_list" : myJsonString},
         success: function(msg){
             alert(msg);

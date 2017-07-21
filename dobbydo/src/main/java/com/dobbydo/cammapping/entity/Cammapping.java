@@ -17,6 +17,8 @@ public class Cammapping implements Serializable {
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="cammapping_id")
 	private int cammapping_id;
+	@Column(name="cam_id")
+	private int cam_id;
 	@Column(name="line_id")
 	private int line_id;
 	@Column(name="start_x")
@@ -27,6 +29,10 @@ public class Cammapping implements Serializable {
 	private int start_y;
 	@Column(name="end_y")
 	private int end_y;
+	@Column(name="booksf_id")
+	private int booksf_id;
+	
+	
 	public int getCammapping_id() {
 		return cammapping_id;
 	}
@@ -65,5 +71,17 @@ public class Cammapping implements Serializable {
 	}
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+	public int getCam_id() {
+		return cam_id;
+	}
+	public void setCam_id(int cam_id) {
+		this.cam_id = cam_id;
+	}
+	public int getBooksf_id() {
+		return booksf_id;
+	}
+	public void setBooksf_id(int booksf_id) {
+		this.booksf_id = booksf_id;
 	}
 }

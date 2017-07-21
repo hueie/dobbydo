@@ -264,6 +264,75 @@ function getBoxList(){
         } 
     });
 }
+
+function getAllCams(){
+	$("#stack_add_form").css("display","none");
+	$("#booksf_add_form").css("display","none");
+	$("#box_add_form").css("display","none");
+    
+	$.ajax({
+        type: "get",
+        url: "/cammapping/getAllCams",
+        data: { },
+        success: function(data, textStatus, xhr){
+        	var objs = data;//JSON.parse(msg);
+        	var html = "";
+        	for(var idx in objs){
+        		html += "<span><button class=\"btn btn-xs btn-warning\" onclick=\"getLinesfsByCamId("+objs[idx].cam_id+");\">흰상자배치</button>"+ objs[idx].cammapping_id + ", " + objs[idx].cam_id + ", " + objs[idx].line_id + "</span><br>"; 
+        	}
+        	document.getElementById("list").innerHTML = html;
+        },
+        error:function (xhr, ajaxOptions, thrownError){
+            alert(xhr.status);
+            alert(thrownError);
+        } 
+    });
+}
+function getLinesfsByCamId(cam_id){
+	$("#stack_add_form").css("display","none");
+	$("#booksf_add_form").css("display","none");
+	$("#box_add_form").css("display","none");
+    
+	$.ajax({
+        type: "get",
+        url: "/cammapping/getLinesfsByCamId",
+        data: {"cam_id":cam_id },
+        success: function(data, textStatus, xhr){
+        	var objs = data;//JSON.parse(msg);
+        	var html = "";
+        	for(var idx in objs){
+        		html += "<span><button onclick=\"updateBooksfIdToCammapping("+objs[idx].cammapping_id+");\">연동하기</button>"+ objs[idx].cammapping_id + ", " + objs[idx].cam_id + ", " + objs[idx].line_id + ", " + objs[idx].booksf_id + "</span><br>"; 
+        	}
+        	document.getElementById("list").innerHTML = html;
+        },
+        error:function (xhr, ajaxOptions, thrownError){
+            alert(xhr.status);
+            alert(thrownError);
+        } 
+    });
+}
+function updateBooksfIdToCammapping(cammapping_id){
+	var booksf_id = $("#booksf_id").val();
+	if(booksf_id == ""){
+		alert("연결할 서가를 선택해주세요.");
+		return false;
+	}
+	
+	$.ajax({
+        type: "put",
+        url: "/cammapping/updateBooksfIdToCammapping",
+        data: {"booksf_id" : booksf_id, "cammapping_id" : cammapping_id},
+        success: function(data){
+        	alert("save it finish");
+        },
+        error:function (xhr, ajaxOptions, thrownError){
+            alert(xhr.status);
+            alert(thrownError);
+        } 
+    });
+}
+
+
 function getBooksfView(booksf_id){
 	//서가
 	$.ajax({
@@ -272,7 +341,8 @@ function getBooksfView(booksf_id){
         data: { "booksf_id" : booksf_id},
         success: function(data){
         	var obj = data;
-        	document.getElementById("view").innerHTML = "<span>"+ obj.stack_id + ", " + obj.booksf_id + ", " + obj.booksf_nm + ", " + obj.booksf_remk + "</span><br>"; 
+        	document.getElementById("view").innerHTML = "<span>"+ obj.stack_id + ", " + obj.booksf_id + ", " + obj.booksf_nm + ", " + obj.booksf_remk + "</span><button onclick=\"linkedwithcam("+obj.stack_id+","+obj.booksf_id+");\">카메라에 연동</button><br>"; 
+        	$("#booksf_id").val(booksf_id);
         },
         error:function (xhr, ajaxOptions, thrownError){
             alert(xhr.status);
@@ -350,7 +420,7 @@ function upNdown(tag_id,i){
 							<div class="col-lg-4">
 								<input class="form-control input-sm" type="text" id="linked_id" value="0" >
 							</div>
-						
+							<input type="hidden" id="booksf_id"/>
 							<!--
 							<button onclick="setPen_type(1)">white box</button><button onclick="setPen_type(2)">red box</button>
 							<button onclick="setPen_type(7)">green rack</button><button onclick="setPen_type(0)">eraser</button><br><hr><br>
@@ -359,6 +429,7 @@ function upNdown(tag_id,i){
 							<button class="btn btn-xs btn-warning" onclick="getBooksfList()">서가 목록 가져오기</button>
 							<button class="btn btn-xs btn-warning" onclick="getBoxList()">상자 목록 가져오기</button>
 							<button class="btn btn-xs btn-warning" onclick="setPen_type(0)">지우개</button>
+							<button class="btn btn-xs btn-warning" onclick="getAllCams()">카메라 목록 가져오기</button>
 							<button class="btn btn-xs btn-warning" onclick="setPen_type(999)">상세정보</button>
 							<button class="btn btn-xs btn-warning" onclick="savemap()">배치도 저장</button> 
 							<button class="btn btn-xs btn-warning" onclick="savestack()">서고,사가,상자 배치 저장</button> 
