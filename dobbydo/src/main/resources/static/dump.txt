@@ -90,3 +90,11 @@ CREATE TABLE `ysindex` (
   `id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+CREATE TABLE `cam` (
+  `cam_id` int(11) NOT NULL AUTO_INCREMENT,
+  `fileupload_id` int(11) DEFAULT NULL,
+  `cam_nm` text,
+  `cam_imgsrc` text,
+  PRIMARY KEY (`cam_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
