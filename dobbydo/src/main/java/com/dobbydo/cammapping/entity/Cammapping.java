@@ -30,7 +30,7 @@ public class Cammapping implements Serializable {
 	@Column(name="end_y")
 	private int end_y;
 	@Column(name="booksf_id")
-	private int booksf_id;
+	private Integer booksf_id;
 	
 	
 	public int getCammapping_id() {

@@ -278,7 +278,7 @@ function getAllCams(){
         	var objs = data;//JSON.parse(msg);
         	var html = "";
         	for(var idx in objs){
-        		html += "<span><button class=\"btn btn-xs btn-warning\" onclick=\"getLinesfsByCamId("+objs[idx].cam_id+");\">흰상자배치</button>"+ objs[idx].cammapping_id + ", " + objs[idx].cam_id + ", " + objs[idx].line_id + "</span><br>"; 
+        		html += "<span><button class=\"btn btn-xs btn-warning\" onclick=\"getLinesfsByCamId("+objs[idx].cam_id+");\">사진 선택</button>"+ objs[idx].cammapping_id + ", " + objs[idx].cam_id + ", " + objs[idx].line_id + "</span><br>"; 
         	}
         	document.getElementById("list").innerHTML = html;
         },
@@ -341,7 +341,7 @@ function getBooksfView(booksf_id){
         data: { "booksf_id" : booksf_id},
         success: function(data){
         	var obj = data;
-        	document.getElementById("view").innerHTML = "<span>"+ obj.stack_id + ", " + obj.booksf_id + ", " + obj.booksf_nm + ", " + obj.booksf_remk + "</span><button onclick=\"linkedwithcam("+obj.stack_id+","+obj.booksf_id+");\">카메라에 연동</button><br>"; 
+        	document.getElementById("view").innerHTML = "<span>"+ obj.stack_id + ", " + obj.booksf_id + ", " + obj.booksf_nm + ", " + obj.booksf_remk + "<br>"; 
         	$("#booksf_id").val(booksf_id);
         },
         error:function (xhr, ajaxOptions, thrownError){
@@ -425,15 +425,21 @@ function upNdown(tag_id,i){
 							<button onclick="setPen_type(1)">white box</button><button onclick="setPen_type(2)">red box</button>
 							<button onclick="setPen_type(7)">green rack</button><button onclick="setPen_type(0)">eraser</button><br><hr><br>
 							 -->
+							<div>
 							<button class="btn btn-xs btn-warning" onclick="getStackList()">서고 목록 가져오기</button>
 							<button class="btn btn-xs btn-warning" onclick="getBooksfList()">서가 목록 가져오기</button>
 							<button class="btn btn-xs btn-warning" onclick="getBoxList()">상자 목록 가져오기</button>
+							</div>
+							<div>
 							<button class="btn btn-xs btn-warning" onclick="setPen_type(0)">지우개</button>
-							<button class="btn btn-xs btn-warning" onclick="getAllCams()">카메라 목록 가져오기</button>
+							<button class="btn btn-xs btn-warning" onclick="setStackId(-1)">되돌리기</button> 
+							</div>
+							<div>
 							<button class="btn btn-xs btn-warning" onclick="setPen_type(999)">상세정보</button>
+							<button class="btn btn-xs btn-warning" onclick="getAllCams()">카메라 목록 가져오기</button>
 							<button class="btn btn-xs btn-warning" onclick="savemap()">배치도 저장</button> 
 							<button class="btn btn-xs btn-warning" onclick="savestack()">서고,사가,상자 배치 저장</button> 
-							<button class="btn btn-xs btn-warning" onclick="setStackId(-1)">되돌리기</button> 
+							</div>
 							<br><hr><br>
 							<div id="view"></div>
 							<br><hr><br>
