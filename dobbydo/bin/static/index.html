@@ -1,50 +1,60 @@
 <!DOCTYPE HTML>
-<html >
-<head> 
-    <title>DobbyDo</title> 
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <!-- 
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular-route.js"></script>
-     --> <!-- route Module -->
-    
-    
-<!-- 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
- -->
+<html>
+<head>
+<title>DobbyDo</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
 <script src="/js/angular-1.6.5.min.js"></script>
 <script src="/js/angular-route-1.6.5.min.js"></script>
 <script src="/js/jquery-3.2.1.min.js"></script>
-	
+
+<script src="/js/dbd-fileupload.js"></script>
+<script src="/js/dbd-cammapping.js"></script>
+
+<!-- Blue.html -->
+<script src="/js/threejs/three.js"></script>
+<script src="/js/threejs/Detector.js"></script>
+<script src="/js/dbd-cubemap.js"></script>
+
 </head>
 
 <body ng-app="myApp">
+	<a href="cammapping/testOpencv">test</a>
 
-<a href="#/!">Menu</a>
+	<a href="#/!">Dobbydo</a>
+	<a href="#!fileupload">Security Camera File Upload</a> -&gt;
+	<a href="#!cubemap">Simulator Map</a> -&gt;
+	<a href="#!cammapping">Camera Mapping</a> -&gt;
+	<div ng-view></div>
 
-<a href="#!cubemap/index">Red</a>
-<a href="#!green">Green</a>
-
-<div ng-view></div>
-
-<script>
-$(document).ready(function() {
-	//alert("hello1");
-});
-
-var app = angular.module("myApp", ["ngRoute"]);
-app.config(function($routeProvider) {
-    $routeProvider
-    .when("/", {
-        templateUrl : "main.html"
-    })
-    .when("/cubemap/index", {
-        templateUrl : "index2.html"
-    })
-    .when("/green", {
-        templateUrl : "green.html"
-    });
-});
-</script>
+	<script>
+		var app = angular.module("myApp", [ "ngRoute" ]);
+		app.config(function($routeProvider) {
+			$routeProvider.when("/", {
+				templateUrl : "dbd-main.html"
+			}).when("/fileupload", {
+				templateUrl : "dbd-fileupload.html"
+			}).when("/cubemap", {
+				controller : 'cubemapController',
+				templateUrl : "dbd-cubemap.html",
+				resolve : {
+					init : function() {
+						return function() {
+							setStackId(0);
+							getStackList();
+							console.log('Loading Cubemap');
+						}
+					}
+				}
+			}).when("/cammapping", {
+				templateUrl : "dbd-cammapping.html"
+			});
+		});
+		app.controller('cubemapController', [ '$scope', '$route', 'init',
+				function($scope, $route, init) {
+					init($route);
+				} ]
+		);
+	</script>
 </body>
 </html>

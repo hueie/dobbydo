@@ -1,0 +1,104 @@
+<div id="cubemapview">
+	<div style="width: 60%; position: absolute">
+		<div id="info">
+			<!-- <strong>Small Shop Interior YS</strong><br> -->
+			<strong>Left Key</strong>: Rotate Left, <strong>Right Key</strong>:
+			Rotate Right<br>
+			<hr>
+			<br>
+		</div>
+	</div>
+	<div>
+		<div style="width: 60%; display: inline;" id="container"></div>
+		<div style="width: 30%; display: inline; float: right;">
+			<label class="col-lg-2 control-label" for="normalInput">서고 ID
+				: </label>
+			<div class="col-lg-4">
+				<input class="form-control input-sm" type="text" id="stack_id"
+					value="">
+			</div>
+
+			<label class="col-lg-2 control-label" for="normalInput">연결 ID
+				: </label>
+			<div class="col-lg-4">
+				<input class="form-control input-sm" type="text" id="linked_id"
+					value="0">
+			</div>
+			<input type="hidden" id="booksf_id" />
+			<!--
+							<button onclick="setPen_type(1)">white box</button><button onclick="setPen_type(2)">red box</button>
+							<button onclick="setPen_type(7)">green rack</button><button onclick="setPen_type(0)">eraser</button><br><hr><br>
+							 -->
+			<div>
+				<button class="btn btn-xs btn-warning" onclick="getStackList()">서고
+					목록 가져오기</button>
+				<button class="btn btn-xs btn-warning" onclick="getBooksfList()">서가
+					목록 가져오기</button>
+				<button class="btn btn-xs btn-warning" onclick="getBoxList()">상자
+					목록 가져오기</button>
+			</div>
+			<div>
+				<button class="btn btn-xs btn-warning" onclick="setPen_type(0)">지우개</button>
+				<button class="btn btn-xs btn-warning" onclick="setStackId(-1)">되돌리기</button>
+			</div>
+			<div>
+				<button class="btn btn-xs btn-warning" onclick="setPen_type(999)">상세정보</button>
+				<button class="btn btn-xs btn-warning" onclick="getAllCams()">카메라
+					목록 가져오기</button>
+				<button class="btn btn-xs btn-warning" onclick="savemap()">배치도
+					저장</button>
+				<button class="btn btn-xs btn-warning" onclick="savestack()">서고,사가,상자
+					배치 저장</button>
+			</div>
+			<br>
+			<hr>
+			<br>
+			<div id="view"></div>
+			<br>
+			<hr>
+			<br>
+			<div id="stack_add_form" style="display: none">
+				<span>
+					<button class="btn btn-xs btn-warning" onclick="addStack()">새
+						서고등록</button> 서고명 : <input type="text" id="stack_nm"> 비고 : <input
+					type="text" id="stack_remk">
+				</span> <br>
+			</div>
+			<div id="booksf_add_form" style="display: none">
+				<span>
+					<button class="btn btn-xs btn-warning" onclick="addBooksf()">새
+						서가등록</button> 서가명 : <input type="text" id="booksf_nm"> <!-- 단계수 : <input type="text" id="booksf_f_cnt"><br> -->
+					비고 : <input type="text" id="booksf_remk">
+				</span> <br> <br>
+				<div style="display: inline">
+					x : <input type="text" id="booksf_x" style="width: 20px" value="1"></input>
+					<button onclick="upNdown('booksf_x','1')">+</button>
+					<button onclick="upNdown('booksf_x','-1')">-</button>
+				</div>
+				<div style="display: inline">
+					z : <input type="text" id="booksf_z" style="width: 20px" value="1"></input>
+					<button onclick="upNdown('booksf_z','1')">+</button>
+					<button onclick="upNdown('booksf_z','-1')">-</button>
+				</div>
+				<div style="display: inline">
+					단계수 : <input type="text" id="booksf_y" style="width: 20px"
+						value="1"></input>
+					<button onclick="upNdown('booksf_y','1')">+</button>
+					<button onclick="upNdown('booksf_y','-1')">-</button>
+				</div>
+			</div>
+
+			<div id="box_add_form" style="display: none">
+				<span>
+					<button onclick="addBox()">새 상자등록</button> 상자이름 : <input
+					type="text" id="box_nm"> 비고 : <input type="text"
+					id="box_remk">
+				</span> <br>
+			</div>
+			<br>
+			<hr>
+			<br>
+			<div id="list"></div>
+		</div>
+	</div>
+</div>
