@@ -1,10 +1,15 @@
 package com.dobbydo.fileupload.controller;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
 
 import javax.servlet.ServletContext;
@@ -37,6 +42,10 @@ public class MyWebSocketHandler extends AbstractWebSocketHandler {
 	private String DOBBYDO_FILE_UPLOAD_DIR;
 	@Value("${dobbydo.libs.dir}")
 	private String DOBBYDO_LIBS_DIR;
+	@Value("${dobbydo.video.server.ip}")
+	private String DOBBYDO_VIDEO_SERVER_IP;
+	@Value("${dobbydo.video.server.port}")
+	private String DOBBYDO_VIDEO_SERVER_PORT;
 	
 	Integer progressPercent, currentChunkLength, totalChunkLength;
 	String fileName;
@@ -79,29 +88,30 @@ public class MyWebSocketHandler extends AbstractWebSocketHandler {
             }
             
             
-
-        	//Get Video First Image
-            String libName = "";
-            if (SystemUtils.IS_OS_WINDOWS) {
-                libName = "opencv_java320.dll";
-            } else if (SystemUtils.IS_OS_LINUX) {
-                libName = "libopencv_java320.so";
-            }
             
-            System.out.println( DOBBYDO_LIBS_DIR + libName );
-            System.load( "C:\\Program Files\\Java\\jdk1.8.0_131\\jnilib\\opencv_java320.dll" );
-    		
-            //System.load( DOBBYDO_LIBS_DIR + libName );
-            //System.loadLibrary( libName );            
+            //TCP Message To Video Process Server
+            String sentence;
+            String modifiedSentence;
+            DataOutputStream outToServer;
+            Socket clientSocket;
+			try {
+				clientSocket = new Socket(DOBBYDO_VIDEO_SERVER_IP, new Integer(DOBBYDO_VIDEO_SERVER_PORT));
+				outToServer = new DataOutputStream(clientSocket.getOutputStream());
+	            BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+	            sentence = DOBBYDO_FILE_UPLOAD_DIR + fileName;//"user_id:"+"YsJoung"+","+"video_id:"+"v1"+","+"filepath:"+DOBBYDO_FILE_UPLOAD_DIR + fileName;
+	            outToServer.writeBytes(sentence + '\n');
+	            //modifiedSentence = inFromServer.readLine();
+	            //System.out.println("FROM SERVER: " + modifiedSentence);
+	            clientSocket.close();
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             
-            //Logic
-            //VideoCapture vc = new VideoCapture(DOBBYDO_FILE_UPLOAD_DIR + fileName); 
-            VideoCapture vc = new VideoCapture("C:\\upload\\sample.mp4"); 
-            Mat frame = new Mat();
-            vc.read(frame); //Get First Image
-            Imgcodecs.imwrite("firstimage.jpg", frame);
-            
-            
+                        
         }else {
         	System.out.println("Else!!!");
         }
@@ -116,7 +126,10 @@ public class MyWebSocketHandler extends AbstractWebSocketHandler {
         currentChunkLength++;
         //reply
         //progressPercent = (currentChunkLength/totalChunkLength);
-        session.sendMessage(new TextMessage(currentChunkLength.toString()));
+        
+        //Open 443 Port For Transfer data to Browser
+        
+        //session.sendMessage(new TextMessage(currentChunkLength.toString()));
         //System.out.println(progressPercent);
     }
 	

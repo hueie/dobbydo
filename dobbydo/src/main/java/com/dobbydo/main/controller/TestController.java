@@ -27,11 +27,11 @@ public class TestController {
             libName = "libopencv_java320.so";
         }
         
-        System.load( "C:\\Program Files\\Java\\jdk1.8.0_131\\jnilib\\opencv_java320.dll" );
-		
-        //System.load( DOBBYDO_LIBS_DIR + libName );
-        //System.loadLibrary( libName );            
+        //System.setProperty("java.library.path", "C:\\Users\\Kait\\git\\dobbydo\\dobbydo\\libs");
+        System.out.println(System.getProperty("java.library.path"));
         
+        //System.loadLibrary( libName );            
+        //System.load( "C:\\Users\\Kait\\git\\dobbydo\\dobbydo\\libs\\opencv_java320.dll" );
         //Logic
         //VideoCapture vc = new VideoCapture(DOBBYDO_FILE_UPLOAD_DIR + fileName); 
         VideoCapture vc = new VideoCapture("C:\\upload\\sample.mp4"); 
@@ -41,4 +41,12 @@ public class TestController {
         
 		return new ResponseEntity<List<Void>>(HttpStatus.OK);
 	}
+	/*
+	@GetMapping("testOpencv")
+	public ResponseEntity<List<Void>> getJstest() {
+	
+		return new ResponseEntity<List<Void>>(HttpStatus.OK);
+	}
+	*/
+	
 }
