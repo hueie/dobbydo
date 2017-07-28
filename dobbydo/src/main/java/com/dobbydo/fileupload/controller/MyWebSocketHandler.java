@@ -83,6 +83,8 @@ public class MyWebSocketHandler extends AbstractWebSocketHandler {
             try {
                 bos.flush();
                 bos.close();
+                
+                session.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
