@@ -131,7 +131,7 @@ public class MyWebSocketHandler extends AbstractWebSocketHandler {
         
         //Open 443 Port For Transfer data to Browser
         
-        //session.sendMessage(new TextMessage(currentChunkLength.toString()));
+        session.sendMessage(new TextMessage(currentChunkLength.toString()));
         //System.out.println(progressPercent);
     }
 	
