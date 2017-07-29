@@ -248,7 +248,7 @@ function getAllCams(){
         	var objs = data;// JSON.parse(msg);
         	var html = "";
         	for(var idx in objs){
-        		html += "<span><button class=\"btn btn-xs btn-warning\" onclick=\"getLinesfsByCamId("+objs[idx].cam_id+");\">사진 선택</button>"+ objs[idx].cammapping_id + ", " + objs[idx].cam_id + ", " + objs[idx].line_id + "</span><br>"; 
+        		html += "<span><button class=\"btn btn-xs btn-warning\" onclick=\"getLinesfsByCamId("+objs[idx].fileupload_reg_id+");\">사진 선택</button>"+ objs[idx].fileupload_id + ", " + objs[idx].file_nm + ", " + objs[idx].fileupload_reg_id + "</span><br>"; 
         	}
         	document.getElementById("list").innerHTML = html;
         },

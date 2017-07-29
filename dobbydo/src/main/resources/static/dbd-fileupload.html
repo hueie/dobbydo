@@ -1,8 +1,9 @@
 <div>Websocket Upload</div>
 <div>
+	User Id : <input id="userId" type="text"><br>
     <input id="wsfile" type="file" >
     <input id="connect" type="button" value="connect" onclick="connector()">
-    <input id="send" type="button" value="send" onclick="sendFile()">
+    <input id="send" type="button" value="send" onclick="sendFile()" style="display:none;">
     <div>
     Progress Info : <p id="progressing"></p>
     </div>

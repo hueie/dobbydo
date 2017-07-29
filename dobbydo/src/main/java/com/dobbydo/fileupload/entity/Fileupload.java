@@ -45,10 +45,11 @@ public class Fileupload implements Serializable {
 	public void setFile_path(String file_path) {
 		this.file_path = file_path;
 	}
-	public String getReg_id() {
+	public String getFileupload_reg_id() {
 		return fileupload_reg_id;
 	}
-	public void setReg_id(String reg_id) {
-		this.fileupload_reg_id = reg_id;
+	public void setFileupload_reg_id(String fileupload_reg_id) {
+		this.fileupload_reg_id = fileupload_reg_id;
 	}
+	
 }

@@ -48,8 +48,8 @@ public class NormalFileUploadController {
             Fileupload fileupload = new Fileupload();
             fileupload.setFile_nm(sourceFileName);
             fileupload.setFile_path(path + destinationFileName);
-            fileupload.setReg_id("temp");
-        	
+            fileupload.setFileupload_reg_id("temp");
+            
         	boolean flag = fileuploadService.createFileupload(fileupload);
     	}
         return new ResponseEntity<Void>(HttpStatus.CREATED);

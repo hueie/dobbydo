@@ -1,5 +1,7 @@
 package com.dobbydo.fileupload.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,5 +19,10 @@ public class FileuploadServiceImpl implements FileuploadService {
 	public synchronized boolean createFileupload(Fileupload fileupload){
 		fileuploadDAO.createFileupload(fileupload);
 		return true;
+	}
+
+	@Override
+	public List<Fileupload> getFilesByFileuploadRegId(String fileupload_reg_id) {
+		return fileuploadDAO.getFilesByFileuploadRegId(fileupload_reg_id);
 	}
 }

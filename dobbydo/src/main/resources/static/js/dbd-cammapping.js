@@ -1,3 +1,29 @@
+function getAllCams(){
+	$("#stack_add_form").css("display","none");
+	$("#booksf_add_form").css("display","none");
+	$("#box_add_form").css("display","none");
+    
+	$.ajax({
+        type: "get",
+        url: "/cammapping/getAllCams",
+        data: { },
+        success: function(data, textStatus, xhr){
+        	var objs = data;// JSON.parse(msg);
+        	var html = "";
+        	for(var idx in objs){
+        		html += "<span><button class=\"btn btn-xs btn-warning\" onclick=\"getLinesfsByCamId("+objs[idx].fileupload_reg_id+");\">사진 선택</button>"+ objs[idx].fileupload_id + ", " + objs[idx].file_nm + ", " + objs[idx].fileupload_reg_id + "</span><br>"; 
+        	}
+        	document.getElementById("list").innerHTML = html;
+        },
+        error:function (xhr, ajaxOptions, thrownError){
+            alert(xhr.status);
+            alert(thrownError);
+        } 
+    });
+}
+
+
+
 var canvas, ctx, img;
 var prev_pointbool = false;
 var start_x, start_y;

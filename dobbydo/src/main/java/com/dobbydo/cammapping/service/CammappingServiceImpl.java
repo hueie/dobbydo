@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.dobbydo.atestpage.entity.Article;
 import com.dobbydo.cammapping.dao.CammappingDAO;
+import com.dobbydo.cammapping.entity.Cam;
 import com.dobbydo.cammapping.entity.Cammapping;
 import com.dobbydo.cubemap.dao.CubemapDAO;
 import com.dobbydo.cubemap.entity.Cubemap;
@@ -27,7 +28,7 @@ public class CammappingServiceImpl implements CammappingService {
 		cammappingDAO.updateBooksfIdToCammapping(cammapping);
 	}
 	@Override
-	public List<Cammapping> getAllCams() {
+	public List<Cam> getAllCams() {
 		return cammappingDAO.getAllCams();
 	}
 	

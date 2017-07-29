@@ -32,10 +32,16 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.AbstractWebSocketHandler;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
+import com.dobbydo.fileupload.entity.Fileupload;
+import com.dobbydo.fileupload.service.FileuploadService;
+
 public class MyWebSocketHandler extends AbstractWebSocketHandler {
 
 	@Autowired
 	ServletContext context;
+	
+	@Autowired
+	private FileuploadService fileuploadService;
 	
 	//application.properties
 	@Value("${dobbydo.file.upload.dir}")
@@ -48,6 +54,9 @@ public class MyWebSocketHandler extends AbstractWebSocketHandler {
 	private String DOBBYDO_VIDEO_SERVER_PORT;
 	
 	Integer progressPercent, currentChunkLength, totalChunkLength;
+    String fullFilePath;
+    String userId;
+
 	String fileName;
 	BufferedOutputStream bos;
     
@@ -62,9 +71,16 @@ public class MyWebSocketHandler extends AbstractWebSocketHandler {
             // msg shape is "filename:aaa.jpg"
         	String msginfo = msg.substring(0, msg.indexOf(":"));
         	System.out.println(msginfo);
-        	if(msginfo.equals("filename")) {
+        	
+        	if (msginfo.equals("userId")) {
+         		userId = msg.substring(msg.indexOf(":")+1);
+                File file = new File(DOBBYDO_FILE_UPLOAD_DIR+"/"+userId);
+                file.mkdir();
+                
+         	} else if(msginfo.equals("fileName")) {
         		fileName = msg.substring(msg.indexOf(":")+1);
-                File file = new File(DOBBYDO_FILE_UPLOAD_DIR + fileName);
+        		fullFilePath = DOBBYDO_FILE_UPLOAD_DIR+"/"+userId+"/"+fileName;
+        		File file = new File(fullFilePath);
                 try {
                     bos = new BufferedOutputStream(new FileOutputStream(file));
                 } catch (FileNotFoundException e) {
@@ -81,6 +97,12 @@ public class MyWebSocketHandler extends AbstractWebSocketHandler {
         	System.out.println("End!!!");
         	// If msg is "end", Close OutputStream
             try {
+            	Fileupload fileupload = new Fileupload();
+                fileupload.setFile_nm(fileName);
+                fileupload.setFile_path(fullFilePath);
+                fileupload.setFileupload_reg_id(userId);
+            	boolean flag = fileuploadService.createFileupload(fileupload);
+            	
                 bos.flush();
                 bos.close();
                 
@@ -92,28 +114,26 @@ public class MyWebSocketHandler extends AbstractWebSocketHandler {
             
             
             //TCP Message To Video Process Server
-            String sentence;
-            String modifiedSentence;
-            DataOutputStream outToServer;
             Socket clientSocket;
+            DataOutputStream outToServer;
+            //BufferedReader inFromServer;
 			try {
 				clientSocket = new Socket(DOBBYDO_VIDEO_SERVER_IP, new Integer(DOBBYDO_VIDEO_SERVER_PORT));
+
 				outToServer = new DataOutputStream(clientSocket.getOutputStream());
-	            BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-	            sentence = DOBBYDO_FILE_UPLOAD_DIR + fileName;//"user_id:"+"YsJoung"+","+"video_id:"+"v1"+","+"filepath:"+DOBBYDO_FILE_UPLOAD_DIR + fileName;
-	            outToServer.writeBytes(sentence + '\n');
-	            //modifiedSentence = inFromServer.readLine();
+	            outToServer.writeBytes(userId + '\n');
+	            outToServer.writeBytes(fullFilePath + '\n');
+	            
+	            //inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+	            //String resultmsg = inFromServer.readLine();
 	            //System.out.println("FROM SERVER: " + modifiedSentence);
 	            clientSocket.close();
 			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
             
-                        
         }else {
         	System.out.println("Else!!!");
         }

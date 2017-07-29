@@ -15,19 +15,23 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.dobbydo.cammapping.entity.Cam;
 import com.dobbydo.cammapping.entity.Cammapping;
 import com.dobbydo.cammapping.service.CammappingService;
 import com.dobbydo.cubemap.entity.Booksf;
 import com.dobbydo.cubemap.entity.Cubemap;
 import com.dobbydo.cubemap.entity.Stack;
 import com.dobbydo.cubemap.service.CubemapService;
+import com.dobbydo.fileupload.entity.Fileupload;
+import com.dobbydo.fileupload.service.FileuploadService;
 
 @Controller
 @RequestMapping("cammapping")
 public class CammappingController {
 	@Autowired
 	private CammappingService cammappingService;
-	
+	@Autowired
+	private FileuploadService fileuploadService;
 
 	@PostMapping("Cammapping")
 	public ResponseEntity<Void> createMapping(@RequestParam(value="line_list", required = false)String line_list) throws JSONException {
@@ -60,10 +64,14 @@ public class CammappingController {
 	}
 	
 	@GetMapping("getAllCams")
-	public ResponseEntity<List<Cammapping>> getAllCams() {
-		List<Cammapping> list = cammappingService.getAllCams();
-		return new ResponseEntity<List<Cammapping>>(list, HttpStatus.OK);
+	public ResponseEntity<List<Fileupload>> getAllCams() {
+		String id = "vvv";
+		//List<Cam> list = cammappingService.getAllCams();
+		List<Fileupload> list = fileuploadService.getFilesByFileuploadRegId(id);
+		return new ResponseEntity<List<Fileupload>>(list, HttpStatus.OK);
 	}
+	
+	
 	
 	@GetMapping("getLinesfsByCamId")
 	public ResponseEntity<List<Cammapping>> getLinesfsByCamId(@RequestParam(value="cam_id", required = false)int cam_id) {

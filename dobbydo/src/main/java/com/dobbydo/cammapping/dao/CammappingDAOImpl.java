@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dobbydo.atestpage.dao.IArticleDAO;
 import com.dobbydo.atestpage.entity.Article;
+import com.dobbydo.cammapping.entity.Cam;
 import com.dobbydo.cammapping.entity.Cammapping;
 import com.dobbydo.cubemap.entity.Booksf;
 import com.dobbydo.cubemap.entity.Box;
@@ -35,9 +36,9 @@ public class CammappingDAOImpl  implements CammappingDAO {
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Cammapping> getAllCams() {
-		String hql = "FROM Cammapping ORDER BY cam_id DESC";
-		return (List<Cammapping>) entityManager.createQuery(hql).getResultList();
+	public List<Cam> getAllCams() {
+		String hql = "FROM Cam ORDER BY cam_id DESC";
+		return (List<Cam>) entityManager.createQuery(hql).getResultList();
 	}	
 	
 	@SuppressWarnings("unchecked") //Ignore Warnings

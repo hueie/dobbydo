@@ -47,7 +47,15 @@
 					}
 				}
 			}).when("/cammapping", {
-				templateUrl : "dbd-cammapping.html"
+				templateUrl : "dbd-cammapping.html",
+				resolve : {
+					init : function() {
+						return function() {
+							getCamList();
+							console.log('Loading Cubemap');
+						}
+					}
+				}
 			});
 		});
 		app.controller('cubemapController', [ '$scope', '$route', 'init',

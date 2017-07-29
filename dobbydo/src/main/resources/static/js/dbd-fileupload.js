@@ -9,6 +9,8 @@ function connector() {
 
 	ws.onopen = function() {
 		alert("Connection Open");
+		$("#connect").css("display","none");
+		$("#send").css("display","inline");
 	};
 	ws.onmessage = function(e) {
 		var percentage = parseInt( (e.data/totalChunkLength)*100 );
@@ -16,6 +18,8 @@ function connector() {
 	};
 	ws.onclose = function() {
 		alert("Connection Close");
+		$("#connect").css("display","inline");
+		$("#send").css("display","none");
 	};
 	ws.onerror = function(e) {
 		alert(e.data);
@@ -23,9 +27,12 @@ function connector() {
 }
 
 function sendFile() {
+	var userId = $("#userId").val();
+	ws.send('userId:' + userId);
+	
 	var wsfile = document.getElementById('wsfile').files[0];
 	// send filename Text Message For Text Handler
-	ws.send('filename:' + wsfile.name);
+	ws.send('fileName:' + wsfile.name);
 	alert('File Transfer Start');
 	$("#progressing").html('~~ Loading Data ~~');
 	
