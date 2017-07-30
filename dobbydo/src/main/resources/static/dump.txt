@@ -62,7 +62,7 @@ CREATE TABLE `cammapping` (
   `end_y` int(11) DEFAULT NULL,
   `booksf_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`cammapping_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `cube_map` (
   `cube_idx` int(11) NOT NULL,
