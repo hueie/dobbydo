@@ -37,6 +37,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception{
 		http.authorizeRequests()
 		.antMatchers("/").permitAll()
+		.antMatchers("/**").permitAll()
+		.anyRequest()
+		.authenticated().and().csrf().disable().formLogin()
+		.loginPage("/user/Signin").failureUrl("/user/SigninFailure")
+		.defaultSuccessUrl("/user/SigninSuccess")
+		.usernameParameter("email")
+		.passwordParameter("password")
+		.and().logout()
+		.logoutRequestMatcher(new AntPathRequestMatcher("/user/Signout"))
+		.logoutSuccessUrl("/").and().exceptionHandling()
+		.accessDeniedPage("/access-denied");
+		
+		/*
+		http.authorizeRequests()
+		.antMatchers("/").permitAll()
 		.antMatchers("/login").permitAll()
 		.antMatchers("/registration").permitAll()
 		.antMatchers("/admin/**").hasAuthority("ADMIN").anyRequest()
@@ -49,11 +64,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		.logoutRequestMatcher( new AntPathRequestMatcher("/logout"))
 		.logoutSuccessUrl("/").and().exceptionHandling()
 		.accessDeniedPage("/access-denied");
+		*/
 	}
 	@Override
 	public void configure(WebSecurity web) throws Exception{
 		web.ignoring()
-		.antMatchers("/resources/**", "/static/**", "/js/**", "/images/**");
+		.antMatchers("/resources/**", "/static/**", "/js/**", "/img/**");
 		
 	}
 }

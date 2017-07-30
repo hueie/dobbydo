@@ -29,9 +29,9 @@ public class UserDAOImpl  implements UserDAO {
 	
 	@SuppressWarnings("unchecked") //Ignore Warnings
 	@Override
-	public List<User> findByEmail(String email) {
+	public User findUserByEmail(String email) {
 		String hql = "FROM User  WHERE email = :email";
-		return (List<User>) entityManager.createQuery(hql).setParameter("email", email).getResultList();
+		return (User) entityManager.createQuery(hql).setParameter("email", email).getSingleResult();
 	}
 	
 }

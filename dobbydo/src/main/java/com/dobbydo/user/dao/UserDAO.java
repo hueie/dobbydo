@@ -20,5 +20,5 @@ import com.dobbydo.atestpage.entity.Article;
 
 public interface UserDAO {
 	void createUser(User user);
-	List<User> findByEmail(String email);
+	User findUserByEmail(String email);
 }

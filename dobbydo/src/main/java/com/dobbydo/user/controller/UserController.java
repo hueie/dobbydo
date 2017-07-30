@@ -11,6 +11,8 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,38 +43,72 @@ public class UserController {
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
+	@GetMapping("Signin")
+	public ResponseEntity<Void> Signin(
+			//@RequestParam(value = "email", required = false) String email,
+			//@RequestParam(value = "password", required = false) String password
+	) {
+		//System.out.println("Signin : "+email+","+password);
+		//return new ResponseEntity<String>( "Sing In Success!!",HttpStatus.OK);
+		return new ResponseEntity<Void>( HttpStatus.OK);
+	}
 	
-	@PostMapping("User")
-	public ResponseEntity<Void> createUser(
-			@RequestParam(value = "email", required = false) String email,
+	@GetMapping("SigninSuccess")
+	public ResponseEntity<String> SigninSuccess() {
+		System.out.println("SigninSuccess");
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userService.findUserByEmail(auth.getName());
+		return new ResponseEntity<String>(user.getName() + "Sing In Success!!",HttpStatus.OK);
+	}
+	
+	@GetMapping("SigninFailure")
+	public ResponseEntity<String> SigninFailure() {
+		System.out.println("SigninFailure");
+		return new ResponseEntity<String>("Sing In Failure!!",HttpStatus.OK);
+	}
+	
+	@PostMapping("Signup")
+	public ResponseEntity<String> createUser(@RequestParam(value = "email", required = false) String email,
 			@RequestParam(value = "last_name", required = false) String last_name,
 			@RequestParam(value = "name", required = false) String name,
 			@RequestParam(value = "password", required = false) String password
-			
-			) {
-
+	) {
 		User user = new User();
 		user.setActive(1);
 		user.setEmail(email);
 		user.setLast_name(last_name);
 		user.setName(name);
-		//user.setPassword(password);
-		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-		
+		// user.setPassword(password);
+		user.setPassword(bCryptPasswordEncoder.encode(password));
+
 		Role userRole = roleService.findByRole("ADMIN");
 		user.setRoles(new HashSet<Role>(Arrays.asList(userRole)));
-		
+
 		boolean flag = userService.createUser(user);
 		if (flag == false) {
-			return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			return new ResponseEntity<String>("Sing Up Fail!!", HttpStatus.CONFLICT);
 		}
-		return new ResponseEntity<Void>(HttpStatus.OK);
+		return new ResponseEntity<String>("Sing Up Success!!",HttpStatus.OK);
 	}
 
+	/*
+	@RequestMapping(value="/admin/home", method = RequestMethod.GET)
+	public ModelAndView home(){
+		ModelAndView modelAndView = new ModelAndView();
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		User user = userService.findUserByEmail(auth.getName());
+		modelAndView.addObject("userName", "Welcome " + user.getName() + " " + user.getLastName() + " (" + user.getEmail() + ")");
+		modelAndView.addObject("adminMessage","Content Available Only for Users with Admin Role");
+		modelAndView.setViewName("admin/home");
+		return modelAndView;
+	}
+	*/
+	
+	
 	@GetMapping("findByEmail")
-	public ResponseEntity<List<User>> findByEmail(@RequestParam(value = "email", required = false) String email) {
-		List<User> list = userService.findByEmail(email);
-		return new ResponseEntity<List<User>>(list, HttpStatus.OK);
+	public ResponseEntity<User> findByEmail(@RequestParam(value = "email", required = false) String email) {
+		User list = userService.findUserByEmail(email);
+		return new ResponseEntity<User>(list, HttpStatus.OK);
 	}
 
 }

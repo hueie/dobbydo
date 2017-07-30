@@ -10,5 +10,5 @@ import com.dobbydo.cubemap.entity.Stack;
 public interface UserService {
 
     boolean createUser(User user);
-    List<User> findByEmail(String email);
+    User findUserByEmail(String email);
 }

@@ -31,7 +31,7 @@ public class RoleDAOImpl  implements RoleDAO {
 	@Override
 	public Role findByRole(String role) {
 		String hql = "FROM Role  WHERE role = :role";
-		return (Role) entityManager.createQuery(hql).setParameter("role", role).getResultList();
+		return (Role) entityManager.createQuery(hql).setParameter("role", role).getSingleResult();
 	}
 	
 }
