@@ -27,7 +27,8 @@ function connector() {
 }
 
 function sendFile() {
-	var userId = $("#userId").val();
+	
+	var userId = $("#userEmail").val();
 	ws.send('userId:' + userId);
 	
 	var wsfile = document.getElementById('wsfile').files[0];

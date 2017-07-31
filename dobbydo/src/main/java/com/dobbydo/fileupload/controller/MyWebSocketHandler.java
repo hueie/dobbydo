@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.ByteBuffer;
+import java.security.Principal;
 
 import javax.servlet.ServletContext;
 import javax.swing.JFrame;
@@ -25,6 +26,8 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.videoio.VideoCapture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.socket.BinaryMessage;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -34,11 +37,16 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import com.dobbydo.fileupload.entity.Fileupload;
 import com.dobbydo.fileupload.service.FileuploadService;
+import com.dobbydo.user.entity.User;
+import com.dobbydo.user.service.UserService;
 
 public class MyWebSocketHandler extends AbstractWebSocketHandler {
-
+	
 	@Autowired
 	ServletContext context;
+
+	@Autowired
+	private UserService userService;
 	
 	@Autowired
 	private FileuploadService fileuploadService;
@@ -55,7 +63,7 @@ public class MyWebSocketHandler extends AbstractWebSocketHandler {
 	
 	Integer progressPercent, currentChunkLength, totalChunkLength;
     String fullFilePath;
-    String userId;
+    int userId;
 
 	String fileName;
 	BufferedOutputStream bos;
@@ -73,10 +81,14 @@ public class MyWebSocketHandler extends AbstractWebSocketHandler {
         	System.out.println(msginfo);
         	
         	if (msginfo.equals("userId")) {
-         		userId = msg.substring(msg.indexOf(":")+1);
-                File file = new File(DOBBYDO_FILE_UPLOAD_DIR+"/"+userId);
+        		String userEmail = msg.substring(msg.indexOf(":")+1);
+        		
+        		
+         		User user = userService.findUserByEmail(userEmail);
+         		userId = user.getUser_id();
+                System.out.println(userId+ "userId" + userId);
+        		File file = new File(DOBBYDO_FILE_UPLOAD_DIR+"/"+userId);
                 file.mkdir();
-                
          	} else if(msginfo.equals("fileName")) {
         		fileName = msg.substring(msg.indexOf(":")+1);
         		fullFilePath = DOBBYDO_FILE_UPLOAD_DIR+"/"+userId+"/"+fileName;
@@ -121,7 +133,7 @@ public class MyWebSocketHandler extends AbstractWebSocketHandler {
 				clientSocket = new Socket(DOBBYDO_VIDEO_SERVER_IP, new Integer(DOBBYDO_VIDEO_SERVER_PORT));
 
 				outToServer = new DataOutputStream(clientSocket.getOutputStream());
-	            outToServer.writeBytes(userId + '\n');
+	            //outToServer.writeBytes(String.valueOf(userId) + '\n');
 	            outToServer.writeBytes(fullFilePath + '\n');
 	            
 	            //inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));

@@ -1,3 +1,36 @@
+function signCheck(){
+	$.ajax({
+        type: "get",
+        url: "/user/Signcheck",
+        data: {},
+        success: function(data, textStatus, xhr){
+        	$("#userEmail").val(data);
+        	//alert(data);
+        	document.getElementById("list").innerHTML = "<span>"+data+"</span>";
+        },
+        error:function (xhr, ajaxOptions, thrownError){
+            alert(xhr.status);
+            alert(thrownError);
+        } 
+    });
+}
+
+function signOut(){
+	$.ajax({
+        type: "post",
+        url: "/user/Signout",
+        data: {},
+        success: function(data, textStatus, xhr){
+        	 window.location.href = "/";
+        },
+        error:function (xhr, ajaxOptions, thrownError){
+            alert(xhr.status);
+            alert(thrownError);
+        } 
+    });
+}
+
+
 function signIn(){
 	var email = $("#email").val();
 	var password = $("#password").val();
@@ -7,6 +40,7 @@ function signIn(){
         url: "/user/Signin",
         data: {email:email, password:password },
         success: function(data, textStatus, xhr){
+        	$("#userEmail").val(data);
         	alert(data);
         	document.getElementById("list").innerHTML = "<span>"+data+"</span>";
         },

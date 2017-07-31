@@ -22,7 +22,7 @@ public class Fileupload implements Serializable {
 	@Column(name="file_path")
 	private String file_path;
 	@Column(name="fileupload_reg_id")
-	private String fileupload_reg_id;
+	private int fileupload_reg_id;
 	
 	public static long getSerialversionuid() {
 		return serialVersionUID;
@@ -45,10 +45,10 @@ public class Fileupload implements Serializable {
 	public void setFile_path(String file_path) {
 		this.file_path = file_path;
 	}
-	public String getFileupload_reg_id() {
+	public int getFileupload_reg_id() {
 		return fileupload_reg_id;
 	}
-	public void setFileupload_reg_id(String fileupload_reg_id) {
+	public void setFileupload_reg_id(int fileupload_reg_id) {
 		this.fileupload_reg_id = fileupload_reg_id;
 	}
 	

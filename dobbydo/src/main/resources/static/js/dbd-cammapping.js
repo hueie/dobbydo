@@ -1,4 +1,4 @@
-function getAllCams(){
+function getAllFiles(){
 	$("#stack_add_form").css("display","none");
 	$("#booksf_add_form").css("display","none");
 	$("#box_add_form").css("display","none");
@@ -11,7 +11,8 @@ function getAllCams(){
         	var objs = data;// JSON.parse(msg);
         	var html = "";
         	for(var idx in objs){
-        		html += "<span><button class=\"btn btn-xs btn-warning\" onclick=\"getLinesfsByCamId("+objs[idx].fileupload_reg_id+");\">사진 선택</button>"+ objs[idx].fileupload_id + ", " + objs[idx].file_nm + ", " + objs[idx].fileupload_reg_id + "</span><br>"; 
+        		var file_img_nm = objs[idx].file_nm.split(".")[0];
+        		html += "<span><button class=\"btn btn-xs btn-warning\" onclick=\"setImgSrc("+objs[idx].fileupload_id+",'"+file_img_nm+"', "+objs[idx].fileupload_reg_id+");\">카메라 선택</button>"+ objs[idx].fileupload_id + ", " + objs[idx].file_nm + ", " + objs[idx].fileupload_reg_id + "</span><br>"; 
         	}
         	document.getElementById("list").innerHTML = html;
         },
@@ -21,7 +22,6 @@ function getAllCams(){
         } 
     });
 }
-
 
 
 var canvas, ctx, img;
@@ -60,45 +60,55 @@ function fillline(canvas, start_x, start_y, end_x, end_y) {
 	context.stroke();
 }
 
-function getImg() {
-	img = document.getElementById("sampleimg");
 
-	canvas = document.getElementById("myCanvas");
-	ctx = canvas.getContext("2d");
-	ctx.drawImage(img, 0, 0);
+function setImgSrc(fileupload_id, file_img_nm, fileupload_reg_id ) {
+	img = new Image(); //480, 360
+	img.src = "/files/"+fileupload_reg_id+"/"+file_img_nm+".jpg";
+	
+	img.onload = function() {
+		canvas = document.getElementById("myCanvas");
+		canvas.width = img.width;
+		canvas.height = img.height;
+		
+		ctx = canvas.getContext("2d");
+		ctx.drawImage(img, 0, 0, img.width, img.height); //480, 360
+		
+		canvas.addEventListener('click', function(evt) {
+			var mousePos = getMousePos(canvas, evt);
+			var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y + '';
 
-	/*
-	 * canvas.addEventListener('mousemove', function(evt) { var mousePos =
-	 * getMousePos(canvas, evt); var message = 'Mouse position: ' + mousePos.x +
-	 * ',' + mousePos.y + ''; //writediv.append(message); fillpoint(canvas,
-	 * mousePos.x, mousePos.y); }, false);
-	 */
-	canvas.addEventListener('click', function(evt) {
-		var mousePos = getMousePos(canvas, evt);
-		var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y + '';
-
-		fillpoint(canvas, mousePos.x, mousePos.y);
-		if (prev_pointbool) {
-			prev_pointbool = false;
-			end_x = mousePos.x;
-			end_y = mousePos.y;
-			fillline(canvas, start_x, start_y, end_x, end_y);
-			filltext(canvas, start_x, start_y, line_id);
-			line_list.push({
-				line_id : line_id,
-				start_x : start_x,
-				start_y : start_y,
-				end_x : end_x,
-				end_y : end_y
-			});
-			line_id++;
-		} else {
-			prev_pointbool = true;
-			start_x = mousePos.x;
-			start_y = mousePos.y;
-		}
-	}, false);
+			fillpoint(canvas, mousePos.x, mousePos.y);
+			if (prev_pointbool) {
+				prev_pointbool = false;
+				end_x = mousePos.x;
+				end_y = mousePos.y;
+				fillline(canvas, start_x, start_y, end_x, end_y);
+				filltext(canvas, start_x, start_y, line_id);
+				line_list.push({
+					fileupload_id : fileupload_id,
+					line_id : line_id,
+					start_x : start_x,
+					start_y : start_y,
+					end_x : end_x,
+					end_y : end_y
+				});
+				line_id++;
+			} else {
+				prev_pointbool = true;
+				start_x = mousePos.x;
+				start_y = mousePos.y;
+			}
+		}, false);
+		
+		/*
+		 * canvas.addEventListener('mousemove', function(evt) { var mousePos =
+		 * getMousePos(canvas, evt); var message = 'Mouse position: ' + mousePos.x +
+		 * ',' + mousePos.y + ''; //writediv.append(message); fillpoint(canvas,
+		 * mousePos.x, mousePos.y); }, false);
+		 */
+	}
 };
+
 
 function clearcanvas() {
     var writediv = document.getElementById("writediv");
@@ -127,7 +137,7 @@ function sendtodb() {
 			"line_list" : myJsonString
 		},
 		success : function(msg) {
-			alert(msg);
+			//alert(msg);
 		},
 		error : function(xhr, ajaxOptions, thrownError) {
 			alert(xhr.status);

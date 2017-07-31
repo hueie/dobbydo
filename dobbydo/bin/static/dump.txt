@@ -44,6 +44,14 @@ CREATE TABLE `box` (
   PRIMARY KEY (`BOX_ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
+CREATE TABLE `cam` (
+  `cam_id` int(11) NOT NULL AUTO_INCREMENT,
+  `fileupload_id` int(11) DEFAULT NULL,
+  `cam_nm` text,
+  `cam_imgsrc` text,
+  PRIMARY KEY (`cam_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 CREATE TABLE `cammapping` (
   `cammapping_id` int(11) NOT NULL AUTO_INCREMENT,
   `cam_id` int(11) DEFAULT NULL,
@@ -54,7 +62,7 @@ CREATE TABLE `cammapping` (
   `end_y` int(11) DEFAULT NULL,
   `booksf_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`cammapping_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `cube_map` (
   `cube_idx` int(11) NOT NULL,
@@ -76,7 +84,15 @@ CREATE TABLE `fileupload` (
   `file_path` text,
   `fileupload_reg_id` text,
   PRIMARY KEY (`fileupload_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `role` (
+  `role_id` int(11) NOT NULL AUTO_INCREMENT,
+  `role` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`role_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+1	ADMIN
 
 CREATE TABLE `stack` (
   `stack_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -86,15 +102,27 @@ CREATE TABLE `stack` (
   PRIMARY KEY (`stack_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
+CREATE TABLE `user` (
+  `user_id` int(11) NOT NULL AUTO_INCREMENT,
+  `active` int(11) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `last_name` varchar(255) DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `user_role` (
+  `user_id` int(11) NOT NULL,
+  `role_id` int(11) NOT NULL,
+  PRIMARY KEY (`user_id`,`role_id`),
+  KEY `FKa68196081fvovjhkek5m97n3y` (`role_id`),
+  CONSTRAINT `FK859n2jvi8ivhui0rl0esws6o` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
+  CONSTRAINT `FKa68196081fvovjhkek5m97n3y` FOREIGN KEY (`role_id`) REFERENCES `role` (`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 CREATE TABLE `ysindex` (
   `id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
-CREATE TABLE `cam` (
-  `cam_id` int(11) NOT NULL AUTO_INCREMENT,
-  `fileupload_id` int(11) DEFAULT NULL,
-  `cam_nm` text,
-  `cam_imgsrc` text,
-  PRIMARY KEY (`cam_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;

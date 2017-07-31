@@ -8,5 +8,5 @@ import com.dobbydo.fileupload.entity.Fileupload;
 
 public interface FileuploadDAO {
 	void createFileupload(Fileupload fileupload);
-	List<Fileupload> getFilesByFileuploadRegId(String fileupload_reg_id);
+	List<Fileupload> getFilesByFileuploadRegId(int fileupload_reg_id);
 }

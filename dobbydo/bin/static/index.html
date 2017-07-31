@@ -25,8 +25,12 @@
 
 	<a href="#/!">Dobbydo</a>
 	<a href="#!fileupload">Security Camera File Upload</a> -&gt;
-	<a href="#!cubemap">Simulator Map</a> -&gt;
 	<a href="#!cammapping">Camera Mapping</a> -&gt;
+	<a href="#!cubemap">Simulator Map</a> -&gt;
+	<!-- User Id : -->
+	<input id="userEmail" type="text">
+	<button onclick="signOut()">Sign Out</button>
+	
 	<div ng-view></div>
 
 	<script>
@@ -35,7 +39,16 @@
 			$routeProvider.when("/", {
 				templateUrl : "dbd-main.html"
 			}).when("/fileupload", {
-				templateUrl : "dbd-fileupload.html"
+				controller : 'fileuploadController',
+				templateUrl : "dbd-fileupload.html",
+				resolve : {
+					init : function() {
+						return function() {
+							signCheck();
+							console.log('getUserEmail');
+						}
+					}
+				}
 			}).when("/cubemap", {
 				controller : 'cubemapController',
 				templateUrl : "dbd-cubemap.html",
@@ -49,22 +62,34 @@
 					}
 				}
 			}).when("/cammapping", {
+				controller : 'cammappingController',
 				templateUrl : "dbd-cammapping.html",
 				resolve : {
 					init : function() {
 						return function() {
-							getCamList();
+							//getCamList();
 							console.log('Loading Cubemap');
 						}
 					}
 				}
 			});
 		});
+		app.controller('fileuploadController', [ '$scope', '$route', 'init',
+			function($scope, $route, init) {
+				init($route);
+			} ]
+		);
 		app.controller('cubemapController', [ '$scope', '$route', 'init',
 				function($scope, $route, init) {
 					init($route);
 				} ]
 		);
+		app.controller('cammappingController', [ '$scope', '$route', 'init',
+			function($scope, $route, init) {
+				init($route);
+			} ]
+		);
+		
 	</script>
 </body>
 </html>

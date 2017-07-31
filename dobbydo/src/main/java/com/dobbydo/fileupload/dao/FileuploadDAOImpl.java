@@ -30,7 +30,7 @@ public class FileuploadDAOImpl  implements FileuploadDAO {
 	
 	@SuppressWarnings("unchecked") //Ignore Warnings
 	@Override
-	public List<Fileupload> getFilesByFileuploadRegId(String fileupload_reg_id) {
+	public List<Fileupload> getFilesByFileuploadRegId(int fileupload_reg_id) {
 		String hql = "FROM Fileupload  WHERE fileupload_reg_id = :fileupload_reg_id ORDER BY fileupload_id DESC";
 		return (List<Fileupload>) entityManager.createQuery(hql).setParameter("fileupload_reg_id", fileupload_reg_id).getResultList();
 	}

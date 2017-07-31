@@ -1,5 +1,6 @@
 package com.dobbydo.user.controller;
 
+import java.security.Principal;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -53,12 +54,38 @@ public class UserController {
 		return new ResponseEntity<Void>( HttpStatus.OK);
 	}
 	
+	@PostMapping("Signout")
+	public ResponseEntity<Void> Signout(
+	) {
+		System.out.println("Sign out!!!");
+		return new ResponseEntity<Void>( HttpStatus.OK);
+	}
+	
+	@GetMapping("Signcheck")
+	public ResponseEntity<String> Signcheck(Principal pr
+			//@RequestParam(value = "email", required = false) String email,
+			//@RequestParam(value = "password", required = false) String password
+	) {
+		//return new ResponseEntity<String>( "Sing In Success!!",HttpStatus.OK);
+		String userEmail;
+		if(pr != null) {
+			userEmail = pr.getName();
+		} else {
+			userEmail = "";
+		}
+		System.out.println("Signcheck : "+userEmail);
+		return new ResponseEntity<String>(userEmail, HttpStatus.OK);
+	}
+	
 	@GetMapping("SigninSuccess")
-	public ResponseEntity<String> SigninSuccess() {
+	public ResponseEntity<String> SigninSuccess(Principal pr) {
 		System.out.println("SigninSuccess");
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		User user = userService.findUserByEmail(auth.getName());
-		return new ResponseEntity<String>(user.getName() + "Sing In Success!!",HttpStatus.OK);
+		
+		//Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		//User user = userService.findUserByEmail(auth.getName());
+		//User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		
+		return new ResponseEntity<String>(pr.getName(),HttpStatus.OK);
 	}
 	
 	@GetMapping("SigninFailure")

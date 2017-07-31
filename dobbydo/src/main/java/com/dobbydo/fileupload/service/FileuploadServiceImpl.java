@@ -22,7 +22,7 @@ public class FileuploadServiceImpl implements FileuploadService {
 	}
 
 	@Override
-	public List<Fileupload> getFilesByFileuploadRegId(String fileupload_reg_id) {
+	public List<Fileupload> getFilesByFileuploadRegId(int fileupload_reg_id) {
 		return fileuploadDAO.getFilesByFileuploadRegId(fileupload_reg_id);
 	}
 }

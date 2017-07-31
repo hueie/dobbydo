@@ -10,5 +10,5 @@ import com.dobbydo.cubemap.entity.Cubemap;
 public interface FileuploadService {
 
     boolean createFileupload(Fileupload fileupload);
-    List<Fileupload> getFilesByFileuploadRegId(String fileupload_reg_id);
+    List<Fileupload> getFilesByFileuploadRegId(int fileupload_reg_id);
 }
