@@ -46,7 +46,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 		.passwordParameter("password")
 		.and().logout()
 		.logoutRequestMatcher(new AntPathRequestMatcher("/user/Signout"))
-		.logoutSuccessUrl("/").and().exceptionHandling()
+		.logoutSuccessUrl("/user/SignoutSuccess").and().exceptionHandling()
 		.accessDeniedPage("/access-denied");
 		
 		/*

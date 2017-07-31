@@ -43,22 +43,27 @@ public class CammappingController {
 	
 	@PostMapping("Cammapping")
 	public ResponseEntity<Void> createMapping(Principal pr,
-			@RequestParam(value="line_list", required = false)String line_list) throws JSONException {
+			@RequestParam(value="line_list", required = false)String line_list,
+			@RequestParam(value="fileupload_id", required = false)int fileupload_id
+			
+			) throws JSONException {
 		User user = userService.findUserByEmail(pr.getName());
         int userId = user.getUser_id();
+        
+		cammappingService.deleteCammappingByFileuploadId(fileupload_id, userId);
         
 		JSONObject obj = new JSONObject(line_list);
 		JSONArray items = obj.getJSONArray("line_list");
 
 		for (int i = 0; i < items.length(); i++) {
             JSONObject item = items.getJSONObject(i);
-            int fileupload_id = item.getInt("fileupload_id");
+            //int fileupload_id = item.getInt("fileupload_id");
             int line_id = item.getInt("line_id");
             int start_x = item.getInt("start_x");
             int end_x = item.getInt("end_x");
             int start_y = item.getInt("start_y");
             int end_y = item.getInt("end_y");
-		    
+            
             Cammapping cammapping = new Cammapping();
             cammapping.setFileupload_id(fileupload_id);
             cammapping.setLine_id(line_id);
@@ -66,6 +71,7 @@ public class CammappingController {
             cammapping.setEnd_x(end_x);
             cammapping.setStart_y(start_y);
             cammapping.setEnd_y(end_y);
+            cammapping.setBooksf_id(0);
             cammapping.setCammapping_user_id(userId);
             boolean flag = cammappingService.createCammapping(cammapping);
             if (flag == false) {
@@ -86,11 +92,17 @@ public class CammappingController {
 	
 	
 	
-	@GetMapping("getLinesfsByCamId")
-	public ResponseEntity<List<Cammapping>> getLinesfsByCamId(Principal pr, @RequestParam(value="cam_id", required = false)int cam_id) {
+	@GetMapping("getLinesfsByFileuploadId")
+	public ResponseEntity<List<Cammapping>> getLinesfsByFileuploadId(
+			Principal pr, 
+			@RequestParam(value="fileupload_id", required = false)int fileupload_id
+			) {
 		User user = userService.findUserByEmail(pr.getName());
         int userId = user.getUser_id();
-		List<Cammapping> list = cammappingService.getLinesfsByCamId(cam_id);
+		List<Cammapping> list = cammappingService.getLinesfsByFileuploadId(fileupload_id, userId);
+		if(list == null || list.isEmpty()) {
+			
+		}
 		return new ResponseEntity<List<Cammapping>>(list, HttpStatus.OK);
 	}
 	

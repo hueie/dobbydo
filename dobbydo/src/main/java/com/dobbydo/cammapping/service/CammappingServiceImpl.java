@@ -24,6 +24,12 @@ public class CammappingServiceImpl implements CammappingService {
 		return true;
 	}
 	@Override
+	public boolean deleteCammappingByFileuploadId(int fileupload_id, int user_id) {
+		cammappingDAO.deleteCammappingByFileuploadId(fileupload_id, user_id);
+		return true;
+	}
+	
+	@Override
 	public void updateBooksfIdToCammapping(Cammapping cammapping) {
 		cammappingDAO.updateBooksfIdToCammapping(cammapping);
 	}
@@ -33,7 +39,7 @@ public class CammappingServiceImpl implements CammappingService {
 	}
 	
 	@Override
-	public List<Cammapping> getLinesfsByCamId(int cam_id) {
-		return cammappingDAO.getLinesfsByCamId(cam_id);
+	public List<Cammapping> getLinesfsByFileuploadId(int fileupload_id, int user_id) {
+		return cammappingDAO.getLinesfsByFileuploadId(fileupload_id, user_id);
 	}
 }

@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.ColumnDefault;
+
 @Entity
 @Table(name="cammapping")
 public class Cammapping implements Serializable {
@@ -29,7 +31,8 @@ public class Cammapping implements Serializable {
 	private int start_y;
 	@Column(name="end_y")
 	private int end_y;
-	@Column(name="booksf_id")
+	@Column(name="booksf_id", nullable = false)
+	@ColumnDefault("'0'")
 	private Integer booksf_id;
 	@Column(name="cammapping_user_id")
 	private Integer cammapping_user_id;
@@ -80,12 +83,6 @@ public class Cammapping implements Serializable {
 	public void setFileupload_id(int fileupload_id) {
 		this.fileupload_id = fileupload_id;
 	}
-	public int getBooksf_id() {
-		return booksf_id;
-	}
-	public void setBooksf_id(int booksf_id) {
-		this.booksf_id = booksf_id;
-	}
 	public Integer getCammapping_user_id() {
 		return cammapping_user_id;
 	}
@@ -94,5 +91,8 @@ public class Cammapping implements Serializable {
 	}
 	public void setBooksf_id(Integer booksf_id) {
 		this.booksf_id = booksf_id;
+	}
+	public Integer getBooksf_id() {
+		return booksf_id;
 	}
 }

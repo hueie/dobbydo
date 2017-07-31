@@ -60,6 +60,13 @@ public class UserController {
 		System.out.println("Sign out!!!");
 		return new ResponseEntity<Void>( HttpStatus.OK);
 	}
+
+	@GetMapping("SignoutSuccess")
+	public ResponseEntity<Void> SignoutSuccess(Principal pr) {
+		System.out.println("SignoutSuccess");
+		
+		return new ResponseEntity<Void>(HttpStatus.OK);
+	}
 	
 	@GetMapping("Signcheck")
 	public ResponseEntity<String> Signcheck(Principal pr

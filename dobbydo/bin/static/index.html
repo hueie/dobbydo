@@ -21,23 +21,35 @@
 </head>
 
 <body ng-app="myApp">
-	<a href="cammapping/testOpencv">test</a>
+	<!-- <a href="cammapping/testOpencv">test</a> -->
 
 	<a href="#/!">Dobbydo</a>
-	<a href="#!fileupload">Security Camera File Upload</a> -&gt;
-	<a href="#!cammapping">Camera Mapping</a> -&gt;
-	<a href="#!cubemap">Simulator Map</a> -&gt;
-	<!-- User Id : -->
-	<input id="userEmail" type="text">
-	<button onclick="signOut()">Sign Out</button>
 	
+	<!-- User Id : -->
+	<span id="signoutTable">
+		<a href="#!fileupload">Security Camera File Upload</a> -&gt;
+		<a href="#!cammapping">Camera Mapping</a> -&gt;
+		<a href="#!cubemap">Simulator Map</a> -&gt;
+		<div align="right">
+		<input id="userEmail" type="text">
+		<button onclick="signOut()">Sign Out</button>
+		</div>
+	</span>
 	<div ng-view></div>
 
 	<script>
 		var app = angular.module("myApp", [ "ngRoute" ]);
 		app.config(function($routeProvider) {
 			$routeProvider.when("/", {
-				templateUrl : "dbd-main.html"
+				controller : 'mainController',
+				templateUrl : "dbd-main.html",
+				resolve : {
+					init : function() {
+						return function() {
+							signCheck();
+						}
+					}
+				}
 			}).when("/fileupload", {
 				controller : 'fileuploadController',
 				templateUrl : "dbd-fileupload.html",
@@ -74,6 +86,11 @@
 				}
 			});
 		});
+		app.controller('mainController', [ '$scope', '$route', 'init',
+			function($scope, $route, init) {
+				init($route);
+			} ]
+		);
 		app.controller('fileuploadController', [ '$scope', '$route', 'init',
 			function($scope, $route, init) {
 				init($route);

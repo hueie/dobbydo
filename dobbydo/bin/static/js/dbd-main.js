@@ -4,9 +4,15 @@ function signCheck(){
         url: "/user/Signcheck",
         data: {},
         success: function(data, textStatus, xhr){
-        	$("#userEmail").val(data);
-        	//alert(data);
-        	document.getElementById("list").innerHTML = "<span>"+data+"</span>";
+        	if(data == ""){
+        		$("#userEmail").val("");
+        		$("#signinTable").css("display","block")
+        		$("#signoutTable").css("display","none")
+        	} else {
+        		$("#userEmail").val(data);
+        		$("#signinTable").css("display","none")
+        		$("#signoutTable").css("display","inline")
+        	}
         },
         error:function (xhr, ajaxOptions, thrownError){
             alert(xhr.status);
@@ -41,8 +47,9 @@ function signIn(){
         data: {email:email, password:password },
         success: function(data, textStatus, xhr){
         	$("#userEmail").val(data);
-        	alert(data);
+        	//alert(data);
         	document.getElementById("list").innerHTML = "<span>"+data+"</span>";
+        	signCheck();
         },
         error:function (xhr, ajaxOptions, thrownError){
             alert(xhr.status);

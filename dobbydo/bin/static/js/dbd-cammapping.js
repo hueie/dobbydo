@@ -29,7 +29,7 @@ var prev_pointbool = false;
 var start_x, start_y;
 var end_x, end_y;
 var line_list = [];
-var line_id = 0;
+var line_id = 1;
 
 function filltext(canvas, x, y, text) {
 	var context = canvas.getContext('2d');
@@ -62,6 +62,8 @@ function fillline(canvas, start_x, start_y, end_x, end_y) {
 
 
 function setImgSrc(fileupload_id, file_img_nm, fileupload_reg_id ) {
+	$("#fileupload_id").val(fileupload_id);
+	
 	img = new Image(); //480, 360
 	img.src = "/files/"+fileupload_reg_id+"/"+file_img_nm+".jpg";
 	
@@ -72,7 +74,6 @@ function setImgSrc(fileupload_id, file_img_nm, fileupload_reg_id ) {
 		
 		ctx = canvas.getContext("2d");
 		ctx.drawImage(img, 0, 0, img.width, img.height); //480, 360
-		
 		canvas.addEventListener('click', function(evt) {
 			var mousePos = getMousePos(canvas, evt);
 			var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y + '';
@@ -100,6 +101,41 @@ function setImgSrc(fileupload_id, file_img_nm, fileupload_reg_id ) {
 			}
 		}, false);
 		
+		
+		$.ajax({
+	        type: "get",
+	        url: "/cammapping/getLinesfsByFileuploadId",
+	        data: {fileupload_id:fileupload_id },
+	        success: function(data, textStatus, xhr){
+	        	var objs = data;// JSON.parse(msg);
+	        	var html = "";
+	        	for(var idx in objs){
+	        		var fileupload_id = objs[idx].fileupload_id;
+	        		var line_id = objs[idx].line_id;
+	        		var start_x = objs[idx].start_x;
+	        		var start_y = objs[idx].start_y;
+	        		var end_x = objs[idx].end_x;
+	        		var end_y = objs[idx].end_y;
+
+	        		fillpoint(canvas, start_x, start_y);
+	        		fillpoint(canvas, end_x, end_y);
+	        		fillline(canvas, start_x, start_y, end_x, end_y);
+					filltext(canvas, start_x, start_y, line_id);
+					line_list.push({
+						fileupload_id : fileupload_id,
+						line_id : line_id,
+						start_x : start_x,
+						start_y : start_y,
+						end_x : end_x,
+						end_y : end_y
+					});
+	        	}
+	        },
+	        error:function (xhr, ajaxOptions, thrownError){
+	            alert(xhr.status);
+	            alert(thrownError);
+	        } 
+	    });
 		/*
 		 * canvas.addEventListener('mousemove', function(evt) { var mousePos =
 		 * getMousePos(canvas, evt); var message = 'Mouse position: ' + mousePos.x +
@@ -115,9 +151,14 @@ function clearcanvas() {
 	writediv.innerHTML = "";
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	ctx.drawImage(img, 0, 0);
+
+	line_list = [];
+	line_id = 1;
+	prev_pointbool = false;
 }
 
 function sendtodb() {
+	var fileupload_id = $("#fileupload_id").val();
     var writediv = document.getElementById("writediv");
 	var msg = "";
 	// alert(line_list.length);
@@ -134,10 +175,11 @@ function sendtodb() {
 		type : "post",
 		url : "/cammapping/Cammapping",
 		data : {
-			"line_list" : myJsonString
+			"line_list" : myJsonString,
+			"fileupload_id" : fileupload_id
 		},
 		success : function(msg) {
-			//alert(msg);
+			alert("Successful Sending");
 		},
 		error : function(xhr, ajaxOptions, thrownError) {
 			alert(xhr.status);
