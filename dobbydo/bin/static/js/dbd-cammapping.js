@@ -74,6 +74,7 @@ function setImgSrc(fileupload_id, file_img_nm, fileupload_reg_id ) {
 		
 		ctx = canvas.getContext("2d");
 		ctx.drawImage(img, 0, 0, img.width, img.height); //480, 360
+		canvas.removeEventListener('click', function(evt) {});
 		canvas.addEventListener('click', function(evt) {
 			var mousePos = getMousePos(canvas, evt);
 			var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y + '';

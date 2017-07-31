@@ -67,6 +67,10 @@ function setImgSrc(fileupload_id, file_img_nm, fileupload_reg_id ) {
 	img = new Image(); //480, 360
 	img.src = "/files/"+fileupload_reg_id+"/"+file_img_nm+".jpg";
 	
+	line_list = [];
+	line_id = 1;
+	prev_pointbool = false;
+	
 	img.onload = function() {
 		canvas = document.getElementById("myCanvas");
 		canvas.width = img.width;
