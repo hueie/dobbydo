@@ -22,19 +22,26 @@
 
 <body ng-app="myApp">
 	<!-- <a href="cammapping/testOpencv">test</a> -->
-
-	<a href="#/!">Dobbydo</a>
-	
-	<!-- User Id : -->
-	<span id="signoutTable">
-		<a href="#!fileupload">Security Camera File Upload</a> -&gt;
-		<a href="#!cammapping">Camera Mapping</a> -&gt;
-		<a href="#!cubemap">Simulator Map</a> -&gt;
-		<div align="right">
-		<input id="userEmail" type="text">
-		<button onclick="signOut()">Sign Out</button>
+	<table width="100%">
+	<tr>
+	<td ><a href="#/!">Dobbydo</a></td>
+	<td align="center">
+		<div align="center" class="signoutTable">
+			<a href="#!fileupload">Security Camera File Upload</a> -&gt;
+			<a href="#!cammapping">Camera Mapping</a> -&gt;
+			<a href="#!cubemap">Simulator Map</a> -&gt;
+			<a href="#!report">Result Report</a>
 		</div>
-	</span>
+	</td>
+	<td align="right">
+		<div align="right" class="signoutTable">
+			<input id="userEmail" type="text">
+			<button onclick="signOut()">Sign Out</button>
+		</div>
+	</td>
+	</tr>
+	</table>
+	
 	<div ng-view></div>
 
 	<script>
@@ -57,7 +64,7 @@
 					init : function() {
 						return function() {
 							signCheck();
-							console.log('getUserEmail');
+							console.log('Loading fileupload');
 						}
 					}
 				}
@@ -67,6 +74,7 @@
 				resolve : {
 					init : function() {
 						return function() {
+							signCheck();
 							setStackId(0);
 							getStackList();
 							console.log('Loading Cubemap');
@@ -79,8 +87,9 @@
 				resolve : {
 					init : function() {
 						return function() {
+							signCheck();
 							//getCamList();
-							console.log('Loading Cubemap');
+							console.log('Loading cammapping');
 						}
 					}
 				}

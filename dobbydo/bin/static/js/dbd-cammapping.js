@@ -14,7 +14,7 @@ function getAllFiles(){
         		var file_img_nm = objs[idx].file_nm.split(".")[0];
         		html += "<span><button class=\"btn btn-xs btn-warning\" onclick=\"setImgSrc("+objs[idx].fileupload_id+",'"+file_img_nm+"', "+objs[idx].fileupload_reg_id+");\">카메라 선택</button>"+ objs[idx].fileupload_id + ", " + objs[idx].file_nm + ", " + objs[idx].fileupload_reg_id + "</span><br>"; 
         	}
-        	document.getElementById("list").innerHTML = html;
+        	document.getElementById("canvas_list").innerHTML = html;
         },
         error:function (xhr, ajaxOptions, thrownError){
             alert(xhr.status);
@@ -67,14 +67,49 @@ function setImgSrc(fileupload_id, file_img_nm, fileupload_reg_id ) {
 	img = new Image(); //480, 360
 	img.src = "/files/"+fileupload_reg_id+"/"+file_img_nm+".jpg";
 	
+	line_list = [];
+	line_id = 1;
+	prev_pointbool = false;
+	
 	img.onload = function() {
-		canvas = document.getElementById("myCanvas");
+		var contents = document.getElementById("canvas_contents");
+		canvas =  document.createElement("CANVAS");    // document.getElementById("myCanvas");
 		canvas.width = img.width;
 		canvas.height = img.height;
+		contents.replaceChild(canvas, contents.childNodes[0]);
 		
 		ctx = canvas.getContext("2d");
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
 		ctx.drawImage(img, 0, 0, img.width, img.height); //480, 360
-		canvas.removeEventListener('click', function(evt) {});
+		
+		
+		function myevt(evt){
+			var mousePos = getMousePos(canvas, evt);
+			fillpoint(canvas, mousePos.x, mousePos.y);
+			if (prev_pointbool) {
+				prev_pointbool = false;
+				end_x = mousePos.x;
+				end_y = mousePos.y;
+				fillline(canvas, start_x, start_y, end_x, end_y);
+				filltext(canvas, start_x, start_y, line_id);
+				line_list.push({
+					fileupload_id : fileupload_id,
+					line_id : line_id,
+					start_x : start_x,
+					start_y : start_y,
+					end_x : end_x,
+					end_y : end_y
+				});
+				line_id++;
+			} else {
+				prev_pointbool = true;
+				start_x = mousePos.x;
+				start_y = mousePos.y;
+			}
+		}
+		canvas.addEventListener('click', myevt);
+		
+		/*
 		canvas.addEventListener('click', function(evt) {
 			var mousePos = getMousePos(canvas, evt);
 			var message = 'Mouse position: ' + mousePos.x + ',' + mousePos.y + '';
@@ -101,7 +136,7 @@ function setImgSrc(fileupload_id, file_img_nm, fileupload_reg_id ) {
 				start_y = mousePos.y;
 			}
 		}, false);
-		
+		*/
 		
 		$.ajax({
 	        type: "get",
@@ -111,26 +146,32 @@ function setImgSrc(fileupload_id, file_img_nm, fileupload_reg_id ) {
 	        	var objs = data;// JSON.parse(msg);
 	        	var html = "";
 	        	for(var idx in objs){
-	        		var fileupload_id = objs[idx].fileupload_id;
-	        		var line_id = objs[idx].line_id;
-	        		var start_x = objs[idx].start_x;
-	        		var start_y = objs[idx].start_y;
-	        		var end_x = objs[idx].end_x;
-	        		var end_y = objs[idx].end_y;
+	        		var sub_cammapping_id = objs[idx].cammapping_id;
+	        		var sub_fileupload_id = objs[idx].fileupload_id;
+	        		var sub_line_id = objs[idx].line_id;
+	        		var sub_start_x = objs[idx].start_x;
+	        		var sub_start_y = objs[idx].start_y;
+	        		var sub_end_x = objs[idx].end_x;
+	        		var sub_end_y = objs[idx].end_y;
 
-	        		fillpoint(canvas, start_x, start_y);
-	        		fillpoint(canvas, end_x, end_y);
-	        		fillline(canvas, start_x, start_y, end_x, end_y);
-					filltext(canvas, start_x, start_y, line_id);
+	        		fillpoint(canvas, sub_start_x, sub_start_y);
+	        		fillpoint(canvas, sub_end_x, sub_end_y);
+	        		fillline(canvas, sub_start_x, sub_start_y, sub_end_x, sub_end_y);
+					filltext(canvas, sub_start_x, sub_start_y, sub_line_id);
 					line_list.push({
-						fileupload_id : fileupload_id,
-						line_id : line_id,
-						start_x : start_x,
-						start_y : start_y,
-						end_x : end_x,
-						end_y : end_y
+						fileupload_id : sub_fileupload_id,
+						line_id : sub_line_id,
+						start_x : sub_start_x,
+						start_y : sub_start_y,
+						end_x : sub_end_x,
+						end_y : sub_end_y
 					});
+					line_id++;
+					
+	        		html += "<span><button class=\"btn btn-xs btn-warning\" onclick=\"updateBooksfIdToCammapping("+sub_cammapping_id+");\">서가 선 연동하기</button>"+ sub_fileupload_id + ", " + sub_line_id + "</span><br>"; 
+					
 	        	}
+	        	document.getElementById("canvas_list").innerHTML = html;
 	        },
 	        error:function (xhr, ajaxOptions, thrownError){
 	            alert(xhr.status);

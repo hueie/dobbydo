@@ -234,7 +234,7 @@ function getBoxList(){
         } 
     });
 }
-
+/*
 function getAllCams(){
 	$("#stack_add_form").css("display","none");
 	$("#booksf_add_form").css("display","none");
@@ -248,8 +248,8 @@ function getAllCams(){
         	var objs = data;// JSON.parse(msg);
         	var html = "";
         	for(var idx in objs){
-        		html += "<span><button class=\"btn btn-xs btn-warning\" onclick=\"getLinesfsByCamId("+objs[idx].fileupload_reg_id+");\">사진 선택</button>"+ objs[idx].fileupload_id + ", " + objs[idx].file_nm + ", " + objs[idx].fileupload_reg_id + "</span><br>"; 
-        	}
+        		html += "<span><button class=\"btn btn-xs btn-warning\" onclick=\"setImgSrc("+objs[idx].fileupload_id+",'"+file_img_nm+"', "+objs[idx].fileupload_reg_id+");\">카메라 선택</button>"+ objs[idx].fileupload_id + ", " + objs[idx].file_nm + ", " + objs[idx].fileupload_reg_id + "</span><br>"; 
+            }
         	document.getElementById("list").innerHTML = html;
         },
         error:function (xhr, ajaxOptions, thrownError){
@@ -258,6 +258,8 @@ function getAllCams(){
         } 
     });
 }
+
+
 function getLinesfsByCamId(cam_id){
 	$("#stack_add_form").css("display","none");
 	$("#booksf_add_form").css("display","none");
@@ -281,6 +283,7 @@ function getLinesfsByCamId(cam_id){
         } 
     });
 }
+*/
 function updateBooksfIdToCammapping(cammapping_id){
 	var booksf_id = $("#booksf_id").val();
 	if(booksf_id == ""){

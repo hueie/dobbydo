@@ -43,8 +43,7 @@
 			</div>
 			<div>
 				<button class="btn btn-xs btn-warning" onclick="setPen_type(999)">상세정보</button>
-				<button class="btn btn-xs btn-warning" onclick="getAllCams()">카메라
-					목록 가져오기</button>
+				<button class="btn btn-xs btn-warning" onclick="getAllFiles()">카메라 목록 가져오기</button>
 				<button class="btn btn-xs btn-warning" onclick="savemap()">배치도
 					저장</button>
 				<button class="btn btn-xs btn-warning" onclick="savestack()">서고,사가,상자
@@ -96,9 +95,12 @@
 				</span> <br>
 			</div>
 			<br>
-			<hr>
-			<br>
 			<div id="list"></div>
+			<br>
+			<div id="canvas_list"></div>
+			<div id="canvas_contents" style="border:1px solid #000000;">
+				<canvas id="myCanvas" ></canvas>
+			</div>
 		</div>
 	</div>
 </div>

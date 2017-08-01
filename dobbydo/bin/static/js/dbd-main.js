@@ -6,12 +6,12 @@ function signCheck(){
         success: function(data, textStatus, xhr){
         	if(data == ""){
         		$("#userEmail").val("");
-        		$("#signinTable").css("display","block")
-        		$("#signoutTable").css("display","none")
+        		$(".signinTable").css("display","block")
+        		$(".signoutTable").css("display","none")
         	} else {
         		$("#userEmail").val(data);
-        		$("#signinTable").css("display","none")
-        		$("#signoutTable").css("display","inline")
+        		$(".signinTable").css("display","none")
+        		$(".signoutTable").css("display","inline")
         	}
         },
         error:function (xhr, ajaxOptions, thrownError){
