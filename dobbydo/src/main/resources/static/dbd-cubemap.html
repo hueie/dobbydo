@@ -1,61 +1,86 @@
-<div id="cubemapview">
+<div id="cubemapview" oncontextmenu="return false;">
 	<div style="width: 60%; position: absolute">
 		<div id="info">
 			<!-- <strong>Small Shop Interior YS</strong><br> -->
-			<strong>Left Key</strong>: Rotate Left, <strong>Right Key</strong>:
-			Rotate Right<br>
+			<span>
+				<strong>hi</strong>
+			</span>
+			<span style="float:right;margin:10px;">
+				<!--
+					<button onclick="setPen_type(1)">white box</button><button onclick="setPen_type(2)">red box</button>
+					<button onclick="setPen_type(7)">green rack</button><button onclick="setPen_type(0)">eraser</button><br><hr><br>
+				-->
+				<div>
+					<img src="/images/icon/stack.png" alt="서고 목록 가져오기" onclick="getStackList()" style="width:32px;height:32px;">
+					<img src="/images/icon/shelf.png" alt="서가 목록 가져오기" onclick="getBooksfList()" style="width:32px;height:32px;">
+					<img src="/images/icon/box.png" alt="상자 목록 가져오기" onclick="getBoxList()" style="width:32px;height:32px;">
+					<img src="/images/icon/magnifier.png" alt="상세정보" onclick="setPen_type(999)" style="width:32px;height:32px;">
+					<img src="/images/icon/eraser.png" alt="지우개" onclick="setPen_type(0)" style="width:32px;height:32px;">
+					<img src="/images/icon/redo.png" alt="되돌리기" onclick="setStackId(-1)" style="width:32px;height:32px;">
+					<img src="/images/icon/saving-location.png" alt="배치도 저장" onclick="savemap()" style="width:32px;height:32px;">
+					<img src="/images/icon/saving-documents.png" alt="서고,사가,상자 배치 내용 저장" onclick="savestack()" style="width:32px;height:32px;">
+					<img src="/images/icon/camera.png" alt="카메라 목록 가져오기" onclick="getAllFiles2()" style="width:32px;height:32px;">
+				</div>
+				<div style="float:right;">
+					<table>
+						<tr>
+						<td></td>
+						<td><img src="/images/icon/up-arrow.png" alt="Up Key : Zoom In" onclick="var e = $.Event('keydown');e.keyCode = 38;onDocumentKeyDown(e)" style="width:32px;height:32px;"></td>
+						<td></td>
+						</tr>
+						<tr>
+						<td><img src="/images/icon/left-arrow.png" alt="Left Key : Rotate Left" onclick="var e = $.Event('keydown');e.keyCode = 37;onDocumentKeyDown(e)" style="width:32px;height:32px;"></td>
+						<td><img src="/images/icon/down-arrow.png" alt="Down Key : Zoom Out" onclick="var e = $.Event('keydown');e.keyCode = 40;onDocumentKeyDown(e)" style="width:32px;height:32px;"></td>
+						<td><img src="/images/icon/right-arrow.png" alt="Right Key : Rotate Right" onclick="var e = $.Event('keydown');e.keyCode = 39;onDocumentKeyDown(e)" style="width:32px;height:32px;"></td>
+						</tr>
+					</table>
+				</div>
+			</span>
 			<hr>
-			<br>
+			<div id="canvas_contents" style="display:none;">
+				<img id="canvas_img"></img>
+				<img src="/images/icon/round-plus-button.png" alt="+" onclick="zoomIn()" style="width:32px;height:32px;">
+				<img src="/images/icon/round-minus-button.png" alt="-" onclick="zoomOut()" style="width:32px;height:32px;">
+				<img src="/images/icon/round-delete-button.png" alt="x" onclick="$('#canvas_contents').css('display','none');getAllFiles2();" style="width:32px;height:32px;">
+			</div>
 		</div>
 	</div>
 	<div>
+		<div style="position:absolute;z-index:-1;display:none;height:100%;width:60%;" id="rightClickContainer" onclick="disappearRightClickContainer()">
+			<table id="rightClickMenuTable" style="position:absolute;">
+				<tr>
+					<td></td>
+					<td>
+						<img src="/images/icon/shelf.png" alt="서가 목록 가져오기" onclick="getBooksfList();disappearRightClickContainer()" style="width:32px;height:32px;">
+					</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td>
+						<img src="/images/icon/box.png" alt="상자 목록 가져오기" onclick="getBoxList();disappearRightClickContainer()" style="width:32px;height:32px;">
+					</td>
+					<td></td>
+					<td>
+						<img src="/images/icon/magnifier.png" alt="상세정보" onclick="setPen_type(999);disappearRightClickContainer()" style="width:32px;height:32px;">
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td>
+						<img src="/images/icon/eraser.png" alt="지우개" onclick="setPen_type(0);disappearRightClickContainer()" style="width:32px;height:32px;">
+					</td>
+					<td></td>
+				</tr>
+			</table>
+		</div>
+		
 		<div style="width: 60%; display: inline;" id="container"></div>
-		<div style="width: 30%; display: inline; float: right;">
-			<label class="col-lg-2 control-label" for="normalInput">서고 ID
-				: </label>
-			<div class="col-lg-4">
-				<input class="form-control input-sm" type="text" id="stack_id"
-					value="">
-			</div>
-
-			<label class="col-lg-2 control-label" for="normalInput">연결 ID
-				: </label>
-			<div class="col-lg-4">
-				<input class="form-control input-sm" type="text" id="linked_id"
-					value="0">
-			</div>
-			<input type="hidden" id="booksf_id" />
-			<!--
-							<button onclick="setPen_type(1)">white box</button><button onclick="setPen_type(2)">red box</button>
-							<button onclick="setPen_type(7)">green rack</button><button onclick="setPen_type(0)">eraser</button><br><hr><br>
-							 -->
-			<div>
-				<button class="btn btn-xs btn-warning" onclick="getStackList()">서고
-					목록 가져오기</button>
-				<button class="btn btn-xs btn-warning" onclick="getBooksfList()">서가
-					목록 가져오기</button>
-				<button class="btn btn-xs btn-warning" onclick="getBoxList()">상자
-					목록 가져오기</button>
-			</div>
-			<div>
-				<button class="btn btn-xs btn-warning" onclick="setPen_type(0)">지우개</button>
-				<button class="btn btn-xs btn-warning" onclick="setStackId(-1)">되돌리기</button>
-			</div>
-			<div>
-				<button class="btn btn-xs btn-warning" onclick="setPen_type(999)">상세정보</button>
-				<button class="btn btn-xs btn-warning" onclick="getAllFiles()">카메라 목록 가져오기</button>
-				<button class="btn btn-xs btn-warning" onclick="savemap()">배치도
-					저장</button>
-				<button class="btn btn-xs btn-warning" onclick="savestack()">서고,사가,상자
-					배치 저장</button>
-			</div>
-			<br>
-			<hr>
-			<br>
+		<div style="width: 38%; display: inline; float: right;">
+			<input type="hidden" id="stack_id" value=""><!-- 서고 ID  -->
+			<input type="hidden" id="linked_id" value="0"><!-- 연결 ID  -->
+			<input type="hidden" id="booksf_id" /><!-- 서가 ID -->
 			<div id="view"></div>
-			<br>
 			<hr>
-			<br>
 			<div id="stack_add_form" style="display: none">
 				<span>
 					<button class="btn btn-xs btn-warning" onclick="addStack()">새
@@ -96,11 +121,8 @@
 			</div>
 			<br>
 			<div id="list"></div>
-			<br>
+			<hr>
 			<div id="canvas_list"></div>
-			<div id="canvas_contents" style="border:1px solid #000000;">
-				<canvas id="myCanvas" ></canvas>
-			</div>
 		</div>
 	</div>
 </div>

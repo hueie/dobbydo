@@ -234,6 +234,129 @@ function getBoxList(){
         } 
     });
 }
+
+function getAllFiles2(){
+	$("#stack_add_form").css("display","none");
+	$("#booksf_add_form").css("display","none");
+	$("#box_add_form").css("display","none");
+    
+	$.ajax({
+        type: "get",
+        url: "/cammapping/getAllCams",
+        data: { },
+        success: function(data, textStatus, xhr){
+        	var objs = data;// JSON.parse(msg);
+        	var html = "";
+        	for(var idx in objs){
+        		var file_img_nm = objs[idx].file_nm.split(".")[0];
+        		html += "<span><button class=\"btn btn-xs btn-warning\" onclick=\"setImgSrc2("+objs[idx].fileupload_id+",'"+file_img_nm+"', "+objs[idx].fileupload_reg_id+");setPen_type(999);\">카메라 선택</button>"+ objs[idx].fileupload_id + ", " + objs[idx].file_nm + ", " + objs[idx].fileupload_reg_id + "</span><br>"; 
+        	}
+        	document.getElementById("canvas_list").innerHTML = html;
+        },
+        error:function (xhr, ajaxOptions, thrownError){
+            alert(xhr.status);
+            alert(thrownError);
+        } 
+    });
+}
+
+function setImgSrc2(fileupload_id, file_img_nm, fileupload_reg_id ) {
+	$("#fileupload_id").val(fileupload_id);
+	
+	img = new Image(); //480, 360
+	img.src = "/files/"+fileupload_reg_id+"/"+file_img_nm+".jpg";
+	
+	line_list = [];
+	line_id = 1;
+	prev_pointbool = false;
+	
+	img.onload = function() {
+		canvas =  document.createElement("CANVAS");    // document.getElementById("myCanvas");
+		canvas.width = img.width;
+		canvas.height = img.height;
+		
+		ctx = canvas.getContext("2d");
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		ctx.drawImage(img, 0, 0, img.width, img.height); //480, 360
+		
+		$.ajax({
+	        type: "get",
+	        url: "/cammapping/getLinesfsByFileuploadId",
+	        data: {fileupload_id:fileupload_id },
+	        success: function(data, textStatus, xhr){
+	        	var objs = data;// JSON.parse(msg);
+	        	var html = "";
+	        	for(var idx in objs){
+	        		var sub_cammapping_id = objs[idx].cammapping_id;
+	        		var sub_fileupload_id = objs[idx].fileupload_id;
+	        		var sub_line_id = objs[idx].line_id;
+	        		var sub_start_x = objs[idx].start_x;
+	        		var sub_start_y = objs[idx].start_y;
+	        		var sub_end_x = objs[idx].end_x;
+	        		var sub_end_y = objs[idx].end_y;
+
+	        		fillpoint(canvas, sub_start_x, sub_start_y);
+	        		fillpoint(canvas, sub_end_x, sub_end_y);
+	        		fillline(canvas, sub_start_x, sub_start_y, sub_end_x, sub_end_y);
+					filltext(canvas, sub_start_x, sub_start_y, sub_line_id);
+					line_list.push({
+						fileupload_id : sub_fileupload_id,
+						line_id : sub_line_id,
+						start_x : sub_start_x,
+						start_y : sub_start_y,
+						end_x : sub_end_x,
+						end_y : sub_end_y
+					});
+					line_id++;
+					
+	        		html += "<span><button class=\"btn btn-xs btn-warning\" onclick=\"updateBooksfIdToCammapping("+sub_cammapping_id+");\">서가 선 연동하기</button>"+ sub_fileupload_id + ", " + sub_line_id + "</span><br>"; 
+					
+	        	}
+	        	
+	        	document.getElementById("canvas_list").innerHTML = html;
+	        	$("#canvas_contents").css("display","block");
+	        	var dataUrl = canvas.toDataURL();
+	            var imageFoo = document.getElementById('canvas_img');
+	        	imageFoo.src = dataUrl;
+	        	imageFoo.style.width =  300 + 'px';
+	        	imageFoo.style.height = parseInt(img.height*(300/img.width))+'px';
+
+	        },
+	        error:function (xhr, ajaxOptions, thrownError){
+	            alert(xhr.status);
+	            alert(thrownError);
+	        } 
+	    });
+		/*
+		 * canvas.addEventListener('mousemove', function(evt) { var mousePos =
+		 * getMousePos(canvas, evt); var message = 'Mouse position: ' + mousePos.x +
+		 * ',' + mousePos.y + ''; //writediv.append(message); fillpoint(canvas,
+		 * mousePos.x, mousePos.y); }, false);
+		 */
+	}
+};
+
+function zoomIn(){
+	var str = $('#canvas_img').css('width'); 
+	var rewidth = parseInt(str.substring(0,str.length-2)) * 2;
+	str = $('#canvas_img').css('height'); 
+	var reheight = parseInt(str.substring(0,str.length-2)) * 2;
+	
+	var imageFoo = document.getElementById('canvas_img');
+	imageFoo.style.width =  rewidth + 'px';
+	imageFoo.style.height =  reheight + 'px';
+}
+function zoomOut(){
+	var str = $('#canvas_img').css('width'); 
+	var rewidth = parseInt(str.substring(0,str.length-2)) * 0.5;
+	str = $('#canvas_img').css('height'); 
+	var reheight = parseInt(str.substring(0,str.length-2)) * 0.5;
+	
+	var imageFoo = document.getElementById('canvas_img');
+	imageFoo.style.width =  rewidth + 'px';
+	imageFoo.style.height =  reheight + 'px';
+}
+
 /*
 function getAllCams(){
 	$("#stack_add_form").css("display","none");
@@ -296,6 +419,8 @@ function updateBooksfIdToCammapping(cammapping_id){
         url: "/cammapping/updateBooksfIdToCammapping",
         data: {"booksf_id" : booksf_id, "cammapping_id" : cammapping_id},
         success: function(data){
+        	$("#booksf_id").val("");
+        	
         	alert("save it finish");
         },
         error:function (xhr, ajaxOptions, thrownError){
@@ -730,103 +855,132 @@ function onDocumentMouseMove( event ) {
 }
 function onDocumentMouseDown( event ) {
 	event.preventDefault();
-	var d = document.getElementById('cubemapview').getBoundingClientRect();
-	var left_margin = parseInt(d.left);
-	var top_margin = parseInt(d.top);
-	mouse.set( ( (event.clientX-left_margin) / (window.innerWidth*6/10) ) * 2 - 1, - ( (event.clientY-top_margin) / window.innerHeight ) * 2 + 1 );
-	raycaster.setFromCamera( mouse, camera );
-	var intersects = raycaster.intersectObjects( objects );
-	
-	if ( intersects.length > 0 ) {
-		var intersect = intersects[0];
-		var voxel;
-		if ( pen_type == 0 ) {
-			// eraser
-			if ( intersect.object != plane ) {
-				var jsonobj = JSON.parse(intersect.object["name"]);
-				if(jsonobj.cube_type == "7"){
-					// alert("obj:"+jsonobj.object_id);
-					// Rack
-					var erased_id = jsonobj.object_id;
-					var objectsdel_flag = false, objectsdel_idx=0;
-					for(var idx in objects){
-						// alert(idx);
-						if(objects[idx] != plane){
-							var tmpjsonobj = JSON.parse(objects[idx]["name"]);
-							if(tmpjsonobj.object_id == erased_id){
-								scene.remove( objects[idx] );
-								if(objectsdel_flag == false){
-									objectsdel_idx = idx;
-									objectsdel_flag = true;
+	switch (event.which) {
+    case 1:
+        //alert('Left Mouse button pressed.');
+		var d = document.getElementById('cubemapview').getBoundingClientRect();
+		var left_margin = parseInt(d.left);
+		var top_margin = parseInt(d.top);
+		mouse.set( ( (event.clientX-left_margin) / (window.innerWidth*6/10) ) * 2 - 1, - ( (event.clientY-top_margin) / window.innerHeight ) * 2 + 1 );
+		raycaster.setFromCamera( mouse, camera );
+		var intersects = raycaster.intersectObjects( objects );
+		
+		if ( intersects.length > 0 ) {
+			var intersect = intersects[0];
+			var voxel;
+			if ( pen_type == 0 ) {
+				// eraser
+				if ( intersect.object != plane ) {
+					var jsonobj = JSON.parse(intersect.object["name"]);
+					if(jsonobj.cube_type == "7"){
+						// alert("obj:"+jsonobj.object_id);
+						// Rack
+						var erased_id = jsonobj.object_id;
+						var objectsdel_flag = false, objectsdel_idx=0;
+						for(var idx in objects){
+							// alert(idx);
+							if(objects[idx] != plane){
+								var tmpjsonobj = JSON.parse(objects[idx]["name"]);
+								if(tmpjsonobj.object_id == erased_id){
+									scene.remove( objects[idx] );
+									if(objectsdel_flag == false){
+										objectsdel_idx = idx;
+										objectsdel_flag = true;
+									}
 								}
 							}
 						}
+						if(objectsdel_flag){
+							// objects.splice( objects.indexOf(
+							// objects[objectsdel_idx-12] ), 12 );
+							objects.splice( objectsdel_idx, 12 );
+						}
+					} else{
+						scene.remove( intersect.object );
+						objects.splice( objects.indexOf( intersect.object ), 1 );
 					}
-					if(objectsdel_flag){
-						// objects.splice( objects.indexOf(
-						// objects[objectsdel_idx-12] ), 12 );
-						objects.splice( objectsdel_idx, 12 );
+				}
+			} else if( pen_type == 1) {
+				// white pen
+				voxel = new THREE.Mesh( cubeGeo, cubeMaterial );
+				voxel.position.copy( intersect.point ).add( intersect.face.normal );
+				voxel.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
+				voxel.name = "{ \"cube_type\":1, \"linked_id\":"+static_linked_id+", \"object_id\":"+object_id+", \"cube_size\":1, \"cube_axis\":0 }";
+				object_id++;
+			} else if ( pen_type == 2 ) {
+				// red box
+				voxel = new THREE.Mesh( cubeGeo, cctvMaterial );
+				voxel.position.copy( intersect.point ).add( intersect.face.normal );
+				voxel.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
+				voxel.name = "{ \"cube_type\":2, \"linked_id\":"+static_linked_id+", \"object_id\":"+object_id+", \"cube_size\":1, \"cube_axis\":0 }";
+				object_id++;
+			} else if( pen_type == 7) {
+				var voxel;
+				for(var idx=0; idx<12; idx++){
+					var remainder = idx%4;
+					var quotient = parseInt(idx/4);
+					if(quotient == 0){
+						voxel = rollOverBooksfYMesh[remainder+1].clone();
+						voxel.name = "{ \"cube_type\":7, \"linked_id\":"+static_linked_id+", \"object_id\":"+object_id+", \"cube_size\":"+booksf_y+", \"cube_axis\":1 }";
+					} else if(quotient == 1){
+						voxel = rollOverBooksfZMesh[remainder+1].clone();
+						voxel.name = "{ \"cube_type\":7, \"linked_id\":"+static_linked_id+", \"object_id\":"+object_id+", \"cube_size\":"+booksf_z+", \"cube_axis\":2 }";
+					} else if(quotient == 2){
+						voxel = rollOverBooksfXMesh[remainder+1].clone();
+						voxel.name = "{ \"cube_type\":7, \"linked_id\":"+static_linked_id+", \"object_id\":"+object_id+", \"cube_size\":"+booksf_x+", \"cube_axis\":3 }";
 					}
-				} else{
-					scene.remove( intersect.object );
-					objects.splice( objects.indexOf( intersect.object ), 1 );
+					scene.add( voxel );
+					objects.push( voxel );
+				}
+				object_id++;
+			} else if ( pen_type == 999 ) {
+				if ( intersect.object != plane ) {
+					var jsonobj = JSON.parse(intersect.object["name"]);
+					if(jsonobj.cube_type == "1" || jsonobj.cube_type == "2"){
+						getBoxView(jsonobj.linked_id);
+					} else if(jsonobj.cube_type == "7"){
+						getBooksfView(jsonobj.linked_id);
+					}
 				}
 			}
-		} else if( pen_type == 1) {
-			// white pen
-			voxel = new THREE.Mesh( cubeGeo, cubeMaterial );
-			voxel.position.copy( intersect.point ).add( intersect.face.normal );
-			voxel.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
-			voxel.name = "{ \"cube_type\":1, \"linked_id\":"+static_linked_id+", \"object_id\":"+object_id+", \"cube_size\":1, \"cube_axis\":0 }";
-			object_id++;
-		} else if ( pen_type == 2 ) {
-			// red box
-			voxel = new THREE.Mesh( cubeGeo, cctvMaterial );
-			voxel.position.copy( intersect.point ).add( intersect.face.normal );
-			voxel.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
-			voxel.name = "{ \"cube_type\":2, \"linked_id\":"+static_linked_id+", \"object_id\":"+object_id+", \"cube_size\":1, \"cube_axis\":0 }";
-			object_id++;
-		} else if( pen_type == 7) {
-			var voxel;
-			for(var idx=0; idx<12; idx++){
-				var remainder = idx%4;
-				var quotient = parseInt(idx/4);
-				if(quotient == 0){
-					voxel = rollOverBooksfYMesh[remainder+1].clone();
-					voxel.name = "{ \"cube_type\":7, \"linked_id\":"+static_linked_id+", \"object_id\":"+object_id+", \"cube_size\":"+booksf_y+", \"cube_axis\":1 }";
-				} else if(quotient == 1){
-					voxel = rollOverBooksfZMesh[remainder+1].clone();
-					voxel.name = "{ \"cube_type\":7, \"linked_id\":"+static_linked_id+", \"object_id\":"+object_id+", \"cube_size\":"+booksf_z+", \"cube_axis\":2 }";
-				} else if(quotient == 2){
-					voxel = rollOverBooksfXMesh[remainder+1].clone();
-					voxel.name = "{ \"cube_type\":7, \"linked_id\":"+static_linked_id+", \"object_id\":"+object_id+", \"cube_size\":"+booksf_x+", \"cube_axis\":3 }";
-				}
+		
+			
+			if ( pen_type == 0 || pen_type == 7 || pen_type == 999 ) {
+				
+			} else {
 				scene.add( voxel );
 				objects.push( voxel );
 			}
-			object_id++;
-		} else if ( pen_type == 999 ) {
-			if ( intersect.object != plane ) {
-				var jsonobj = JSON.parse(intersect.object["name"]);
-				if(jsonobj.cube_type == "1" || jsonobj.cube_type == "2"){
-					getBoxView(jsonobj.linked_id);
-				} else if(jsonobj.cube_type == "7"){
-					getBooksfView(jsonobj.linked_id);
-				}
-			}
-		}
-	
 		
-		if ( pen_type == 0 || pen_type == 7 || pen_type == 999 ) {
-			
-		} else {
-			scene.add( voxel );
-			objects.push( voxel );
+			render();
 		}
-	
-		render();
+		break;
+	    case 2:
+	        //alert('Middle Mouse button pressed.');
+	        break;
+	    case 3:
+	        //alert('Right Mouse button pressed.');
+	        var left_margin = parseInt(event.clientX);
+			var top_margin = parseInt(event.clientY);
+			//mouse.set( ( (event.clientX-left_margin) / (window.innerWidth*6/10) ) * 2 - 1, - ( (event.clientY-top_margin) / window.innerHeight ) * 2 + 1 );
+			$("#rightClickMenuTable").css("left",left_margin);
+			$("#rightClickMenuTable").css("top",top_margin);
+			$("#rightClickContainer").css("z-index","99");
+			$("#rightClickContainer").css("display","block");
+			
+	        break;
+	    default:
+	        alert('You have a strange Mouse!');
 	}
+	return false;
 }
+
+function disappearRightClickContainer(){
+	$("#rightClickContainer").css("z-index","-1");
+	$("#rightClickContainer").css("display","none");
+	document.getElementById("container").focus();
+}
+
 function onDocumentKeyDown( event ) {
 	switch( event.keyCode ) {
 		// case 16: isShiftDown = true; break; //shift key
@@ -862,6 +1016,11 @@ function onDocumentKeyDown( event ) {
 			break;
 	}
 }
+
+function myKeyDownEventHandler(keycode){
+	//
+}
+
 function onDocumentKeyUp( event ) {
 	switch ( event.keyCode ) {
 		// case 16: isShiftDown = false; break;
