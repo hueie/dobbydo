@@ -200,7 +200,7 @@ function getBooksfList(){
         	var html = "";
         	for(var idx in objs){
         		// alert(idx);
-        		html += "<span><button class=\"btn btn-xs btn-warning\" onclick=\"upNdown('static_booksf_y',"+objs[idx].booksf_height+");upNdown('linked_id',"+objs[idx].booksf_id+");setPen_type(7)\">서가배치</button> "+ objs[idx].stack_id + ", " + objs[idx].booksf_id + ", " + objs[idx].booksf_nm + ", " + objs[idx].booksf_remk  + "</span><br>"; 
+        		html += "<span><button class=\"btn btn-xs btn-warning\" onclick=\"upNdown('static_booksf_y',"+objs[idx].booksf_height+");upNdown('linked_id',"+objs[idx].booksf_id+");setPen_type(7);\">서가배치</button> "+ objs[idx].stack_id + ", " + objs[idx].booksf_id + ", " + objs[idx].booksf_nm + ", " + objs[idx].booksf_remk  + "</span><br>"; 
         	}
         	document.getElementById("list").innerHTML = html;
         	
