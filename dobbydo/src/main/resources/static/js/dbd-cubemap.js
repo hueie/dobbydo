@@ -462,8 +462,15 @@ var booksf_flw = 1;
 var booksf_y = 1; 
 var booksf_z = 1; 
 var booksf_x = 1; 
-function upNdown(tag_id,i){
+function upNdown(tag_id, i){
 	var value =  $("#"+tag_id).val();
+	if(value == 1 && parseInt(i) < 0 ){
+		return false;
+	}
+	if(tag_id == "booksf_flw" && $("#booksf_flw").val() == $("#booksf_y").val() && parseInt(i) > 0){
+		return false;
+	}
+	
 	if(tag_id == "linked_id"){
 		value = i;
 	} else if(tag_id == "static_booksf_y"){
@@ -896,7 +903,7 @@ function onDocumentMouseMove( event ) {
 			rollOverBooksfXMesh[4].position.y += 50*booksf_y;
 			rollOverBooksfXMesh[4].position.z += 50*booksf_z;
 			
-			if(booksf_flw > 1){ //Except 1 단
+			//if(booksf_flw > 1){ //Except 1 단
 				var step = 50*booksf_y/booksf_flw;
 				for(var i=0; i <= booksf_flw; i++){
 					/*
@@ -914,7 +921,7 @@ function onDocumentMouseMove( event ) {
 					//scene.add( rollOverBooksfFlwMesh[i] );
 
 				}
-			}
+			//}
 		}
 	}
 	render();
@@ -1112,7 +1119,7 @@ function onDocumentMouseDown( event ) {
 					objects.push( voxel );
 		
 					//Add Booksf_flw
-					if(booksf_flw > 1){ //Except 1 단
+					//if(booksf_flw > 1){ //Except 1 단
 						var step = 50*booksf_y/booksf_flw;
 						for(var i=0; i <= booksf_flw; i++){
 							voxel = new THREE.Mesh(realBooksfFlwGeo, realBooksfFlwMaterial); 
@@ -1128,7 +1135,7 @@ function onDocumentMouseDown( event ) {
 							scene.add( voxel );
 							objects.push( voxel );
 						}
-					}
+					//}
 					
 					object_id++;
 				} else if ( pen_type == 999 ) {
