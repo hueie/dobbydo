@@ -86,12 +86,11 @@
 					</span> 
 				</div>
 				<div id="booksf_add_form" style="display: none">
-					<span>
-						
-						새 서가 이름 : <input type="text" id="booksf_nm" onclick=";event.stopPropagation();"> <!-- 단계수 : <input type="text" id="booksf_f_cnt"><br> -->
-						비고 : <input type="text" id="booksf_remk" onclick=";event.stopPropagation();">
-						<img src="/images/icon/check-green.png" style="width:32px;height:32px;" onclick="addBooksf();event.stopPropagation();">
-					</span> <br>
+					<span style="height:50px; line-height:50px; text-align:center;">
+						새 서가 이름 : <input type="text" style="height:24px;" id="booksf_nm" onclick=";event.stopPropagation();"> <!-- 단계수 : <input type="text" id="booksf_f_cnt"><br> -->
+						비고 : <input type="text" style="height:24px;" id="booksf_remk" onclick=";event.stopPropagation();">
+						<img src="/images/icon/check-green.png" style="width:24px;height:24px;" onclick="addBooksf();event.stopPropagation();">
+					</span><br>
 					<div style="display: inline">
 						x : <input type="text" id="booksf_x" style="width: 20px" value="1"></input>
 						<button onclick="upNdown('booksf_x','1');event.stopPropagation();">+</button>
@@ -103,17 +102,23 @@
 						<button onclick="upNdown('booksf_z','-1');event.stopPropagation();">-</button>
 					</div>
 					<div style="display: inline">
-						단계수 : <input type="text" id="booksf_y" style="width: 20px"
+						y : <input type="text" id="booksf_y" style="width: 20px"
 							value="1"></input>
 						<button onclick="upNdown('booksf_y','1');event.stopPropagation();">+</button>
 						<button onclick="upNdown('booksf_y','-1');event.stopPropagation();">-</button>
 					</div>
+					<div style="display: inline">
+						단계수 : <input type="text" id="booksf_flw" style="width: 20px"
+							value="1"></input>
+						<button onclick="upNdown('booksf_flw','1');event.stopPropagation();">+</button>
+						<button onclick="upNdown('booksf_flw','-1');event.stopPropagation();">-</button>
+					</div>
 				</div>
 	
 				<div id="box_add_form" style="display: none">
-					<span>
-						새 상자 이름: <input type="text" id="box_nm" onclick=";event.stopPropagation();"> 
-						비고 : <input type="text" id="box_remk" onclick=";event.stopPropagation();">
+					<span style="height:50px; line-height:50px; text-align:center;">
+						새 상자 이름: <input type="text" style="height:24px;" id="box_nm" onclick=";event.stopPropagation();"> 
+						비고 : <input type="text" style="height:24px;" id="box_remk" onclick=";event.stopPropagation();">
 						<img src="/images/icon/check-green.png" style="width:32px;height:32px;" onclick="addBox();event.stopPropagation();">
 					</span>
 				</div>

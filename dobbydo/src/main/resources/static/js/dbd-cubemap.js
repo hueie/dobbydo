@@ -458,6 +458,7 @@ function getBoxView(box_id){
         } 
     });
 }
+var booksf_flw = 1; 
 var booksf_y = 1; 
 var booksf_z = 1; 
 var booksf_x = 1; 
@@ -489,6 +490,8 @@ function upNdown(tag_id,i){
 		static_linked_id = value;
 	} else if(tag_id == "static_booksf_y"){
 		booksf_y = value;
+	} else if(tag_id == "booksf_flw"){
+		booksf_flw = value;
 	}
 }
 
@@ -799,27 +802,24 @@ function onDocumentMouseMove( event ) {
 			rollOverMesh.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
 		} else if(pen_type == 7){
 			rollOverBooksfYMesh[1].scale.y = booksf_y;// 50*booksf_y;
-			rollOverBooksfYMesh[2].scale.y = booksf_y;
-			rollOverBooksfYMesh[3].scale.y = booksf_y;// 50*booksf_y;
-			rollOverBooksfYMesh[4].scale.y = booksf_y;
-			// .addScalar( 25);
 			rollOverBooksfYMesh[1].position.copy( intersect.point ).add( intersect.face.normal );
 			rollOverBooksfYMesh[1].position.divideScalar( 50 ).round().multiplyScalar( 50 );
 			rollOverBooksfYMesh[1].position.y += 25*booksf_y;
 			
-			// .addScalar( 25);
+			rollOverBooksfYMesh[2].scale.y = booksf_y;
 			rollOverBooksfYMesh[2].position.copy( intersect.point ).add( intersect.face.normal );
 			rollOverBooksfYMesh[2].position.divideScalar( 50 ).round().multiplyScalar( 50 );
 			rollOverBooksfYMesh[2].position.y += 25*booksf_y;
 			rollOverBooksfYMesh[2].position.x += 50*booksf_x;
 			
-			// .addScalar( 25);
+			rollOverBooksfYMesh[3].scale.y = booksf_y;// 50*booksf_y;
 			rollOverBooksfYMesh[3].position.copy( intersect.point ).add( intersect.face.normal );
 			rollOverBooksfYMesh[3].position.divideScalar( 50 ).round().multiplyScalar( 50 );
 			rollOverBooksfYMesh[3].position.y += 25*booksf_y;
 			rollOverBooksfYMesh[3].position.z += 50*booksf_z;
 			
 			// .addScalar( 25);
+			rollOverBooksfYMesh[4].scale.y = booksf_y;
 			rollOverBooksfYMesh[4].position.copy( intersect.point ).add( intersect.face.normal );
 			rollOverBooksfYMesh[4].position.divideScalar( 50 ).round().multiplyScalar( 50 );
 			rollOverBooksfYMesh[4].position.y += 25*booksf_y;
@@ -828,24 +828,23 @@ function onDocumentMouseMove( event ) {
 			
 			
 			rollOverBooksfZMesh[1].scale.z = booksf_z;
-			rollOverBooksfZMesh[2].scale.z = booksf_z;
-			rollOverBooksfZMesh[3].scale.z = booksf_z;
-			rollOverBooksfZMesh[4].scale.z = booksf_z;
-			
 			rollOverBooksfZMesh[1].position.copy( intersect.point ).add( intersect.face.normal );
 			rollOverBooksfZMesh[1].position.divideScalar( 50 ).round().multiplyScalar( 50 );
 			rollOverBooksfZMesh[1].position.z += 25*booksf_z;
 			
+			rollOverBooksfZMesh[2].scale.z = booksf_z;
 			rollOverBooksfZMesh[2].position.copy( intersect.point ).add( intersect.face.normal );
 			rollOverBooksfZMesh[2].position.divideScalar( 50 ).round().multiplyScalar( 50 );
 			rollOverBooksfZMesh[2].position.z += 25*booksf_z;
 			rollOverBooksfZMesh[2].position.y += 50*booksf_y;
 			
+			rollOverBooksfZMesh[3].scale.z = booksf_z;
 			rollOverBooksfZMesh[3].position.copy( intersect.point ).add( intersect.face.normal );
 			rollOverBooksfZMesh[3].position.divideScalar( 50 ).round().multiplyScalar( 50 );
 			rollOverBooksfZMesh[3].position.z += 25*booksf_z;
 			rollOverBooksfZMesh[3].position.x += 50*booksf_x;
 			
+			rollOverBooksfZMesh[4].scale.z = booksf_z;
 			rollOverBooksfZMesh[4].position.copy( intersect.point ).add( intersect.face.normal );
 			rollOverBooksfZMesh[4].position.divideScalar( 50 ).round().multiplyScalar( 50 );
 			rollOverBooksfZMesh[4].position.z += 25*booksf_z;
@@ -854,24 +853,23 @@ function onDocumentMouseMove( event ) {
 			
 
 			rollOverBooksfXMesh[1].scale.x = booksf_x;
-			rollOverBooksfXMesh[2].scale.x = booksf_x;
-			rollOverBooksfXMesh[3].scale.x = booksf_x;
-			rollOverBooksfXMesh[4].scale.x = booksf_x;
-			
 			rollOverBooksfXMesh[1].position.copy( intersect.point ).add( intersect.face.normal );
 			rollOverBooksfXMesh[1].position.divideScalar( 50 ).round().multiplyScalar( 50 );
 			rollOverBooksfXMesh[1].position.x += 25*booksf_x;
 			
+			rollOverBooksfXMesh[2].scale.x = booksf_x;
 			rollOverBooksfXMesh[2].position.copy( intersect.point ).add( intersect.face.normal );
 			rollOverBooksfXMesh[2].position.divideScalar( 50 ).round().multiplyScalar( 50 );
 			rollOverBooksfXMesh[2].position.x += 25*booksf_x;
 			rollOverBooksfXMesh[2].position.y += 50*booksf_y;
 			
+			rollOverBooksfXMesh[3].scale.x = booksf_x;
 			rollOverBooksfXMesh[3].position.copy( intersect.point ).add( intersect.face.normal );
 			rollOverBooksfXMesh[3].position.divideScalar( 50 ).round().multiplyScalar( 50 );
 			rollOverBooksfXMesh[3].position.x += 25*booksf_x;
 			rollOverBooksfXMesh[3].position.z += 50*booksf_z;
 			
+			rollOverBooksfXMesh[4].scale.x = booksf_x;
 			rollOverBooksfXMesh[4].position.copy( intersect.point ).add( intersect.face.normal );
 			rollOverBooksfXMesh[4].position.divideScalar( 50 ).round().multiplyScalar( 50 );
 			rollOverBooksfXMesh[4].position.x += 25*booksf_x;
