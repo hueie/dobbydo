@@ -505,11 +505,13 @@ var rollOverGeo, rollOverMesh, rollOverMaterial;
 var rollOverBooksfXGeo, rollOverBooksfXMaterial, rollOverBooksfXMesh = [];
 var rollOverBooksfYGeo, rollOverBooksfYMaterial, rollOverBooksfYMesh = [];
 var rollOverBooksfZGeo, rollOverBooksfZMaterial, rollOverBooksfZMesh = [];
+var rollOverBooksfFlwGeo, rollOverBooksfFlwMaterial, rollOverBooksfFlwMesh = [];
 
 var cubeGeo, cubeMaterial, cctvMaterial;
 var realBooksfXGeo, realBooksfXMaterial;
 var realBooksfYGeo, realBooksfYMaterial;
 var realBooksfZGeo, realBooksfZMaterial;
+var realBooksfFlwGeo, realBooksfFlwMaterial;
 
 var objects = [];
 var pen_type = 999; // 999; //0:eraser//1:white box//2:red box//3,4,5:y,z,x-axis
@@ -550,11 +552,7 @@ function init() {
 	
 	rollOverBooksfYMesh[1] = new THREE.Mesh( rollOverBooksfYGeo, rollOverBooksfYMaterial ); 
 	rollOverBooksfYMesh[1].rotation.y = 0.5*Math.PI;
-	// rollOverBooksfYMesh.position.copy( intersect.point ).add(
-	// intersect.face.normal );
 	rollOverBooksfYMesh[1].position.divideScalar( 50 ).round().multiplyScalar( 50 );// .addScalar(
-																					// 25
-																					// );
 	rollOverBooksfYMesh[1].position.y += 25*booksf_y;
 	scene.add( rollOverBooksfYMesh[1] );
 	
@@ -622,6 +620,15 @@ function init() {
 	/* End Rack */
 	
 	
+	/* Book Shelves */
+	rollOverBooksfFlwGeo = new THREE.BoxGeometry( 50, 1, 50 );
+	rollOverBooksfFlwMaterial = new THREE.MeshLambertMaterial( { color: 0x0000ff, opacity: 0.5, transparent: true } );
+	for(var idx=0; idx<50; idx++){
+		rollOverBooksfFlwMesh[idx] = new THREE.Mesh(rollOverBooksfFlwGeo, rollOverBooksfFlwMaterial); 
+		scene.add( rollOverBooksfFlwMesh[idx] );
+	}
+	
+	
 	/* Textures !!! */
 	/* White Cube Setting */
 	cubeGeo = new THREE.BoxGeometry( 50, 50, 50 );
@@ -646,6 +653,10 @@ function init() {
 	
 	realBooksfXGeo = new THREE.BoxGeometry(50*booksf_x,8,8);
 	realBooksfXMaterial = new THREE.MeshBasicMaterial( { map: new THREE.TextureLoader().load( "/images/texture/booksf-texture.jpg" ) } );
+
+	realBooksfFlwGeo = new THREE.BoxGeometry(50,1,50);
+	realBooksfFlwMaterial = new THREE.MeshLambertMaterial( { color: 0xffffff, map: new
+		 THREE.TextureLoader().load( "/images/texture/booksf-texture.jpg" ) } );
 	
 	/* End Rack */
 	
@@ -791,15 +802,24 @@ function onDocumentMouseMove( event ) {
 	var intersects = raycaster.intersectObjects( objects );
 	if ( intersects.length > 0 ) {
 		var intersect = intersects[ 0 ];
+		for(var tmpidx in intersects){
+			var tmpintersect = intersects[tmpidx];
+			var msg = "";
+			msg += "Point["+tmpidx+"]:("+tmpintersect.point.x+","+tmpintersect.point.y+","+tmpintersect.point.z+")";
+			msg += "\n";
+			msg += "Face["+tmpidx+"]:("+tmpintersect.face.normal.x+","+tmpintersect.face.normal.y+","+tmpintersect.face.normal.z+")";
+			msg += "\n";
+			console.log(msg);
+		}
 		
-		// alert("Point : "+intersect.point.x+" face :
-		// "+intersect.face.normal.x+"Point : "+intersect.point.y+" face :
-		// "+intersect.face.normal.y);
 		if(pen_type == 0 || pen_type == 999){
 			
 		} else if(pen_type == 1 || pen_type == 2){
 			rollOverMesh.position.copy( intersect.point ).add( intersect.face.normal );
 			rollOverMesh.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
+			//For Intersect Different Booksf_Y and Booksf_Flw
+			rollOverMesh.position.y = intersect.point.y + 25;
+			
 		} else if(pen_type == 7){
 			rollOverBooksfYMesh[1].scale.y = booksf_y;// 50*booksf_y;
 			rollOverBooksfYMesh[1].position.copy( intersect.point ).add( intersect.face.normal );
@@ -875,8 +895,27 @@ function onDocumentMouseMove( event ) {
 			rollOverBooksfXMesh[4].position.x += 25*booksf_x;
 			rollOverBooksfXMesh[4].position.y += 50*booksf_y;
 			rollOverBooksfXMesh[4].position.z += 50*booksf_z;
-		}
 			
+			if(booksf_flw > 1){ //Except 1 단
+				var step = 50*booksf_y/booksf_flw;
+				for(var i=0; i <= booksf_flw; i++){
+					/*
+					rollOverBooksfFlwGeo = new THREE.BoxGeometry( 50, 1, 50 );
+					rollOverBooksfFlwMaterial = new THREE.MeshLambertMaterial( { color: 0x0000ff, opacity: 0.5, transparent: true } );
+					rollOverBooksfFlwMesh[i] = new THREE.Mesh(rollOverBooksfFlwGeo, rollOverBooksfFlwMaterial); 
+					*/
+					rollOverBooksfFlwMesh[i].scale.x = booksf_x;
+					rollOverBooksfFlwMesh[i].scale.z = booksf_z;
+					rollOverBooksfFlwMesh[i].position.copy( intersect.point ).add( intersect.face.normal );
+					rollOverBooksfFlwMesh[i].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+					rollOverBooksfFlwMesh[i].position.y += (step*i);
+					rollOverBooksfFlwMesh[i].position.x += 25*booksf_x;
+					rollOverBooksfFlwMesh[i].position.z += 25*booksf_z;
+					//scene.add( rollOverBooksfFlwMesh[i] );
+
+				}
+			}
+		}
 	}
 	render();
 }
@@ -936,6 +975,7 @@ function onDocumentMouseDown( event ) {
 					voxel = new THREE.Mesh( cubeGeo, cubeMaterial );
 					voxel.position.copy( intersect.point ).add( intersect.face.normal );
 					voxel.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
+					voxel.position.y = intersect.point.y + 25;
 					voxel.name = "{ \"cube_type\":1, \"linked_id\":"+static_linked_id+", \"object_id\":"+object_id+", \"cube_size\":1, \"cube_axis\":0 }";
 					object_id++;
 				} else if ( pen_type == 2 ) {
@@ -943,6 +983,7 @@ function onDocumentMouseDown( event ) {
 					voxel = new THREE.Mesh( cubeGeo, cctvMaterial );
 					voxel.position.copy( intersect.point ).add( intersect.face.normal );
 					voxel.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
+					voxel.position.y = intersect.point.y + 25;
 					voxel.name = "{ \"cube_type\":2, \"linked_id\":"+static_linked_id+", \"object_id\":"+object_id+", \"cube_size\":1, \"cube_axis\":0 }";
 					object_id++;
 				} else if( pen_type == 7) {
@@ -1070,6 +1111,25 @@ function onDocumentMouseDown( event ) {
 					scene.add( voxel );
 					objects.push( voxel );
 		
+					//Add Booksf_flw
+					if(booksf_flw > 1){ //Except 1 단
+						var step = 50*booksf_y/booksf_flw;
+						for(var i=0; i <= booksf_flw; i++){
+							voxel = new THREE.Mesh(realBooksfFlwGeo, realBooksfFlwMaterial); 
+							voxel.scale.x = booksf_x;
+							voxel.scale.z = booksf_z;
+							voxel.position.copy( intersect.point ).add( intersect.face.normal );
+							voxel.position.divideScalar( 50 ).round().multiplyScalar( 50 );
+							voxel.position.y += (step*i);
+							voxel.position.x += 25*booksf_x;
+							voxel.position.z += 25*booksf_z;
+							
+							voxel.name = "{ \"cube_type\":7, \"linked_id\":"+static_linked_id+", \"object_id\":"+object_id+", \"cube_size\":"+booksf_x+", \"cube_axis\":3 }";
+							scene.add( voxel );
+							objects.push( voxel );
+						}
+					}
+					
 					object_id++;
 				} else if ( pen_type == 999 ) {
 					if ( intersect.object != plane ) {
