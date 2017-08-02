@@ -219,7 +219,33 @@ function getBooksfList(){
     });
 }
 function getBoxList(){
+	$("#stack_add_form").css("display","none");
+	$("#booksf_add_form").css("display","none");
+	$("#box_add_form").css("display","block");
+	// 상자
 	
+	$.ajax({
+		type:"post",
+		url: "/cubemap/CubemapBoxList",
+		data: {},
+		success: function (data, textStatus, xhr){
+			var objs = data;
+			var html = "<table><tr><td></td><td>이름</td><td>비고</td><tr>";
+			for(var idx in objs){
+				html +="<tr>";
+				html +="<td><img src\"/images/icon/check-green.png\" style=\"width:24px;height:24px;\" onclick=\"upNdown('linked_id',"+objs[idx].box_id+");setPen_type(1)\"></td>";
+				html +="<td>"+objs[idx].box_nm+"</td>";
+				html +="<td>"+objs[idx].box_remk+"</td>";
+				html +="</tr>";
+			}
+			html += "</table>";
+			document.getElementById("list").innerHTML = html;
+		},
+		error: function (xhr, ajaxOptions, thrownError){
+			alert(xhr.status);
+			alert(thrownError);
+		}
+	});
 }
 
 function getAllFiles2(){
