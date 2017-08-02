@@ -1,17 +1,20 @@
+<input type="hidden" id="stack_id" value="0"><!-- 서고 ID  -->
+<input type="hidden" id="linked_id" value="0"><!-- 연결 ID  -->
+<input type="hidden" id="booksf_id" value="0"/><!-- 서가 ID -->
+
 <div id="cubemapview" oncontextmenu="return false;">
 	<div style="width: 60%; position: absolute">
-		<div id="info">
-			<!-- <strong>Small Shop Interior YS</strong><br> -->
-			<span>
-				<strong>hi</strong>
+		<div id="info" >
+			<span id="stackInfo" style="font-weight:bold;">
+				오른쪽 서고 아이콘을 이용하여 서고를 선택해주세요.
 			</span>
 			<span style="float:right;margin:10px;">
 				<!--
 					<button onclick="setPen_type(1)">white box</button><button onclick="setPen_type(2)">red box</button>
 					<button onclick="setPen_type(7)">green rack</button><button onclick="setPen_type(0)">eraser</button><br><hr><br>
 				-->
-				<div>
-					<img src="/images/icon/stack.png" onmouseover="this.src='/images/icon/stack-red.png';" onmouseout="this.src='/images/icon/stack.png';" alt="서고 목록 가져오기" class="stackEvent" style="width:32px;height:32px;">
+				<img src="/images/icon/stack.png" onmouseover="this.src='/images/icon/stack-red.png';" onmouseout="this.src='/images/icon/stack.png';" alt="서고 목록 가져오기" class="stackEvent" style="width:32px;height:32px;display:inline;">
+				<div id="menu_icons" style="display:none;">
 					<img src="/images/icon/shelf.png" onmouseover="this.src='/images/icon/shelf-red.png';" onmouseout="this.src='/images/icon/shelf.png';" alt="서가 목록 가져오기" class="shelfEvent" style="width:32px;height:32px;">
 					<img src="/images/icon/box.png" onmouseover="this.src='/images/icon/box-red.png';" onmouseout="this.src='/images/icon/box.png';" alt="상자 목록 가져오기" class="boxEvent" style="width:32px;height:32px;">
 					<img src="/images/icon/magnifier.png" onmouseover="this.src='/images/icon/magnifier-red.png';" onmouseout="this.src='/images/icon/magnifier.png';" alt="상세정보" onclick="setPen_type(999)" style="width:32px;height:32px;">
@@ -73,21 +76,22 @@
 					<td></td>
 				</tr>
 			</table>
-			<div id="view" style="position:absolute;background-color:white;left:50%;top:50%;"></div>
-			<div id="addandlist" style="position:absolute;background-color:white;left:50%;top:50%;">
+			<div id="view" style="position:absolute;background-color:#feffce;left:50%;top:50%;border-radius: 10px;padding:10px;"></div>
+			<div id="addandlist" style="position:absolute;background-color:#feffce;left:50%;top:50%;border-radius: 10px;padding:10px;">
 				<div id="stack_add_form" style="display: none">
-					<span>
-						<button onclick="addStack();event.stopPropagation();">새 서고등록</button> 
-						서고명 : <input type="text" id="stack_nm" onclick=";event.stopPropagation();"> 
-						비고 : <input type="text" id="stack_remk" onclick=";event.stopPropagation();">
-					</span> <br>
+					<span  style="height:50px; line-height:50px; text-align:center;">
+						새 서고 이름 : <input style="height:24px;" type="text" id="stack_nm" onclick=";event.stopPropagation();"> 
+						비고 : <input style="height:24px;" type="text" id="stack_remk" onclick=";event.stopPropagation();">
+						<img src="/images/icon/check-green.png" style="width:24px;height:24px;" onclick="addStack();event.stopPropagation();">
+					</span> 
 				</div>
 				<div id="booksf_add_form" style="display: none">
 					<span>
-						<button onclick="addBooksf();event.stopPropagation();">서가등록</button> 
-						서가명 : <input type="text" id="booksf_nm" onclick=";event.stopPropagation();"> <!-- 단계수 : <input type="text" id="booksf_f_cnt"><br> -->
+						
+						새 서가 이름 : <input type="text" id="booksf_nm" onclick=";event.stopPropagation();"> <!-- 단계수 : <input type="text" id="booksf_f_cnt"><br> -->
 						비고 : <input type="text" id="booksf_remk" onclick=";event.stopPropagation();">
-					</span> <br> <br>
+						<img src="/images/icon/check-green.png" style="width:32px;height:32px;" onclick="addBooksf();event.stopPropagation();">
+					</span> <br>
 					<div style="display: inline">
 						x : <input type="text" id="booksf_x" style="width: 20px" value="1"></input>
 						<button onclick="upNdown('booksf_x','1');event.stopPropagation();">+</button>
@@ -108,28 +112,19 @@
 	
 				<div id="box_add_form" style="display: none">
 					<span>
-						<button onclick="addBox();event.stopPropagation();">새 상자등록</button> 
-						상자이름 : <input
-						type="text" id="box_nm" onclick=";event.stopPropagation();"> 비고 : <input type="text"
-						id="box_remk" onclick=";event.stopPropagation();">
-					</span> <br>
+						새 상자 이름: <input type="text" id="box_nm" onclick=";event.stopPropagation();"> 
+						비고 : <input type="text" id="box_remk" onclick=";event.stopPropagation();">
+						<img src="/images/icon/check-green.png" style="width:32px;height:32px;" onclick="addBox();event.stopPropagation();">
+					</span>
 				</div>
-				<br>
+				<hr>
 				<div id="list"></div>
 			</div>
 		</div>
 		
 		<div style="width: 60%; display: inline;" id="container"></div>
-		<div style="width: 38%; display: inline; float: right;">
-			<input type="hidden" id="stack_id" value=""><!-- 서고 ID  -->
-			<input type="hidden" id="linked_id" value="0"><!-- 연결 ID  -->
-			<input type="hidden" id="booksf_id" /><!-- 서가 ID -->
-			
-			<hr>
-			
-			
-			<hr>
-			<div id="canvas_list"></div>
-		</div>
+		<!-- 
+		<div style="width: 19%; display: inline; float: right;"></div>
+		 -->
 	</div>
 </div>
