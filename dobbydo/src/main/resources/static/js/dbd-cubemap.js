@@ -233,7 +233,7 @@ function getBoxList(){
 			var html = "<table><tr><td></td><td>이름</td><td>비고</td><tr>";
 			for(var idx in objs){
 				html +="<tr>";
-				html +="<td><img src\"/images/icon/check-green.png\" style=\"width:24px;height:24px;\" onclick=\"upNdown('linked_id',"+objs[idx].box_id+");setPen_type(1)\"></td>";
+				html +="<td><img src=\"/images/icon/check-green.png\" style=\"width:24px;height:24px;\" onclick=\"upNdown('linked_id',"+objs[idx].box_id+");setPen_type(1)\"></td>";
 				html +="<td>"+objs[idx].box_nm+"</td>";
 				html +="<td>"+objs[idx].box_remk+"</td>";
 				html +="</tr>";
