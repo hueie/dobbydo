@@ -26,8 +26,14 @@ public class Booksf implements Serializable {
 	@Column(name="booksf_remk")
 	private String booksf_remk;
 
-	@Column	(name="booksf_height")
-	private int booksf_height;
+	@Column	(name="booksf_y")
+	private int booksf_y;
+	@Column	(name="booksf_x")
+	private int booksf_x;
+	@Column	(name="booksf_z")
+	private int booksf_z;
+	@Column	(name="booksf_flw")
+	private int booksf_flw;
 	@Column	(name="booksf_row_cnt")
 	private int booksf_row_cnt;
 	
@@ -77,13 +83,13 @@ public class Booksf implements Serializable {
 	}
 
 
-	public int getBooksf_height() {
-		return booksf_height;
+	public int getBooksf_y() {
+		return booksf_y;
 	}
 
 
-	public void setBooksf_height(int booksf_height) {
-		this.booksf_height = booksf_height;
+	public void setBooksf_y(int booksf_y) {
+		this.booksf_y = booksf_y;
 	}
 
 
@@ -94,6 +100,36 @@ public class Booksf implements Serializable {
 
 	public void setBooksf_row_cnt(int booksf_row_cnt) {
 		this.booksf_row_cnt = booksf_row_cnt;
+	}
+
+
+	public int getBooksf_x() {
+		return booksf_x;
+	}
+
+
+	public void setBooksf_x(int booksf_x) {
+		this.booksf_x = booksf_x;
+	}
+
+
+	public int getBooksf_z() {
+		return booksf_z;
+	}
+
+
+	public void setBooksf_z(int booksf_z) {
+		this.booksf_z = booksf_z;
+	}
+
+
+	public int getBooksf_flw() {
+		return booksf_flw;
+	}
+
+
+	public void setBooksf_flw(int booksf_flw) {
+		this.booksf_flw = booksf_flw;
 	}
 
 

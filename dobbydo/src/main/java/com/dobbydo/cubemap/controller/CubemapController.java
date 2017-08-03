@@ -94,13 +94,19 @@ public class CubemapController {
 	public ResponseEntity<Void> CubemapAddBooksf(@RequestParam(value="stack_id", required = false)int stack_id, 
 			@RequestParam(value="booksf_nm", required = false)String booksf_nm, 
 			@RequestParam(value="booksf_remk", required = false)String booksf_remk, 
-			@RequestParam(value="booksf_y", required = false)int booksf_height) {
+			@RequestParam(value="booksf_y", required = false)int booksf_y,
+			@RequestParam(value="booksf_x", required = false)int booksf_x,
+			@RequestParam(value="booksf_z", required = false)int booksf_z,
+			@RequestParam(value="booksf_flw", required = false)int booksf_flw) {
 		
 		Booksf booksf = new Booksf();
 		booksf.setStack_id(stack_id);
 		booksf.setBooksf_nm(booksf_nm);
 		booksf.setBooksf_remk(booksf_remk);
-		booksf.setBooksf_height(booksf_height);
+		booksf.setBooksf_y(booksf_y);
+		booksf.setBooksf_x(booksf_x);
+		booksf.setBooksf_z(booksf_z);
+		booksf.setBooksf_flw(booksf_flw);
 		
 		boolean flag = cubemapService.createBooksf(booksf);
         if (flag == false) {
