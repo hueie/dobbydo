@@ -567,8 +567,10 @@ var realBooksfZGeo, realBooksfZMaterial;
 var realBooksfFlwGeo, realBooksfFlwMaterial;
 
 var objects = [];
-var pen_type = 999; // 999; //0:eraser//1:white box//2:red box//3,4,5:y,z,x-axis
-					// green pen//6:rack
+var grabbing_objects = [];
+
+var pen_type = 999; // 999:magnifier//0:eraser//1:white box//2:red box//3,4,5:y,z,x-axis
+					// green pen//6:rack//990:hand , 991:hand-grab
 var cubes = [];
 
 function initRoleOverMesh(){
@@ -696,11 +698,10 @@ function init() {
 	/* Textures !!! */
 	/* White Cube Setting */
 	cubeGeo = new THREE.BoxGeometry( 50, 50, 50 );
-	cubeMaterial = new THREE.MeshLambertMaterial( { color: 0xffffff, map: new
-		 THREE.TextureLoader().load( "/images/texture/box-texture.jpg" ) } );
+	cubeMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, map: new THREE.TextureLoader().load( "/images/texture/box-texture.jpg" ) });
 	
 	/* Red Cube Setting */
-	cctvMaterial = new THREE.MeshLambertMaterial( { color: 0xff0000 } ); // Red
+	cctvMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 }); // Red
 		
 	
 	/* Start Rack */
@@ -749,7 +750,7 @@ function init() {
 	scene.add( directionalLight );
 	
 	
-	/* Build Boxes */
+	/* Build Boxes From DB */
 	for(var key in cubes){
 		var voxel;
 		if(cubes[key]['cube_type'] == 1){
@@ -858,26 +859,22 @@ function onDocumentMouseMove( event ) {
 	// alert(top_margin + " "+left_margin);
 	mouse.set( ( (event.clientX-left_margin) / (window.innerWidth*6/10) ) * 2 - 1, - ( (event.clientY-top_margin) / window.innerHeight ) * 2 + 1 );
 	raycaster.setFromCamera( mouse, camera );
+	
 	var intersects = raycaster.intersectObjects( objects );
+	
 	if ( intersects.length > 0 ) {
 		var intersect = intersects[ 0 ];
-		for(var tmpidx in intersects){
-			var tmpintersect = intersects[tmpidx];
-			var msg = "";
-			msg += "Point["+tmpidx+"]:("+tmpintersect.point.x+","+tmpintersect.point.y+","+tmpintersect.point.z+")";
-			msg += "\n";
-			msg += "Face["+tmpidx+"]:("+tmpintersect.face.normal.x+","+tmpintersect.face.normal.y+","+tmpintersect.face.normal.z+")";
-			msg += "\n";
-			console.log(msg);
-		}
 		
-		if(pen_type == 0 || pen_type == 999){
-			
-		} else if(pen_type == 1 || pen_type == 2){
+		if(pen_type == 1 || pen_type == 2){
 			rollOverMesh.position.copy( intersect.point ).add( intersect.face.normal );
 			rollOverMesh.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
 			//For Intersect Different Booksf_Y and Booksf_Flw
 			rollOverMesh.position.y = intersect.point.y + 25;
+			
+		} else if( pen_type == 991 ){
+			grabbing_objects[0].position.copy( intersect.point ).add( intersect.face.normal );
+			grabbing_objects[0].position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
+			grabbing_objects[0].position.y = intersect.point.y + 25;
 			
 		} else if(pen_type == 7){
 			rollOverBooksfYMesh[1].scale.y = booksf_y;// 50*booksf_y;
@@ -965,6 +962,8 @@ function onDocumentMouseMove( event ) {
 				rollOverBooksfFlwMesh[i].position.x += 25*booksf_x;
 				rollOverBooksfFlwMesh[i].position.z += 25*booksf_z;
 			}
+		} else{
+			//pen_type == 0 || pen_type == 999 990 991
 		}
 	}
 	render();
@@ -996,15 +995,16 @@ function onDocumentMouseDown( event ) {
 					if ( intersect.object != plane ) {
 						var jsonobj = JSON.parse(intersect.object["name"]);
 						if(jsonobj.cube_type == "7"){
-							// alert("obj:"+jsonobj.object_id);
 							// Rack
 							var erased_id = jsonobj.object_id;
-							var objectsdel_flag = false, objectsdel_idx=0;
+							var objectsdel_flag = false, objectsdel_idx=0, objectsdel_cnt=0;
+							
 							for(var idx in objects){
-								// alert(idx);
 								if(objects[idx] != plane){
 									var tmpjsonobj = JSON.parse(objects[idx]["name"]);
 									if(tmpjsonobj.object_id == erased_id){
+										objectsdel_cnt++;
+										//console.log("objectsdel_cnt : " + objectsdel_cnt);
 										scene.remove( objects[idx] );
 										if(objectsdel_flag == false){
 											objectsdel_idx = idx;
@@ -1014,9 +1014,7 @@ function onDocumentMouseDown( event ) {
 								}
 							}
 							if(objectsdel_flag){
-								// objects.splice( objects.indexOf(
-								// objects[objectsdel_idx-12] ), 12 );
-								objects.splice( objectsdel_idx, 12 );
+								objects.splice( objectsdel_idx, objectsdel_cnt );
 							}
 						} else{
 							scene.remove( intersect.object );
@@ -1030,6 +1028,9 @@ function onDocumentMouseDown( event ) {
 					voxel.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
 					voxel.position.y = intersect.point.y + 25;
 					voxel.name = "{ \"cube_type\":1, \"linked_id\":"+static_linked_id+", \"object_id\":"+object_id+", \"cube_size\":1, \"cube_axis\":0 }";
+
+					scene.add( voxel );
+					objects.push( voxel );
 					object_id++;
 				} else if ( pen_type == 2 ) {
 					// red box
@@ -1038,6 +1039,9 @@ function onDocumentMouseDown( event ) {
 					voxel.position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
 					voxel.position.y = intersect.point.y + 25;
 					voxel.name = "{ \"cube_type\":2, \"linked_id\":"+static_linked_id+", \"object_id\":"+object_id+", \"cube_size\":1, \"cube_axis\":0 }";
+
+					scene.add( voxel );
+					objects.push( voxel );
 					object_id++;
 				} else if( pen_type == 7) {
 					var voxel;
@@ -1165,23 +1169,21 @@ function onDocumentMouseDown( event ) {
 					objects.push( voxel );
 		
 					//Add Booksf_flw
-					//if(booksf_flw > 1){ //Except 1 단
-						var step = 50*booksf_y/booksf_flw;
-						for(var i=0; i <= booksf_flw; i++){
-							voxel = new THREE.Mesh(realBooksfFlwGeo, realBooksfFlwMaterial); 
-							voxel.scale.x = booksf_x;
-							voxel.scale.z = booksf_z;
-							voxel.position.copy( intersect.point ).add( intersect.face.normal );
-							voxel.position.divideScalar( 50 ).round().multiplyScalar( 50 );
-							voxel.position.y += (step*i);
-							voxel.position.x += 25*booksf_x;
-							voxel.position.z += 25*booksf_z;
+					var step = 50 * booksf_y / booksf_flw;
+					for(var i=0; i <= booksf_flw; i++){
+						voxel = new THREE.Mesh(realBooksfFlwGeo, realBooksfFlwMaterial); 
+						voxel.scale.x = booksf_x;
+						voxel.scale.z = booksf_z;
+						voxel.position.copy( intersect.point ).add( intersect.face.normal );
+						voxel.position.divideScalar( 50 ).round().multiplyScalar( 50 );
+						voxel.position.y += (step*i);
+						voxel.position.x += 25*booksf_x;
+						voxel.position.z += 25*booksf_z;
 							
-							voxel.name = "{ \"cube_type\":7, \"linked_id\":"+static_linked_id+", \"object_id\":"+object_id+", \"cube_size\":"+booksf_x+", \"cube_axis\":3 }";
-							scene.add( voxel );
-							objects.push( voxel );
-						}
-					//}
+						voxel.name = "{ \"cube_type\":7, \"linked_id\":"+static_linked_id+", \"object_id\":"+object_id+", \"cube_size\":"+booksf_x+", \"cube_axis\":4 }";
+						scene.add( voxel );
+						objects.push( voxel );
+					}
 					
 					object_id++;
 				} else if ( pen_type == 999 ) {
@@ -1198,22 +1200,31 @@ function onDocumentMouseDown( event ) {
 						$("#view").css("left",left_margin);
 						$("#view").css("top",top_margin);
 
-						// $("#view").css("z-index","92");
 						$("#view").css("display","block");
 						$("#rightClickMenuTable").css("display","none");
-						// $("#rightClickContainer").css("z-index","91");
 						$("#rightClickContainer").css("display","block");
 					}
+				} else if( pen_type == 990 ){
+					if ( intersect.object != plane ) {
+						var jsonobj = JSON.parse(intersect.object["name"]);
+						if(jsonobj.cube_type == "1" || jsonobj.cube_type == "2"){
+							setPen_type(991);
+							intersect.object.material.transparent = true;
+							intersect.object.material.opacity  = 0.5;
+							grabbing_objects[0] = intersect.object;
+							objects.splice( objects.indexOf( intersect.object ), 1 );
+						}
+					}
+				} else if( pen_type == 991 ){
+					var jsonobj = JSON.parse(grabbing_objects[0]["name"]);
+					if(jsonobj.cube_type == "1" || jsonobj.cube_type == "2"){
+						setPen_type(990);
+						grabbing_objects[0].material.opacity  = 1;
+						grabbing_objects[0].material.transparent = false;
+						objects.push( grabbing_objects[0] );
+						grabbing_objects = [];
+					}
 				}
-			
-				
-				if ( pen_type == 0 || pen_type == 7 || pen_type == 999 ) {
-					
-				} else {
-					scene.add( voxel );
-					objects.push( voxel );
-				}
-			
 				render();
 			}
 			break;
@@ -1221,6 +1232,27 @@ function onDocumentMouseDown( event ) {
 	        // alert('Middle Mouse button pressed.');
 	        break;
 	    case 3:
+	    	var d = document.getElementById('cubemapview').getBoundingClientRect();
+			var left_margin = parseInt(d.left);
+			var top_margin = parseInt(d.top);
+			mouse.set( ( (event.clientX-left_margin) / (window.innerWidth*6/10) ) * 2 - 1, - ( (event.clientY-top_margin) / window.innerHeight ) * 2 + 1 );
+			raycaster.setFromCamera( mouse, camera );
+			var intersects = raycaster.intersectObjects( objects );
+			
+			if ( intersects.length > 0 ) {
+				var intersect = intersects[0];
+				var voxel;
+		    	if( pen_type == 991 ){
+		    		var jsonobj = JSON.parse(grabbing_objects[0]["name"]);
+					if(jsonobj.cube_type == "1" || jsonobj.cube_type == "2"){
+						setPen_type(990);
+						grabbing_objects[0].material.opacity  = 1;
+						grabbing_objects[0].material.transparent = false;
+						objects.push( grabbing_objects[0] );
+						grabbing_objects = [];
+					}
+		    	}
+			}
 	    	//alert('Right Mouse button pressed.');
 	        rollOverMesh.position.y = 10000;
 	    	
@@ -1243,7 +1275,9 @@ function onDocumentMouseDown( event ) {
 	    		rollOverBooksfFlwMesh[idx].position.y = 10000;
 	    	}
 	    	
-	        var left_margin = parseInt(event.clientX) - 48;
+	    	render();
+	    	
+	    	var left_margin = parseInt(event.clientX) - 48;
 			var top_margin = parseInt(event.clientY) - 48*2;
 			$("#rightClickMenuTable").css("left",left_margin);
 			$("#rightClickMenuTable").css("top",top_margin);
@@ -1331,6 +1365,7 @@ function render() {
 	renderer.render( scene, camera );
 }
 function setPen_type(i){
+	$('#container').css("cursor", "default");
 	if(i==3){
 		// y-axis green pen
 		rollOverPenMesh.rotation.x = 0;
@@ -1344,7 +1379,17 @@ function setPen_type(i){
 		rollOverPenMesh.rotation.z = 0.5*Math.PI;
 	} else if(i==7){
 		
+	} else if(i==990){
+		$('#container').css("cursor", "grab");
+		$('#container').css("cursor", "-moz-grab");
+		$('#container').css("cursor", "-webkit-grab");
+	} else if(i==991){
+		$('#container').css("cursor", "grabbing");
+		$('#container').css("cursor", "-moz-grabbing");
+		$('#container').css("cursor", "-webkit-grabbing");
 	}
+	
+	
 	pen_type=i;
 	disappearRightClickContainer();
 }

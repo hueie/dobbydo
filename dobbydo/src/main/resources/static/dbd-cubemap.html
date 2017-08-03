@@ -19,6 +19,7 @@
 					<img src="/images/icon/box.png" onmouseover="this.src='/images/icon/box-red.png';" onmouseout="this.src='/images/icon/box.png';" alt="상자 목록 가져오기" class="boxEvent" style="width:32px;height:32px;">
 					<img src="/images/icon/magnifier.png" onmouseover="this.src='/images/icon/magnifier-red.png';" onmouseout="this.src='/images/icon/magnifier.png';" alt="상세정보" onclick="setPen_type(999)" style="width:32px;height:32px;">
 					<img src="/images/icon/eraser.png" onmouseover="this.src='/images/icon/eraser-red.png';" onmouseout="this.src='/images/icon/eraser.png';" alt="지우개" onclick="setPen_type(0)" style="width:32px;height:32px;">
+					<img src="/images/icon/hand.png" onmouseover="this.src='/images/icon/hand-red.png';" onmouseout="this.src='/images/icon/hand.png';" alt="옴기기" onclick="setPen_type(990)" style="width:32px;height:32px;">
 					<img src="/images/icon/redo.png" onmouseover="this.src='/images/icon/redo-red.png';" onmouseout="this.src='/images/icon/redo.png';" alt="되돌리기" onclick="setStackId(-1)" style="width:32px;height:32px;">
 					<img src="/images/icon/saving-location.png" onmouseover="this.src='/images/icon/saving-location-red.png';" onmouseout="this.src='/images/icon/saving-location.png';" alt="배치도 저장" onclick="savemap()" style="width:32px;height:32px;">
 					<img src="/images/icon/saving-documents.png" onmouseover="this.src='/images/icon/saving-documents-red.png';" onmouseout="this.src='/images/icon/saving-documents.png';" alt="서고,사가,상자 배치 내용 저장" onclick="savestack()" style="width:32px;height:32px;">
@@ -53,27 +54,34 @@
 		<div style="position:absolute;z-index:90;display:none;height:100%;width:60%;" id="rightClickContainer" onclick="disappearRightClickContainer();">
 			<table id="rightClickMenuTable" style="position:absolute;z-index:91;">
 				<tr>
-					<td></td>
-					<td>
-						<img src="/images/icon/shelf.png" onmouseover="this.src='/images/icon/shelf-red.png';" onmouseout="this.src='/images/icon/shelf.png';" alt="서가 목록 가져오기" class="shelfEvent" style="width:32px;height:32px;">
-					</td>
-					<td></td>
-				</tr>
-				<tr>
 					<td>
 						<img src="/images/icon/box.png" onmouseover="this.src='/images/icon/box-red.png';" onmouseout="this.src='/images/icon/box.png';" alt="상자 목록 가져오기" class="boxEvent" style="width:32px;height:32px;">
 					</td>
-					<td></td>
+					<td>
+						<img src="/images/icon/shelf.png" onmouseover="this.src='/images/icon/shelf-red.png';" onmouseout="this.src='/images/icon/shelf.png';" alt="서가 목록 가져오기" class="shelfEvent" style="width:32px;height:32px;">
+					</td>
+					<td>
+					</td>
+				</tr>
+				<tr>
+					<td>
+					</td>
+					<td>
+					</td>
 					<td>
 						<img src="/images/icon/magnifier.png" onmouseover="this.src='/images/icon/magnifier-red.png';" onmouseout="this.src='/images/icon/magnifier.png';"  alt="상세정보" onclick="setPen_type(999);disappearRightClickContainer()" style="width:32px;height:32px;">
 					</td>
 				</tr>
 				<tr>
-					<td></td>
+					<td>
+						<img src="/images/icon/hand.png" onmouseover="this.src='/images/icon/hand-red.png';" onmouseout="this.src='/images/icon/hand.png';" alt="지우개" onclick="setPen_type(990);disappearRightClickContainer()" style="width:32px;height:32px;">
+					</td>
+					<td>
+					</td>
 					<td>
 						<img src="/images/icon/eraser.png" onmouseover="this.src='/images/icon/eraser-red.png';" onmouseout="this.src='/images/icon/eraser.png';" alt="지우개" onclick="setPen_type(0);disappearRightClickContainer()" style="width:32px;height:32px;">
 					</td>
-					<td></td>
+					
 				</tr>
 			</table>
 			<div id="view" style="position:absolute;background-color:#feffce;left:50%;top:50%;border-radius: 10px;padding:10px;" onclick=";event.stopPropagation();"></div>
