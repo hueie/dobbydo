@@ -872,10 +872,85 @@ function onDocumentMouseMove( event ) {
 			rollOverMesh.position.y = intersect.point.y + 25;
 			
 		} else if( pen_type == 991 ){
-			grabbing_objects[0].position.copy( intersect.point ).add( intersect.face.normal );
-			grabbing_objects[0].position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
-			grabbing_objects[0].position.y = intersect.point.y + 25;
-			
+			var jsonobj = JSON.parse(grabbing_objects[0]["name"]);
+			if(jsonobj.cube_type == "7"){
+				//Y
+				grabbing_objects[0].position.copy( intersect.point ).add( intersect.face.normal );
+				grabbing_objects[0].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+				grabbing_objects[0].position.y += 25*booksf_y;
+				
+				grabbing_objects[1].position.copy( intersect.point ).add( intersect.face.normal );
+				grabbing_objects[1].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+				grabbing_objects[1].position.y += 25*booksf_y;
+				grabbing_objects[1].position.x += 50*booksf_x;
+				
+				grabbing_objects[2].position.copy( intersect.point ).add( intersect.face.normal );
+				grabbing_objects[2].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+				grabbing_objects[2].position.y += 25*booksf_y;
+				grabbing_objects[2].position.z += 50*booksf_z;
+				
+				grabbing_objects[3].position.copy( intersect.point ).add( intersect.face.normal );
+				grabbing_objects[3].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+				grabbing_objects[3].position.y += 25*booksf_y;
+				grabbing_objects[3].position.x += 50*booksf_x;
+				grabbing_objects[3].position.z += 50*booksf_z;
+				
+				//Z
+				grabbing_objects[4].position.copy( intersect.point ).add( intersect.face.normal );
+				grabbing_objects[4].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+				grabbing_objects[4].position.z += 25*booksf_z;
+				
+				grabbing_objects[5].position.copy( intersect.point ).add( intersect.face.normal );
+				grabbing_objects[5].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+				grabbing_objects[5].position.z += 25*booksf_z;
+				grabbing_objects[5].position.y += 50*booksf_y;
+				
+				grabbing_objects[6].position.copy( intersect.point ).add( intersect.face.normal );
+				grabbing_objects[6].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+				grabbing_objects[6].position.z += 25*booksf_z;
+				grabbing_objects[6].position.x += 50*booksf_x;
+				
+				grabbing_objects[7].position.copy( intersect.point ).add( intersect.face.normal );
+				grabbing_objects[7].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+				grabbing_objects[7].position.z += 25*booksf_z;
+				grabbing_objects[7].position.y += 50*booksf_y;
+				grabbing_objects[7].position.x += 50*booksf_x;
+				
+				//X
+				grabbing_objects[8].position.copy( intersect.point ).add( intersect.face.normal );
+				grabbing_objects[8].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+				grabbing_objects[8].position.x += 25*booksf_x;
+				
+				grabbing_objects[9].position.copy( intersect.point ).add( intersect.face.normal );
+				grabbing_objects[9].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+				grabbing_objects[9].position.x += 25*booksf_x;
+				grabbing_objects[9].position.y += 50*booksf_y;
+				
+				grabbing_objects[10].position.copy( intersect.point ).add( intersect.face.normal );
+				grabbing_objects[10].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+				grabbing_objects[10].position.x += 25*booksf_x;
+				grabbing_objects[10].position.z += 50*booksf_z;
+				
+				grabbing_objects[11].position.copy( intersect.point ).add( intersect.face.normal );
+				grabbing_objects[11].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+				grabbing_objects[11].position.x += 25*booksf_x;
+				grabbing_objects[11].position.y += 50*booksf_y;
+				grabbing_objects[11].position.z += 50*booksf_z;
+				
+				var step = 50*booksf_y/booksf_flw;
+				console.log("step : "+step+" length" + grabbing_objects.length);
+				for(var idx=12; idx < grabbing_objects.length; idx++){
+					grabbing_objects[idx].position.copy( intersect.point ).add( intersect.face.normal );
+					grabbing_objects[idx].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+					grabbing_objects[idx].position.y += (step*(idx-12));
+					grabbing_objects[idx].position.x += 25*booksf_x;
+					grabbing_objects[idx].position.z += 25*booksf_z;
+				}
+			} else if(jsonobj.cube_type == "1" || jsonobj.cube_type == "2") {
+				grabbing_objects[0].position.copy( intersect.point ).add( intersect.face.normal );
+				grabbing_objects[0].position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
+				grabbing_objects[0].position.y = intersect.point.y + 25;
+			}
 		} else if(pen_type == 7){
 			rollOverBooksfYMesh[1].scale.y = booksf_y;// 50*booksf_y;
 			rollOverBooksfYMesh[1].position.copy( intersect.point ).add( intersect.face.normal );
@@ -894,7 +969,6 @@ function onDocumentMouseMove( event ) {
 			rollOverBooksfYMesh[3].position.y += 25*booksf_y;
 			rollOverBooksfYMesh[3].position.z += 50*booksf_z;
 			
-			// .addScalar( 25);
 			rollOverBooksfYMesh[4].scale.y = booksf_y;
 			rollOverBooksfYMesh[4].position.copy( intersect.point ).add( intersect.face.normal );
 			rollOverBooksfYMesh[4].position.divideScalar( 50 ).round().multiplyScalar( 50 );
@@ -1180,7 +1254,7 @@ function onDocumentMouseDown( event ) {
 						voxel.position.x += 25*booksf_x;
 						voxel.position.z += 25*booksf_z;
 							
-						voxel.name = "{ \"cube_type\":7, \"linked_id\":"+static_linked_id+", \"object_id\":"+object_id+", \"cube_size\":"+booksf_x+", \"cube_axis\":4 }";
+						voxel.name = "{ \"cube_type\":7, \"linked_id\":"+static_linked_id+", \"object_id\":"+object_id+", \"cube_size\":"+booksf_flw+", \"cube_axis\":4 }";
 						scene.add( voxel );
 						objects.push( voxel );
 					}
@@ -1206,22 +1280,63 @@ function onDocumentMouseDown( event ) {
 					}
 				} else if( pen_type == 990 ){
 					if ( intersect.object != plane ) {
+						setPen_type(991);
 						var jsonobj = JSON.parse(intersect.object["name"]);
 						if(jsonobj.cube_type == "1" || jsonobj.cube_type == "2"){
-							setPen_type(991);
 							intersect.object.material.transparent = true;
 							intersect.object.material.opacity  = 0.5;
 							grabbing_objects[0] = intersect.object;
 							objects.splice( objects.indexOf( intersect.object ), 1 );
+						} else if(jsonobj.cube_type == "7"){
+							// Rack
+							var erased_id = jsonobj.object_id;
+							var objectsdel_flag = false, objectsdel_idx=0, objectsdel_cnt=0;
+							
+							for(var idx in objects){
+								if(objects[idx] != plane){
+									var tmpjsonobj = JSON.parse(objects[idx]["name"]);
+									if(tmpjsonobj.object_id == erased_id){
+										objects[idx].material.transparent = true;
+										objects[idx].material.opacity  = 0.5;
+										grabbing_objects[objectsdel_cnt] = objects[idx];
+										objectsdel_cnt++;
+										if(objectsdel_flag == false){
+											objectsdel_idx = idx;
+											objectsdel_flag = true;
+										}
+										if(tmpjsonobj.cube_axis == 1){
+											booksf_y = tmpjsonobj.cube_size;
+										} else if(tmpjsonobj.cube_axis == 2){
+											booksf_z = tmpjsonobj.cube_size;
+										} else if(tmpjsonobj.cube_axis == 3){
+											booksf_x = tmpjsonobj.cube_size;
+										} else if(tmpjsonobj.cube_axis == 4){
+											booksf_flw = tmpjsonobj.cube_size;
+										}
+										console.log(booksf_y+" "+booksf_x+" "+booksf_z+" "+booksf_y+" ")
+										console.log("objectsdel_cnt : " + objectsdel_cnt)
+									}
+								}
+							}
+							if(objectsdel_flag){
+								objects.splice( objectsdel_idx, objectsdel_cnt );
+							}
 						}
 					}
 				} else if( pen_type == 991 ){
+					setPen_type(990);
 					var jsonobj = JSON.parse(grabbing_objects[0]["name"]);
 					if(jsonobj.cube_type == "1" || jsonobj.cube_type == "2"){
-						setPen_type(990);
 						grabbing_objects[0].material.opacity  = 1;
 						grabbing_objects[0].material.transparent = false;
 						objects.push( grabbing_objects[0] );
+						grabbing_objects = [];
+					} else if(jsonobj.cube_type == "7"){
+						for(var idx in grabbing_objects){
+							grabbing_objects[idx].material.opacity  = 1;
+							grabbing_objects[idx].material.transparent = false;
+							objects.push( grabbing_objects[idx] );
+						}
 						grabbing_objects = [];
 					}
 				}
