@@ -951,6 +951,99 @@ function onDocumentMouseMove( event ) {
 				grabbing_objects[0].position.divideScalar( 50 ).floor().multiplyScalar( 50 ).addScalar( 25 );
 				grabbing_objects[0].position.y = intersect.point.y + 25;
 			}
+		} else if(pen_type == 993){
+			var jsonobj = JSON.parse(grabbing_objects[0]["name"]);
+			if(jsonobj.cube_type == "7"){
+				//Y
+				grabbing_objects[0].position.copy( intersect.point ).add( intersect.face.normal );
+				grabbing_objects[0].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+				grabbing_objects[0].position.y += 25*booksf_y;
+				
+				grabbing_objects[1].position.copy( intersect.point ).add( intersect.face.normal );
+				grabbing_objects[1].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+				grabbing_objects[1].position.y += 25*booksf_y;
+				grabbing_objects[1].position.x += 50*booksf_x;
+				
+				grabbing_objects[2].position.copy( intersect.point ).add( intersect.face.normal );
+				grabbing_objects[2].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+				grabbing_objects[2].position.y += 25*booksf_y;
+				grabbing_objects[2].position.z += 50*booksf_z;
+				
+				grabbing_objects[3].position.copy( intersect.point ).add( intersect.face.normal );
+				grabbing_objects[3].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+				grabbing_objects[3].position.y += 25*booksf_y;
+				grabbing_objects[3].position.x += 50*booksf_x;
+				grabbing_objects[3].position.z += 50*booksf_z;
+				
+				//Z
+				grabbing_objects[4].position.copy( intersect.point ).add( intersect.face.normal );
+				grabbing_objects[4].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+				grabbing_objects[4].position.z += 25*booksf_z;
+				
+				grabbing_objects[5].position.copy( intersect.point ).add( intersect.face.normal );
+				grabbing_objects[5].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+				grabbing_objects[5].position.z += 25*booksf_z;
+				grabbing_objects[5].position.y += 50*booksf_y;
+				
+				grabbing_objects[6].position.copy( intersect.point ).add( intersect.face.normal );
+				grabbing_objects[6].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+				grabbing_objects[6].position.z += 25*booksf_z;
+				grabbing_objects[6].position.x += 50*booksf_x;
+				
+				grabbing_objects[7].position.copy( intersect.point ).add( intersect.face.normal );
+				grabbing_objects[7].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+				grabbing_objects[7].position.z += 25*booksf_z;
+				grabbing_objects[7].position.y += 50*booksf_y;
+				grabbing_objects[7].position.x += 50*booksf_x;
+				
+				//X
+				grabbing_objects[8].position.copy( intersect.point ).add( intersect.face.normal );
+				grabbing_objects[8].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+				grabbing_objects[8].position.x += 25*booksf_x;
+				
+				grabbing_objects[9].position.copy( intersect.point ).add( intersect.face.normal );
+				grabbing_objects[9].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+				grabbing_objects[9].position.x += 25*booksf_x;
+				grabbing_objects[9].position.y += 50*booksf_y;
+				
+				grabbing_objects[10].position.copy( intersect.point ).add( intersect.face.normal );
+				grabbing_objects[10].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+				grabbing_objects[10].position.x += 25*booksf_x;
+				grabbing_objects[10].position.z += 50*booksf_z;
+				
+				grabbing_objects[11].position.copy( intersect.point ).add( intersect.face.normal );
+				grabbing_objects[11].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+				grabbing_objects[11].position.x += 25*booksf_x;
+				grabbing_objects[11].position.y += 50*booksf_y;
+				grabbing_objects[11].position.z += 50*booksf_z;
+				
+				var step = 50*booksf_y/booksf_flw;
+				console.log("step : "+step+" length" + grabbing_objects.length);
+				var center_floor_x_pos = grabbing_objects[12].position.x;
+				var center_floor_z_pos = grabbing_objects[12].position.z;
+				var center_floor_y_pos = grabbing_objects[12].position.y;
+				var var_x_pos, var_z_pos, var_y_pos;
+				for(var idx=12; idx < grabbing_objects.length; idx++){
+					var jsonobj = JSON.parse(grabbing_objects[idx]["name"]);
+					if(jsonobj.cube_type == "7"){
+						grabbing_objects[idx].position.copy( intersect.point ).add( intersect.face.normal );
+						grabbing_objects[idx].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+						grabbing_objects[idx].position.y += (step*(idx-12));
+						grabbing_objects[idx].position.x += 25*booksf_x;
+						grabbing_objects[idx].position.z += 25*booksf_z;
+					}  else if(jsonobj.cube_type == "1" || jsonobj.cube_type == "2") {
+						var_x_pos = grabbing_objects[idx].position.x - center_floor_x_pos;
+						var_z_pos = grabbing_objects[idx].position.z - center_floor_z_pos;
+						var_y_pos = grabbing_objects[idx].position.y - center_floor_y_pos;
+						grabbing_objects[idx].position.copy( intersect.point ).add( intersect.face.normal );
+						grabbing_objects[idx].position.divideScalar( 50 ).round().multiplyScalar( 50 );
+						grabbing_objects[idx].position.x += 25*booksf_x + var_x_pos;
+						grabbing_objects[idx].position.z += 25*booksf_z + var_z_pos;
+						grabbing_objects[idx].position.y += var_y_pos;
+					}
+				}
+			}
+			
 		} else if(pen_type == 7){
 			rollOverBooksfYMesh[1].scale.y = booksf_y;// 50*booksf_y;
 			rollOverBooksfYMesh[1].position.copy( intersect.point ).add( intersect.face.normal );
@@ -1339,7 +1432,94 @@ function onDocumentMouseDown( event ) {
 						}
 						grabbing_objects = [];
 					}
+				} else if(pen_type == 992){
+					if ( intersect.object != plane ) {
+						setPen_type(993);
+						var jsonobj = JSON.parse(intersect.object["name"]);
+						if(jsonobj.cube_type == "7"){ // Rack
+							var erased_id = jsonobj.object_id;
+							var objectsdel_flag = false, objectsdel_idx=0, objectsdel_cnt=0;
+							var rack_x_pos_min=9999, rack_x_pos_max=-9999;
+							var rack_z_pos_min=9999, rack_z_pos_max=-9999;
+							
+							for(var idx in objects){
+								if(objects[idx] != plane){
+									var tmpjsonobj = JSON.parse(objects[idx]["name"]);
+									if(tmpjsonobj.object_id == erased_id){
+										objects[idx].material.transparent = true;
+										objects[idx].material.opacity  = 0.5;
+										grabbing_objects[objectsdel_cnt] = objects[idx];
+										objectsdel_cnt++;
+										
+										if(objects[idx].position.x >= rack_x_pos_max){
+											rack_x_pos_max = objects[idx].position.x;
+										}
+										if(objects[idx].position.x <= rack_x_pos_min){
+											rack_x_pos_min = objects[idx].position.x;
+										}
+										if(objects[idx].position.z >= rack_z_pos_max){
+											rack_z_pos_max = objects[idx].position.z;
+										}
+										if(objects[idx].position.z <= rack_z_pos_min){
+											rack_z_pos_min = objects[idx].position.z;
+										}
+										if(objectsdel_flag == false){
+											objectsdel_idx = idx;
+											objectsdel_flag = true;
+										}
+										if(tmpjsonobj.cube_axis == 1){
+											booksf_y = tmpjsonobj.cube_size;
+										} else if(tmpjsonobj.cube_axis == 2){
+											booksf_z = tmpjsonobj.cube_size;
+										} else if(tmpjsonobj.cube_axis == 3){
+											booksf_x = tmpjsonobj.cube_size;
+										} else if(tmpjsonobj.cube_axis == 4){
+											booksf_flw = tmpjsonobj.cube_size;
+										}
+									}
+								}
+							}
+							if(objectsdel_flag){
+								objects.splice( objectsdel_idx, objectsdel_cnt );
+							}
+							
+							var rest_objects_last_idx = objects.length-1;
+							var splice_object_lst = [];
+							console.log("rest_objects_last_idx : "+rest_objects_last_idx);
+							//Boxes In The Rack 
+							for(var idx in objects){
+								if(rest_objects_last_idx - idx != 0){ // plane
+									console.log("idx : "+idx+" x:"+rack_x_pos_min+","+rack_x_pos_max +" z:"+rack_z_pos_min+","+rack_z_pos_max);
+										if(rack_x_pos_min <= objects[rest_objects_last_idx - idx].position.x && objects[rest_objects_last_idx - idx].position.x <= rack_x_pos_max){
+										if(rack_z_pos_min <= objects[rest_objects_last_idx - idx].position.z && objects[rest_objects_last_idx - idx].position.z <= rack_z_pos_max){
+											objects[rest_objects_last_idx - idx].material.transparent = true;
+											objects[rest_objects_last_idx - idx].material.opacity  = 0.5;
+											
+											grabbing_objects[objectsdel_cnt] = objects[rest_objects_last_idx - idx];
+											objectsdel_cnt++;
+											splice_object_lst.push(rest_objects_last_idx - idx);
+										}
+									}
+								}
+							}
+							for(var idx in splice_object_lst){
+								//Splice Object From Backside
+								objects.splice( splice_object_lst[idx], 1 );
+							}
+							
+						}
+					}
+					
+				} else if( pen_type == 993 ){
+					setPen_type(992);
+					for(var idx in grabbing_objects){
+						grabbing_objects[idx].material.opacity  = 1;
+						grabbing_objects[idx].material.transparent = false;
+						objects.push( grabbing_objects[idx] );
+					}
+					grabbing_objects = [];
 				}
+				
 				render();
 			}
 			break;
@@ -1494,11 +1674,11 @@ function setPen_type(i){
 		rollOverPenMesh.rotation.z = 0.5*Math.PI;
 	} else if(i==7){
 		
-	} else if(i==990){
+	} else if(i==990 || i==992){
 		$('#container').css("cursor", "grab");
 		$('#container').css("cursor", "-moz-grab");
 		$('#container').css("cursor", "-webkit-grab");
-	} else if(i==991){
+	} else if(i==991 || i==993){
 		$('#container').css("cursor", "grabbing");
 		$('#container').css("cursor", "-moz-grabbing");
 		$('#container').css("cursor", "-webkit-grabbing");
