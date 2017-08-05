@@ -1489,15 +1489,18 @@ function onDocumentMouseDown( event ) {
 							//Boxes In The Rack 
 							for(var idx in objects){
 								if(rest_objects_last_idx - idx != 0){ // plane
-									console.log("idx : "+idx+" x:"+rack_x_pos_min+","+rack_x_pos_max +" z:"+rack_z_pos_min+","+rack_z_pos_max);
+									var jsonobj = JSON.parse(objects[rest_objects_last_idx - idx]["name"]);
+									if(jsonobj.cube_type != "7"){ // Not Near Rack
+										console.log("idx : "+idx+" x:"+rack_x_pos_min+","+rack_x_pos_max +" z:"+rack_z_pos_min+","+rack_z_pos_max);
 										if(rack_x_pos_min <= objects[rest_objects_last_idx - idx].position.x && objects[rest_objects_last_idx - idx].position.x <= rack_x_pos_max){
-										if(rack_z_pos_min <= objects[rest_objects_last_idx - idx].position.z && objects[rest_objects_last_idx - idx].position.z <= rack_z_pos_max){
-											objects[rest_objects_last_idx - idx].material.transparent = true;
-											objects[rest_objects_last_idx - idx].material.opacity  = 0.5;
-											
-											grabbing_objects[objectsdel_cnt] = objects[rest_objects_last_idx - idx];
-											objectsdel_cnt++;
-											splice_object_lst.push(rest_objects_last_idx - idx);
+											if(rack_z_pos_min <= objects[rest_objects_last_idx - idx].position.z && objects[rest_objects_last_idx - idx].position.z <= rack_z_pos_max){
+												objects[rest_objects_last_idx - idx].material.transparent = true;
+												objects[rest_objects_last_idx - idx].material.opacity  = 0.5;
+												
+												grabbing_objects[objectsdel_cnt] = objects[rest_objects_last_idx - idx];
+												objectsdel_cnt++;
+												splice_object_lst.push(rest_objects_last_idx - idx);
+											}
 										}
 									}
 								}
