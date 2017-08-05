@@ -127,3 +127,17 @@ CREATE TABLE `ysindex` (
   `id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+
+CREATE TABLE `bookarng` (
+  `ARNG_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `BOX_ID` int(11) DEFAULT NULL,
+  `STACK_ID` tinytext,
+  `BOOKSF_ID` tinytext,
+  `BOOKSF_F_NO` int(11) DEFAULT NULL,
+  `BOOKSF_R_NO` int(11) DEFAULT NULL,
+  `BOOKSF_R_SNO` int(11) DEFAULT NULL,
+  `ARNG_CD` tinytext,
+  `BOX_ARNG_DT` tinytext,
+  PRIMARY KEY (`ARNG_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
