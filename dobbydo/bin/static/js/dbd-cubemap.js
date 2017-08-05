@@ -74,7 +74,7 @@ function savemap(){
         url: "/cubemap/CubemapSavemap",
         data: {"cube_list" : myJsonString, "stack_id":stack_id},
         success: function(msg){
-         // alert(msg);
+          alert("저장이 완료되었습니다.");
         },
         error:function (xhr, ajaxOptions, thrownError){
             alert(xhr.status);
@@ -90,7 +90,7 @@ function savestack(){
         url: "/cubemap/CubemapSavestack",
         data: {"stackId" : stackId},
         success: function(msg){
-           // alert(msg);
+        	alert("저장이 완료되었습니다.");
         },
         error:function (xhr, ajaxOptions, thrownError){
             alert(xhr.status);
@@ -428,7 +428,7 @@ function updateBooksfIdToCammapping(cammapping_id){
             alert(xhr.status);
             alert(thrownError);
         } 
-    });
+    }); 
 }
 
 
@@ -578,6 +578,11 @@ function initRoleOverMesh(){
 }
 
 function initpushdata(objs){
+	booksf_flw = 1; 
+	booksf_y = 1; 
+	booksf_z = 1; 
+	booksf_x = 1; 
+	
 	objects = [];
 	//pen_type = 1;
 	cubes = [];
@@ -776,26 +781,33 @@ function init() {
 			voxel.rotation.z = 0.5*Math.PI;
 			voxel.position.set(cubes[key]['pos_x'], cubes[key]['pos_y'], cubes[key]['pos_z']);
 		} else if(cubes[key]['cube_type'] == 7){
-			// cube_axis : none:0 y:1 z:2 x:3
+			// cube_axis : none:0 y:1 z:2 x:3 flw:4
 			if(cubes[key]['cube_axis'] == 1){
 				// YMesh
-				var tmpRealBooksfYGeo = new THREE.BoxGeometry(8,50*cubes[key]['cube_size'],8);
-				var tmpRealBooksfYMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, opacity: 1, transparent: true } );
-				voxel = new THREE.Mesh( tmpRealBooksfYGeo, tmpRealBooksfYMaterial ); 
+				console.log("cube_size : "+cubes[key]['cube_size']);
+				voxel = new THREE.Mesh( realBooksfYGeo, realBooksfYMaterial ); 
+				booksf_y = cubes[key]['cube_size'];
+				voxel.scale.y = booksf_y;
 				voxel.rotation.y = 0.5*Math.PI;
 				voxel.position.set(cubes[key]['pos_x'], cubes[key]['pos_y'], cubes[key]['pos_z']);
 			} else if(cubes[key]['cube_axis'] == 2){
 				// ZMesh
-				var tmpRealBooksfZGeo = new THREE.BoxGeometry(8,8,50*cubes[key]['cube_size']);
-				var tmpRealBooksfZMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, opacity: 1, transparent: true } );
-				voxel = new THREE.Mesh( tmpRealBooksfZGeo, tmpRealBooksfZMaterial ); 
+				voxel = new THREE.Mesh( realBooksfZGeo, realBooksfZMaterial ); 
+				booksf_z = cubes[key]['cube_size'];
+				voxel.scale.z = booksf_z;
 				voxel.position.set(cubes[key]['pos_x'], cubes[key]['pos_y'], cubes[key]['pos_z']);
 			} else if(cubes[key]['cube_axis'] == 3){
 				// XMesh
-				var tmpRealBooksfXGeo = new THREE.BoxGeometry(50*cubes[key]['cube_size'],8,8);
-				var tmpRealBooksfXMaterial = new THREE.MeshBasicMaterial( { color: 0x000000, opacity: 1, transparent: true } );
-				voxel = new THREE.Mesh( tmpRealBooksfXGeo, tmpRealBooksfXMaterial ); 
+				voxel = new THREE.Mesh( realBooksfXGeo, realBooksfXMaterial ); 
+				booksf_x = cubes[key]['cube_size'];
+				voxel.scale.x = booksf_x;
 				voxel.rotation.x = 0.5*Math.PI;
+				voxel.position.set(cubes[key]['pos_x'], cubes[key]['pos_y'], cubes[key]['pos_z']);
+			} else if(cubes[key]['cube_axis'] == 4){
+				// Flw
+				voxel = new THREE.Mesh( realBooksfFlwGeo, realBooksfFlwMaterial ); 
+				voxel.scale.x = booksf_x;
+				voxel.scale.z = booksf_z;
 				voxel.position.set(cubes[key]['pos_x'], cubes[key]['pos_y'], cubes[key]['pos_z']);
 			}
 		}
