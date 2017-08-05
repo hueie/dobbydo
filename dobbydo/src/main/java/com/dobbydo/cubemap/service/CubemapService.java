@@ -2,6 +2,7 @@ package com.dobbydo.cubemap.service;
 
 import java.util.List;
 
+import com.dobbydo.cubemap.entity.Bookarng;
 import com.dobbydo.cubemap.entity.Booksf;
 import com.dobbydo.cubemap.entity.Box;
 import com.dobbydo.cubemap.entity.Cubemap;
@@ -13,8 +14,11 @@ public interface CubemapService {
     boolean createCubemap(Cubemap cubemap);
     boolean createStack(Stack stack);
     boolean createBooksf(Booksf booksf);
+    boolean createBookarng(Bookarng bookarng);
     boolean createBox(Box box);
     List<Cubemap> getCubemapsByStackId(int stack_id);
+    List<Cubemap> getCubemapsBySql(String sql);
+    
     List<Booksf> getBooksfsByStackId(int stack_id);
     
 

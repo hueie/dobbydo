@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.dobbydo.atestpage.dao.IArticleDAO;
 import com.dobbydo.atestpage.entity.Article;
+import com.dobbydo.cubemap.entity.Bookarng;
 import com.dobbydo.cubemap.entity.Booksf;
 import com.dobbydo.cubemap.entity.Box;
 import com.dobbydo.cubemap.entity.Cubemap;
@@ -47,6 +48,10 @@ public class CubemapDAOImpl  implements CubemapDAO {
 		entityManager.persist(booksf);
 	}
 	@Override
+	public void createBookarng(Bookarng bookarng) {
+		entityManager.persist(bookarng);
+	}
+	@Override
 	public void createBox(Box box) {
 		entityManager.persist(box);
 	}
@@ -65,6 +70,11 @@ public class CubemapDAOImpl  implements CubemapDAO {
 		return (List<Cubemap>) entityManager.createQuery(hql).setParameter("stack_id", stack_id).getResultList();
 	}
 	
+	@SuppressWarnings("unchecked") //Ignore Warnings
+	@Override
+	public List<Cubemap> getCubemapsBySql(String sql) {
+		return (List<Cubemap>) entityManager.createQuery(sql).getResultList();
+	}
 
 	@SuppressWarnings("unchecked") //Ignore Warnings
 	@Override

@@ -31,6 +31,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import com.dobbydo.atestpage.entity.Article;
 import com.dobbydo.atestpage.service.IArticleService;
+import com.dobbydo.cubemap.entity.Bookarng;
 import com.dobbydo.cubemap.entity.Booksf;
 import com.dobbydo.cubemap.entity.Box;
 import com.dobbydo.cubemap.entity.Cubemap;
@@ -203,60 +204,28 @@ public class CubemapController {
 	}	
 	
 	@PostMapping("CubemapSavestack")
-	public void CubemapSavestack(@RequestParam(value="stackId", required = false)String stackId, 
-			HttpServletResponse response) throws Exception {
+	public ResponseEntity<Void> CubemapSavestack(@RequestParam(value="stackId", required = false)int stackId 
+			) {
 		
-		Connection connect = null;
-		Statement statement = null;
-		PreparedStatement preparedStatement = null;
-		ResultSet resultSet, resultSet2 = null;
-		String sql = "";
-
-		try{
-		            // DB Open: mysql Server
-		            // JDBC Driver Loading
-		            /*
-		            String url = "jdbc:mysql://localhost:3306/mmstestdb";
-		            String uid = "root";
-		            String pw = "1234";    
-		                                               
-		            Class.forName("com.mysql.jdbc.Driver");
-		            */
-		            // Mysql DB Connection!!
-		            
-		            // DB Open: oracle Server
-				    // JDBC Driver Loading
-				    String url = "jdbc:oracle:thin:@123.212.43.252:1521:ARCHIVE1";
-				    String uid = "CBCK";
-				    String pw = "CBCK";    
-				                                       
-				    Class.forName("oracle.jdbc.driver.OracleDriver");
-		            
-		            connect = DriverManager.getConnection(url,uid,pw);
-		            statement = connect.createStatement();
-		            
-
-		sql = "SELECT object_id, linked_id, pos_y, pos_x, pos_z FROM YS_CUBE_MAP where stack_id = "+stackId+" and cube_type = 7 order by object_id, pos_y";
-
-		resultSet = statement.executeQuery(sql);    
-		System.out.println(sql);
-
-		String obejctId="", booksfId = "";
+		String sql = "SELECT object_id, linked_id, pos_y, pos_x, pos_z FROM CUBE_MAP where stack_id = "+stackId+" and cube_type = 7 order by object_id, pos_y";
+		List<Cubemap> list = cubemapService.getCubemapsBySql(sql);
+		
+		int obejctId=0, booksfId=0;
 		int posY, posX, posZ;
 
 		int idx = 12;
 		int minPosY=9999, maxPosY=-9999, minPosX=9999, maxPosX=-9999, minPosZ=9999, maxPosZ=-9999; 
-		while (resultSet.next()) {
+		for (Cubemap cube : list) {
 			if(idx == 12){
 				idx = 0;
 				minPosY=9999; maxPosY=-9999; minPosX=9999; maxPosX=-9999; minPosZ=9999; maxPosZ=-9999; 
-				obejctId = resultSet.getString("object_id");
-				booksfId = resultSet.getString("linked_id");
+				obejctId = cube.getObject_id();
+				booksfId = cube.getLinked_id();
 			}
 			if( (0 <= idx && idx <= 3) || (8 <= idx && idx <= 11)){
-				posY = resultSet.getInt("pos_y");
-				posX = resultSet.getInt("pos_x");
-				posZ = resultSet.getInt("pos_z");
+				posY = cube.getPos_y();
+				posX = cube.getPos_x();
+				posZ = cube.getPos_z();
 				
 				if(posX > maxPosX){
 					maxPosX = posX;
@@ -278,61 +247,37 @@ public class CubemapController {
 				}
 			}
 			if(idx == 11){
+				
 				sql = "SELECT linked_id, pos_y FROM YS_CUBE_MAP where stack_id = "+stackId+" and cube_type = 1"+ 
 						" AND pos_y between "+minPosY+" and "+maxPosY+
 						" AND pos_x between "+minPosX+" and "+maxPosX+
 						" AND pos_z between "+minPosZ+" and "+maxPosZ;
 				System.out.println(sql);
 
-				resultSet2 = statement.executeQuery(sql);  
+				List<Cubemap> list2 = cubemapService.getCubemapsBySql(sql);
+				
 				int boxId = 0, arngId = 0, box_pos_y = 0;
-				while (resultSet2.next()) {
-					boxId = resultSet2.getInt("linked_id");
-					box_pos_y = resultSet2.getInt("pos_y");
+				for (Cubemap cube2 : list2) {
+					boxId = cube2.getLinked_id();
+					box_pos_y = cube2.getPos_y();
+
+					Bookarng bookarng = new Bookarng();
+					bookarng.setBox_id(boxId);
+					bookarng.setStack_id(stackId);
+					bookarng.setBooksf_id(booksfId);
+					bookarng.setBooksf_f_no((box_pos_y-25)/50 + 1);
+					bookarng.setBooksf_r_no(0);
+					bookarng.setBooksf_r_sno(0);
+					bookarng.setArng_cd(1);
 					
-					sql = "SELECT MAX(arng_id) FROM TB_PVBOOKARNG";
-					resultSet = statement.executeQuery(sql);
-					resultSet.next();
-					arngId = resultSet.getInt(1);
-					System.out.println("arrgId : " + arngId);
-					resultSet.close();
-					
-					sql = "insert into TB_PVBOOKARNG(ARNG_ID, BOX_ID, STACK_ID, BOOKSF_ID, BOOKSF_F_NO, BOOKSF_R_NO, BOOKSF_R_SNO, ARNG_CD, BOX_ARNG_DT) values (?, ?, LPAD(?, 3, '0'), LPAD(?, 3, '0'), ?, ?, ?, ?, TO_CHAR(SYSDATE, 'YYYYMMDDhh24miss'))";
-					System.out.println(sql);
-					preparedStatement = connect.prepareStatement(sql);
-					preparedStatement.setInt(1, arngId+1);
-					preparedStatement.setInt(2, boxId);
-					preparedStatement.setString(3, stackId);
-					preparedStatement.setString(4, booksfId);
-					preparedStatement.setInt(5, (box_pos_y-25)/50 + 1);
-					System.out.println((box_pos_y-25)/50 + 1);
-					
-					preparedStatement.setInt(6, 0);
-					preparedStatement.setInt(7, arngId+1);
-					preparedStatement.setString(8, "01");
-					preparedStatement.executeUpdate();
+					boolean flag = cubemapService.createBookarng(bookarng);
+			        if (flag == false) {
+			        	return new ResponseEntity<Void>(HttpStatus.CONFLICT);
+			        }
 				}
-				resultSet2.close();
 			}
 			idx++;
 		}
-
-		//resultSet.close();
-		preparedStatement.close();
-		statement.close();
-		connect.close();
-
-		preparedStatement.close();
-		statement.close();
-		connect.close();
-		}catch(Exception ex){
-		}finally{
-		}
-		
-		response.setHeader("Cache-Control", "no-cache");
-		PrintWriter out = response.getWriter();
-		out.write("Completely Insert Data Into DB.");
-		out.flush();
+		return new ResponseEntity<Void>(HttpStatus.CREATED);
 	}	
-		
 }
