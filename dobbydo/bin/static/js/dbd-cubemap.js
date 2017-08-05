@@ -1195,6 +1195,8 @@ function onDocumentMouseDown( event ) {
 							if(objectsdel_flag){
 								objects.splice( objectsdel_idx, objectsdel_cnt );
 							}
+							
+							
 						} else{
 							scene.remove( intersect.object );
 							objects.splice( objects.indexOf( intersect.object ), 1 );
