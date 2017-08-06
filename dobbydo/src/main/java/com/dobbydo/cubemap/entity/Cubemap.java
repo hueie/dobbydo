@@ -15,6 +15,7 @@ public class Cubemap implements Serializable {
 	@Id
 	@Column(name="cube_idx")
     private int cube_idx;
+	@Id
 	@Column(name="stack_id")
     private int stack_id;
 	@Column(name="pos_x")

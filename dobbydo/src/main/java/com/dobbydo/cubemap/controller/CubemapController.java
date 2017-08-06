@@ -207,76 +207,77 @@ public class CubemapController {
 	public ResponseEntity<Void> CubemapSavestack(@RequestParam(value="stackId", required = false)int stackId 
 			) {
 		
-		String sql = "SELECT object_id, linked_id, pos_y, pos_x, pos_z FROM CUBE_MAP where stack_id = "+stackId+" and cube_type = 7 order by object_id, pos_y";
+		String sql = " FROM Cubemap where stack_id = "+stackId+" and cube_type = 7 order by object_id, cube_axis, pos_y";
 		List<Cubemap> list = cubemapService.getCubemapsBySql(sql);
 		
 		int obejctId=0, booksfId=0;
 		int posY, posX, posZ;
 
-		int idx = 12;
+		int flw_idx=0, preFlwPosY=0;
 		int minPosY=9999, maxPosY=-9999, minPosX=9999, maxPosX=-9999, minPosZ=9999, maxPosZ=-9999; 
+		Cubemap preCube = new Cubemap();
 		for (Cubemap cube : list) {
-			if(idx == 12){
-				idx = 0;
+			if(cube.getObject_id() != preCube.getObject_id()) {
+				//Init Process
+				flw_idx=0;
 				minPosY=9999; maxPosY=-9999; minPosX=9999; maxPosX=-9999; minPosZ=9999; maxPosZ=-9999; 
 				obejctId = cube.getObject_id();
 				booksfId = cube.getLinked_id();
+				System.out.println("obejctId : "+obejctId+" booksfId : "+booksfId);
 			}
-			if( (0 <= idx && idx <= 3) || (8 <= idx && idx <= 11)){
+			if(cube.getCube_axis() == 1) {
 				posY = cube.getPos_y();
-				posX = cube.getPos_x();
+				if(posY > maxPosY){
+					maxPosY = posY;
+				}
+				if(posY < minPosY) {
+					minPosY = posY;
+				}
+			} else if(cube.getCube_axis() == 2) {
 				posZ = cube.getPos_z();
-				
-				if(posX > maxPosX){
-					maxPosX = posX;
-				}
-				if(posX < minPosX){
-					minPosX = posX;
-				}
 				if(posZ > maxPosZ){
 					maxPosZ = posZ;
 				}
 				if(posZ < minPosZ){
 					minPosZ = posZ;
 				}
-				
-				if(idx == 3){
-					minPosY = posY;
-				} else if(idx == 11){
-					maxPosY = posY;
+			} else if(cube.getCube_axis() == 3) {
+				posX = cube.getPos_x();
+				if(posX > maxPosX){
+					maxPosX = posX;
 				}
-			}
-			if(idx == 11){
-				
-				sql = "SELECT linked_id, pos_y FROM YS_CUBE_MAP where stack_id = "+stackId+" and cube_type = 1"+ 
-						" AND pos_y between "+minPosY+" and "+maxPosY+
-						" AND pos_x between "+minPosX+" and "+maxPosX+
-						" AND pos_z between "+minPosZ+" and "+maxPosZ;
-				System.out.println(sql);
-
-				List<Cubemap> list2 = cubemapService.getCubemapsBySql(sql);
-				
-				int boxId = 0, arngId = 0, box_pos_y = 0;
-				for (Cubemap cube2 : list2) {
-					boxId = cube2.getLinked_id();
-					box_pos_y = cube2.getPos_y();
-
-					Bookarng bookarng = new Bookarng();
-					bookarng.setBox_id(boxId);
-					bookarng.setStack_id(stackId);
-					bookarng.setBooksf_id(booksfId);
-					bookarng.setBooksf_f_no((box_pos_y-25)/50 + 1);
-					bookarng.setBooksf_r_no(0);
-					bookarng.setBooksf_r_sno(0);
-					bookarng.setArng_cd(1);
-					
-					boolean flag = cubemapService.createBookarng(bookarng);
-			        if (flag == false) {
-			        	return new ResponseEntity<Void>(HttpStatus.CONFLICT);
-			        }
+				if(posX < minPosX){
+					minPosX = posX;
 				}
-			}
-			idx++;
+			} else if(cube.getCube_axis() == 4) {
+				if(flw_idx != 0) {
+					sql = " FROM Cubemap where stack_id = "+stackId+" and cube_type = 1"+ 
+							" AND pos_y between "+preFlwPosY+" and "+cube.getPos_y()+
+							" AND pos_x between "+minPosX+" and "+maxPosX+
+							" AND pos_z between "+minPosZ+" and "+maxPosZ;
+					System.out.println("Insert Into BookArng : "+sql);
+					List<Cubemap> list2 = cubemapService.getCubemapsBySql(sql);
+					int boxId = 0, arngId = 0, box_pos_y = 0;
+					for (Cubemap cube2 : list2) {
+						boxId = cube2.getLinked_id();
+						box_pos_y = cube2.getPos_y();
+
+						Bookarng bookarng = new Bookarng();
+						bookarng.setBox_id(boxId);
+						bookarng.setStack_id(stackId);
+						bookarng.setBooksf_id(booksfId);
+						bookarng.setBooksf_f_no(flw_idx);
+						bookarng.setBooksf_r_no(0);
+						bookarng.setBooksf_r_sno(0);
+						bookarng.setArng_cd(1);
+						
+						boolean flag = cubemapService.createBookarng(bookarng);
+					}
+				}
+				flw_idx++;
+			} 
+			preFlwPosY = cube.getPos_y();
+			preCube = cube;
 		}
 		return new ResponseEntity<Void>(HttpStatus.CREATED);
 	}	
