@@ -27,4 +27,5 @@ public interface CubemapService {
     
 
     void deleteCubemap(int stack_d);
+    void deleteBookarng(int stack_d);
 }

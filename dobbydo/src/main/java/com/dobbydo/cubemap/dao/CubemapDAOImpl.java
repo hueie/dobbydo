@@ -101,4 +101,10 @@ public class CubemapDAOImpl  implements CubemapDAO {
 		String hql = "DELETE FROM Cubemap  WHERE stack_id = :stack_id ";
 		entityManager.createQuery(hql).setParameter("stack_id", stack_id).executeUpdate();
 	}
+	
+	@Override
+	public void deleteBookarng(int stack_id) {
+		String hql = "DELETE FROM Bookarng  WHERE stack_id = :stack_id ";
+		entityManager.createQuery(hql).setParameter("stack_id", stack_id).executeUpdate();
+	}
 }

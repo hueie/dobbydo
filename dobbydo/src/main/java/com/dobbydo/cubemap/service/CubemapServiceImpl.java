@@ -92,4 +92,8 @@ public class CubemapServiceImpl implements CubemapService {
 	public void deleteCubemap(int stack_id) {
 		cubemapDAO.deleteCubemap(stack_id);
 	}
+	@Override
+	public void deleteBookarng(int stack_id) {
+		cubemapDAO.deleteBookarng(stack_id);
+	}
 }

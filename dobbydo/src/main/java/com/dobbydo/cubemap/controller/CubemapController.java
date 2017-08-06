@@ -206,6 +206,9 @@ public class CubemapController {
 	@PostMapping("CubemapSavestack")
 	public ResponseEntity<Void> CubemapSavestack(@RequestParam(value="stackId", required = false)int stackId 
 			) {
+		//Clear Stack
+		cubemapService.deleteBookarng(stackId);
+		
 		
 		String sql = " FROM Cubemap where stack_id = "+stackId+" and cube_type = 7 order by object_id, cube_axis, pos_y";
 		List<Cubemap> list = cubemapService.getCubemapsBySql(sql);
@@ -216,6 +219,7 @@ public class CubemapController {
 		int flw_idx=0, preFlwPosY=0;
 		int minPosY=9999, maxPosY=-9999, minPosX=9999, maxPosX=-9999, minPosZ=9999, maxPosZ=-9999; 
 		Cubemap preCube = new Cubemap();
+		preCube.setObject_id(-1);
 		for (Cubemap cube : list) {
 			if(cube.getObject_id() != preCube.getObject_id()) {
 				//Init Process

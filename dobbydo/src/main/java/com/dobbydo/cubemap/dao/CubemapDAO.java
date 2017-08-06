@@ -26,6 +26,7 @@ public interface CubemapDAO {
 
 	Booksf getBooksfByBooksfId(int booksf_id);
 	Box getBoxByBoxId(int box_id);
-	
+
     void deleteCubemap(int stack_id);
+    void deleteBookarng(int stack_id);
 }
