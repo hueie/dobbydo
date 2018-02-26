@@ -120,9 +120,9 @@ public class UserController {
 
 		boolean flag = userService.createUser(user);
 		if (flag == false) {
-			return new ResponseEntity<String>("Sing Up Fail!!", HttpStatus.CONFLICT);
+			return new ResponseEntity<String>("Sign Up Fail!!", HttpStatus.CONFLICT);
 		}
-		return new ResponseEntity<String>("Sing Up Success!!",HttpStatus.OK);
+		return new ResponseEntity<String>("Sign Up Success!!",HttpStatus.OK);
 	}
 
 	/*

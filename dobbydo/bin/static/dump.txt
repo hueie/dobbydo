@@ -9,6 +9,7 @@ CREATE TABLE `articles` (
   PRIMARY KEY (`article_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+/*
 CREATE TABLE `bookarng` (
   `ARNG_ID` int(11) DEFAULT NULL,
   `BOX_ID` int(11) DEFAULT NULL,
@@ -30,6 +31,21 @@ CREATE TABLE `booksf` (
   `BOOKSF_ROW_CNT` int(11) DEFAULT '0',
   PRIMARY KEY (`BOOKSF_ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
+*/
+CREATE TABLE `booksf` (
+  `BOOKSF_ID` int(11) NOT NULL AUTO_INCREMENT,
+  `STACK_ID` int(11) DEFAULT NULL,
+  `BOOKSF_NM` text,
+  `BOOKSF_REMK` text,
+  `BOOKSF_ROW_CNT` int(11) DEFAULT '0',
+  `BOOKSF_Y` int(11) DEFAULT '0',
+  `BOOKSF_X` int(11) DEFAULT '0',
+  `BOOKSF_Z` int(11) DEFAULT '0',
+  `BOOKSF_FLW` int(11) DEFAULT '0',
+  PRIMARY KEY (`BOOKSF_ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE `booksf_flw` (
   `STACK_ID` tinytext,
@@ -93,7 +109,7 @@ CREATE TABLE `role` (
   PRIMARY KEY (`role_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
-1	ADMIN
+INSERT INTO `dobbydo`.`role` (`role_id`, `role`) VALUES ('1', 'ADMIN');
 
 CREATE TABLE `stack` (
   `stack_id` int(11) NOT NULL AUTO_INCREMENT,

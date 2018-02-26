@@ -46,14 +46,11 @@ public class CubemapController {
 	
 	@GetMapping("Cubemap")
 	public ResponseEntity<List<Cubemap>> Cubemap (@RequestParam(value="stack_id", required = false)int stack_id) {
-		System.out.println("stack_id : " + stack_id);
 		List<Cubemap> list = null;
 		if (stack_id != 0 ) {
 			list = cubemapService.getCubemapsByStackId(stack_id);
-			return new ResponseEntity<List<Cubemap>>(list, HttpStatus.OK);
-		}else {
-			return new ResponseEntity<List<Cubemap>>(list, HttpStatus.OK);
 		}
+		return new ResponseEntity<List<Cubemap>>(list, HttpStatus.OK);
 	}
 	
 	@GetMapping("CubemapStackList")
@@ -72,7 +69,6 @@ public class CubemapController {
 	public ResponseEntity<Void> CubemapAddStack(@RequestParam(value="stack_nm", required = false)String stack_nm, 
 			@RequestParam(value="stack_remk", required = false)String stack_remk, UriComponentsBuilder builder
 			) throws Exception {
-		System.out.println("CubemapAddStack");
 		int stackId = 0;
 		
 		Stack stack = new Stack();
@@ -208,7 +204,6 @@ public class CubemapController {
 			) {
 		//Clear Stack
 		cubemapService.deleteBookarng(stackId);
-		
 		
 		String sql = " FROM Cubemap where stack_id = "+stackId+" and cube_type = 7 order by object_id, cube_axis, pos_y";
 		List<Cubemap> list = cubemapService.getCubemapsBySql(sql);

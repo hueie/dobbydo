@@ -45,7 +45,6 @@ public class CammappingController {
 	public ResponseEntity<Void> createMapping(Principal pr,
 			@RequestParam(value="line_list", required = false)String line_list,
 			@RequestParam(value="fileupload_id", required = false)int fileupload_id
-			
 			) throws JSONException {
 		User user = userService.findUserByEmail(pr.getName());
         int userId = user.getUser_id();
