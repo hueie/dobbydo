@@ -83,7 +83,7 @@ CREATE TABLE `cammapping` (
 
 CREATE TABLE `cube_map` (
   `cube_idx` int(11) NOT NULL,
-  `stack_id` int(11) DEFAULT NULL,
+  `stack_id` int(11) NOT NULL,
   `pos_x` int(11) DEFAULT NULL,
   `pos_y` int(11) DEFAULT NULL,
   `pos_z` int(11) DEFAULT NULL,
@@ -92,7 +92,7 @@ CREATE TABLE `cube_map` (
   `linked_id` int(11) DEFAULT NULL,
   `cube_size` int(11) DEFAULT NULL,
   `cube_axis` int(11) DEFAULT NULL,
-  PRIMARY KEY (`cube_idx`)
+   PRIMARY KEY (`cube_idx`, `stack_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `fileupload` (
